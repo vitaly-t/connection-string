@@ -1,6 +1,6 @@
 {
   "env": {
-    "es6": true,
+    "es6": false,
     "node": true,
     "jasmine": true
   },
@@ -15,8 +15,6 @@
     "new-cap": "error",
     "no-console": "error",
     "comma-dangle": "error",
-    "no-var": "error",
-    "object-shorthand": ["error", "properties"],
     "indent": [
       "error",
       4,

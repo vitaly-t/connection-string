@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+html, body, section {
+    background-color: #F5F5F5
+}
+
+.prettyprint {
+    width: auto;
+}
+
+h4.name {
+    border-radius: 7px;
+    padding: 4px 10px;
+    background-color: #303030;
+    color: Cyan;
+    font-size: 24px;
+}
+
+section {
+    border-bottom: none;
+    padding-left: 40px;
+}
+
+div#main {
+    margin-left: 260px;
+    float: none;
+    /*    max-width: 1650px;*/
+}
+
+code {
+    border-radius: 3px;
+    padding: 2px 4px;
+    background-color: grey;
+    color: white !important;
+}
+
+code span {
+    line-height: 20px;
+}
+
+nav {
+    background-color: #404040;
+    padding: 10px 20px 20px 20px;
+    width: auto;
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    font-size: 18px;
+    margin-top: 0px;
+    line-height: 24px;
+    float: none;
+    overflow-y: auto;
+}
+
+nav h2 a,
+nav h2 a:visited,
+nav div.home-link a,
+nav div.home-link a:visited {
+    color: #FFFFA0;
+}
+
+nav ul li a,
+nav ul li a:visited {
+    color: White;
+    font-size: 17px;
+}
+
+nav h3 {
+    color: LightGreen;
+    font-size: 18px;
+}
+
+nav h2 {
+    font-size: 20px;
+}
+
+.nav li a {
+    color: white !important;
+}
+
+.home-link {
+    padding-top: 20px;
+}
+
+.home-link a {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+table.params th:first-child,
+table.props th:first-child {
+    border-top-left-radius: 5px;
+}
+
+table.params th:last-child,
+table.props th:last-child {
+    border-top-right-radius: 5px;
+}
+
+table.params th,
+table.props th {
+    border: none;
+    border-right: 1px solid #F5F5F5;
+}
+
+table.params th,
+table.props th {
+    font-family: 'Verdana';
+    font-weight: normal;
+}
+
+table.params th {
+    background-color: SteelBlue;
+    color: White;
+}
+
+table.props th {
+    background-color: DarkCyan;
+    color: White;
+}
