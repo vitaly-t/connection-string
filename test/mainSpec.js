@@ -93,9 +93,9 @@ describe('host', function () {
         });
     });
     it('must allow IPv4 addresses', function () {
-        expect(parse('1.2.3.4')).toEqual({
-            host: '1.2.3.4',
-            hostname: '1.2.3.4'
+        expect(parse('1.2.3.456')).toEqual({
+            host: '1.2.3.456',
+            hostname: '1.2.3.456'
         });
     });
     it('must recognize IPv6 addresses', function () {
@@ -114,6 +114,11 @@ describe('host', function () {
             host: '[2001:0db8%20]',
             hostname: '2001:0db8%20'
         });
+    });
+    it('must skip invalid IPv6 addresses', function () {
+        expect(parse('[]')).toEqual({});
+        expect(parse('[a]:123')).toEqual({});
+        expect(parse('[a-b-c]')).toEqual({});
     });
 });
 
@@ -144,6 +149,7 @@ describe('segments', function () {
 describe('params', function () {
     it('must support lack of parameters', function () {
         expect(parse('?')).toEqual({});
+        expect(parse('/?')).toEqual({});
     });
     it('must support short parameters', function () {
         expect(parse('?a=1&b=2')).toEqual({
@@ -165,6 +171,27 @@ describe('params', function () {
         expect(parse('?a%20b=test')).toEqual({
             params: {
                 'a b': 'test'
+            }
+        });
+    });
+});
+
+describe('complex', function () {
+    it('protocol + segment', function () {
+        expect(parse('a://:/seg')).toEqual({
+            protocol: 'a',
+            segments: ['seg']
+        });
+        expect(parse('a:/@/seg')).toEqual({
+            protocol: 'a',
+            segments: ['seg']
+        });
+    });
+    it('protocol + params', function () {
+        expect(parse('a:///?one=1')).toEqual({
+            protocol: 'a',
+            params: {
+                one: '1'
             }
         });
     });

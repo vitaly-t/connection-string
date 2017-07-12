@@ -47,10 +47,10 @@ var parse = require('connection-string');
 var obj = parse('my-server:12345');
 ```
 
-* **Browser**
+* **Browsers**
 
 ```html
-<script src="./connection-string"></script>
+<script src="./connection-string/lib/index.js"></script>
 
 <script>
     var obj = parseConnectionString('my-server:12345');
