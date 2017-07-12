@@ -86,10 +86,10 @@ describe('host', function () {
             hostname: 'server'
         });
     });
-    it('must decode special characters', function () {
-        expect(parse('server%20123')).toEqual({
-            host: 'server 123',
-            hostname: 'server 123'
+    it('must not decode URL characters', function () {
+        expect(parse('server%20')).toEqual({
+            host: 'server%20',
+            hostname: 'server%20'
         });
     });
     it('must allow IPv4 addresses', function () {
@@ -98,14 +98,23 @@ describe('host', function () {
             hostname: '1.2.3.4'
         });
     });
-    // TODO: IPv6 in URL-s are to be inside square brackets
-    /*
-    it('must allow IPv6 addresses', function () {
+    it('must recognize IPv6 addresses', function () {
         expect(parse('[2001:0db8:0000:0000:0000:ff00:0042:8329]')).toEqual({
-            host: '2001:0db8:0000:0000:0000:ff00:0042:8329',
+            host: '[2001:0db8:0000:0000:0000:ff00:0042:8329]',
             hostname: '2001:0db8:0000:0000:0000:ff00:0042:8329'
         });
-    });*/
+        expect(parse('[2001:0db8]:123')).toEqual({
+            host: '[2001:0db8]:123',
+            hostname: '2001:0db8',
+            port: 123
+        });
+    });
+    it('must not treat IPv6 scopes as special characters', function () {
+        expect(parse('[2001:0db8%20]')).toEqual({
+            host: '[2001:0db8%20]',
+            hostname: '2001:0db8%20'
+        });
+    });
 });
 
 describe('port', function () {
@@ -123,6 +132,12 @@ describe('segments', function () {
         expect(parse('//')).toEqual({});
         expect(parse('///')).toEqual({});
         expect(parse('//')).toEqual({});
+    });
+    it('must enumerate all segments', function () {
+        expect(parse('/one/two')).toEqual({segments: ['one', 'two']});
+    });
+    it('must decode special characters', function () {
+        expect(parse('/one%20/%20two')).toEqual({segments: ['one ', ' two']});
     });
 });
 
