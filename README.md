@@ -9,7 +9,7 @@ URL Connection String Parser - _for all browsers and Node.js versions._
 Accepts a URL connection string (with every element being optional): 
 
 ```
-protocol://user:password@hostname:12345/segment1/segment2?param1=value1&param2=value2
+protocol://user:password@hostname:12345/seg1/seg2?p1=val1&p2=val2
 ```
 
 and converts it into an object:
@@ -22,10 +22,10 @@ and converts it into an object:
     host: 'hostname:12345',
     hostname: 'hostname',
     port: 12345,
-    segments: ['segment1', 'segment2'],
+    segments: ['seg1', 'seg2'],
     params: {
-        param1: 'value1',
-        param2: 'value2'
+        p1: 'val1',
+        p2: 'val2'
     }
 }
 ```
