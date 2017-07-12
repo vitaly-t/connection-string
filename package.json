@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "URL Connection String Parser.",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
@@ -11,7 +11,7 @@
     "lint": "./node_modules/.bin/eslint ./lib ./test"
   },
   "files": [
-    "lib"
+    "src"
   ],
   "homepage": "https://github.com/vitaly-t/connection-string",
   "repository": {
@@ -23,8 +23,10 @@
     "email": "vitaly.tomilov@gmail.com"
   },
   "keywords": [
+    "url",
     "connection",
-    "string"
+    "string",
+    "parser"
   ],
   "author": {
     "name": "Vitaly Tomilov",

@@ -57,7 +57,7 @@ var obj = parse('my-server:12345');
 </script>
 ```
 
-* **TypeScript 2.x**
+* **TypeScript**
 
 ```ts
 import * as parse from './connection-string/src'
