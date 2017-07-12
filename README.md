@@ -1,7 +1,7 @@
 connection-string
 =================
 
-URL Connection String Parser - _for all browsers and Node.js versions.
+URL Connection String Parser - _for all browsers and Node.js versions._
 
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
