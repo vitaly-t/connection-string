@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "URL Connection String Parser.",
   "main": "lib/index.js",
   "scripts": {
