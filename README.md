@@ -1,18 +1,20 @@
 connection-string
 =================
 
-URL Connection String Parser: for all browsers + Node.js versions.
+URL Connection String Parser - _for all browsers and Node.js versions._ 
+
+**UNDER DEVELOPMENT!**
 
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
 
-Parses connection parameters from a URL string: 
+Takes a URL connection string: 
 
 ```
 protocol://user:password@hostname:port/segment1/segment2?param1=value1&param2=value2
 ```
 
-and into an object:
+and converts it into an object:
 
 ```js
 {
@@ -29,5 +31,3 @@ and into an object:
     }
 }
 ```
-
-**NOTE: This project is under development, not ready for use yet.**
