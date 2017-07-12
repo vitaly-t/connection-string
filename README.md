@@ -1,10 +1,12 @@
 connection-string
 =================
 
-URL Connection String Parser - _for all browsers and Node.js versions._ **UNDER DEVELOPMENT!**
+URL Connection String Parser - _for all browsers and Node.js versions.
 
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
+
+**UNDER DEVELOPMENT!**
 
 Takes a URL connection string: 
 
@@ -29,3 +31,5 @@ and converts it into an object:
     }
 }
 ```
+
+See [Examples](https://github.com/vitaly-t/connection-string/wiki).

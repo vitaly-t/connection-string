@@ -57,20 +57,59 @@ describe('protocol', function () {
     });
 });
 
-describe('user', function () {
-
-});
-
-describe('password', function () {
-
-});
-
 describe('host', function () {
-
+    it('must allow without port', function () {
+        expect(parse('server')).toEqual({
+            host: 'server',
+            hostname: 'server',
+            segments: [],
+            params: {}
+        });
+    });
 });
 
 describe('port', function () {
+    it('must allow without server', function () {
+        expect(parse(':12345')).toEqual({
+            host: ':12345',
+            port: 12345,
+            segments: [],
+            params: {}
+        });
+    });
+});
 
+describe('user', function () {
+    it('must allow only the user', function () {
+        expect(parse('name@')).toEqual({
+            user: 'name',
+            segments: [],
+            params: {}
+        });
+    });
+});
+
+describe('password', function () {
+    it('must allow only the password', function () {
+        expect(parse(':pass@')).toEqual({
+            password: 'pass',
+            segments: [],
+            params: {}
+        });
+    });
+});
+
+describe('user+password', function () {
+    it('must allow skipping both', function () {
+        expect(parse('@')).toEqual({
+            segments: [],
+            params: {}
+        });
+        expect(parse(':@')).toEqual({
+            segments: [],
+            params: {}
+        });
+    });
 });
 
 describe('segments', function () {
