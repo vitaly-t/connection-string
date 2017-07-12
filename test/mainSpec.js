@@ -142,5 +142,30 @@ describe('segments', function () {
 });
 
 describe('params', function () {
-
+    it('must support lack of parameters', function () {
+        expect(parse('?')).toEqual({});
+    });
+    it('must support short parameters', function () {
+        expect(parse('?a=1&b=2')).toEqual({
+            params: {
+                a: '1',
+                b: '2'
+            }
+        });
+    });
+    it('must ignore empty parameters', function () {
+        expect(parse('?a=1&b=&c=3')).toEqual({
+            params: {
+                a: '1',
+                c: '3'
+            }
+        });
+    });
+    it('must decode special characters', function () {
+        expect(parse('?a%20b=test')).toEqual({
+            params: {
+                'a b': 'test'
+            }
+        });
+    });
 });
