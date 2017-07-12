@@ -1,10 +1,24 @@
 'use strict';
 
-var CS = require('../lib');
+var parse = require('../lib');
 
-describe('Main', function () {
-    it('must load', function () {
-        expect(typeof CS).toBe('function');
-        expect(new CS('test')).toEqual({});
+describe('protocol', function () {
+    it('must recognize standard format', function () {
+        expect(parse('abc://')).toEqual(jasmine.objectContaining({
+            protocol: 'abc'
+        }));
+    });
+    it('must recognize short format', function () {
+        expect(parse('abc:/')).toEqual(jasmine.objectContaining({
+            protocol: 'abc'
+        }));
+    });
+    it('must recognize redundant format', function () {
+        expect(parse('abc:///')).toEqual(jasmine.objectContaining({
+            protocol: 'abc'
+        }));
+        expect(parse('abc://///')).toEqual(jasmine.objectContaining({
+            protocol: 'abc'
+        }));
     });
 });
