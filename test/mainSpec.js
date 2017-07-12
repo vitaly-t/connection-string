@@ -86,6 +86,26 @@ describe('host', function () {
             hostname: 'server'
         });
     });
+    it('must decode special characters', function () {
+        expect(parse('server%20123')).toEqual({
+            host: 'server 123',
+            hostname: 'server 123'
+        });
+    });
+    it('must allow IPv4 addresses', function () {
+        expect(parse('1.2.3.4')).toEqual({
+            host: '1.2.3.4',
+            hostname: '1.2.3.4'
+        });
+    });
+    // TODO: IPv6 in URL-s are to be inside square brackets
+    /*
+    it('must allow IPv6 addresses', function () {
+        expect(parse('[2001:0db8:0000:0000:0000:ff00:0042:8329]')).toEqual({
+            host: '2001:0db8:0000:0000:0000:ff00:0042:8329',
+            hostname: '2001:0db8:0000:0000:0000:ff00:0042:8329'
+        });
+    });*/
 });
 
 describe('port', function () {
