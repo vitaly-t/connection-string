@@ -1,6 +1,6 @@
 'use strict';
 
-var parse = require('../lib');
+var parse = require('../src');
 
 describe('init', function () {
     it('must throw on a non-string', function () {

@@ -50,11 +50,20 @@ var obj = parse('my-server:12345');
 * **Browsers**
 
 ```html
-<script src="./connection-string/lib/index.js"></script>
+<script src="./connection-string/src"></script>
 
 <script>
     var obj = parseConnectionString('my-server:12345');
 </script>
+```
+
+* **TypeScript 2.x**
+
+```ts
+import * as parse from './connection-string/src'
+import {ConnectionOptions} from './connection-string/src'
+
+var a: ConnectionOptions = parse('protocol://');
 ```
 
 For details and examples see the [WiKi Pages](https://github.com/vitaly-t/connection-string/wiki).
