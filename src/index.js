@@ -19,9 +19,9 @@
         var result = {};
 
         // extract the protocol:
-        var m = cs.match(/^[\w-%]*:\/+/);
+        var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
         if (m) {
-            result.protocol = decodeURI(m[0].replace(/:\/*/, ''));
+            result.protocol = decodeURI(m[0].replace(/:\/\//, ''));
             cs = cs.substr(m[0].length);
             if (!result.protocol) {
                 throw new TypeError('Invalid \'protocol\' specification.');
@@ -29,7 +29,7 @@
         }
 
         // extract user + password:
-        m = cs.match(/^([\w-%]*):?([\w-%]*)@/);
+        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
         if (m) {
             if (m[1]) {
                 result.user = decodeURI(m[1]);
@@ -66,7 +66,7 @@
         }
 
         // extract segments:
-        m = cs.match(/\/([^/?]+)/g);
+        m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
             result.segments = m.map(function (s) {
                 return decodeURI(s.substr(1));
@@ -77,7 +77,7 @@
         idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
-            m = cs.match(/([^=&?]+)=([^&=?]+)/g);
+            m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%]+)/g);
             if (m) {
                 result.params = {};
                 m.forEach(function (s) {

@@ -30,12 +30,8 @@ describe('protocol', function () {
     it('must recognize standard format', function () {
         expect(parse('abc://')).toEqual({protocol: 'abc'});
     });
-    it('must recognize short format', function () {
-        expect(parse('abc:/')).toEqual({protocol: 'abc'});
-    });
-    it('must recognize redundant format', function () {
-        expect(parse('abc:///')).toEqual({protocol: 'abc'});
-        expect(parse('abc://///')).toEqual({protocol: 'abc'});
+    it('must ignore incomplete format', function () {
+        expect(parse('abc:/')).toEqual({host: 'abc', hostname: 'abc'});
     });
     it('must throw on invalid format', function () {
         var error = new TypeError('Invalid \'protocol\' specification.');
@@ -43,14 +39,14 @@ describe('protocol', function () {
             parse('://');
         }).toThrow(error);
         expect(function () {
-            parse(':/');
-        }).toThrow(error);
-        expect(function () {
             parse('://///');
         }).toThrow(error);
     });
-    it('must decode special characters', function () {
+    it('must decode URL-encoded characters', function () {
         expect(parse('a%20b://')).toEqual({protocol: 'a b'});
+    });
+    it('must support special symbols', function () {
+        expect(parse('$-_.+!*\'()://')).toEqual({protocol: '$-_.+!*\'()'});
     });
 });
 
@@ -58,8 +54,11 @@ describe('user', function () {
     it('must allow only the user', function () {
         expect(parse('name@')).toEqual({user: 'name'});
     });
-    it('must decode special characters', function () {
+    it('must decode URL-encoded characters', function () {
         expect(parse('first%20name@')).toEqual({user: 'first name'});
+    });
+    it('must support special symbols', function () {
+        expect(parse('$-_.+!*\'()@')).toEqual({user: '$-_.+!*\'()'});
     });
 });
 
@@ -67,8 +66,11 @@ describe('password', function () {
     it('must allow only the password', function () {
         expect(parse(':pass@')).toEqual({password: 'pass'});
     });
-    it('must decode special characters', function () {
+    it('must decode URL-encoded characters', function () {
         expect(parse(':pass%20123@')).toEqual({password: 'pass 123'});
+    });
+    it('must support special symbols', function () {
+        expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_.+!*\'()'});
     });
 });
 
@@ -141,8 +143,15 @@ describe('segments', function () {
     it('must enumerate all segments', function () {
         expect(parse('/one/two')).toEqual({segments: ['one', 'two']});
     });
-    it('must decode special characters', function () {
+    it('must recognize after protocol', function () {
+        expect(parse('abc:///one')).toEqual({protocol: 'abc', segments: ['one']});
+        expect(parse('abc:////one')).toEqual({protocol: 'abc', segments: ['one']});
+    });
+    it('must decode URL-encoded characters', function () {
         expect(parse('/one%20/%20two')).toEqual({segments: ['one ', ' two']});
+    });
+    it('must support special symbols', function () {
+        expect(parse('/$-_.+!*\'()')).toEqual({segments: ['$-_.+!*\'()']});
     });
 });
 
@@ -167,10 +176,17 @@ describe('params', function () {
             }
         });
     });
-    it('must decode special characters', function () {
+    it('must decode URL-encoded characters', function () {
         expect(parse('?a%20b=test')).toEqual({
             params: {
                 'a b': 'test'
+            }
+        });
+    });
+    it('must support special symbols', function () {
+        expect(parse('?$-_.+!*\'()=$-_.+!*\'()')).toEqual({
+            params: {
+                '$-_.+!*\'()': '$-_.+!*\'()'
             }
         });
     });
@@ -178,17 +194,23 @@ describe('params', function () {
 
 describe('complex', function () {
     it('protocol + segment', function () {
-        expect(parse('a://:/seg')).toEqual({
+        expect(parse('a:///seg')).toEqual({
             protocol: 'a',
             segments: ['seg']
         });
-        expect(parse('a:/@/seg')).toEqual({
+        expect(parse('a:////seg')).toEqual({
             protocol: 'a',
             segments: ['seg']
         });
     });
     it('protocol + params', function () {
         expect(parse('a:///?one=1')).toEqual({
+            protocol: 'a',
+            params: {
+                one: '1'
+            }
+        });
+        expect(parse('a:////?one=1')).toEqual({
             protocol: 'a',
             params: {
                 one: '1'
