@@ -68,5 +68,5 @@ var a: ConnectionOptions = parse('protocol://');
 
 For details and examples see the [WiKi Pages].
 
-[WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki.
-[Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format.
+[WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
+[Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
