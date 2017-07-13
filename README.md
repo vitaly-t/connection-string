@@ -60,8 +60,8 @@ var obj = parse('my-server:12345');
 * **TypeScript**
 
 ```ts
-import * as parse from './connection-string/src'
-import {ConnectionOptions} from './connection-string/src'
+import * as parse from 'connection-string'
+import {ConnectionOptions} from 'connection-string'
 
 var a: ConnectionOptions = parse('my-server:12345');
 ```
