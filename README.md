@@ -63,7 +63,7 @@ var obj = parse('my-server:12345');
 import * as parse from './connection-string/src'
 import {ConnectionOptions} from './connection-string/src'
 
-var a: ConnectionOptions = parse('protocol://');
+var a: ConnectionOptions = parse('my-server:12345');
 ```
 
 For details and examples see the [WiKi Pages].
