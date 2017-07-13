@@ -86,10 +86,10 @@ describe('host', function () {
             hostname: 'server'
         });
     });
-    it('must not decode URL characters', function () {
+    it('must not allow URL characters', function () {
         expect(parse('server%20')).toEqual({
-            host: 'server%20',
-            hostname: 'server%20'
+            host: 'server',
+            hostname: 'server'
         });
     });
     it('must allow IPv4 addresses', function () {
