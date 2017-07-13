@@ -21,11 +21,11 @@
         // extract the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
         if (m) {
-            result.protocol = decodeURI(m[0].replace(/:\/\//, ''));
-            cs = cs.substr(m[0].length);
-            if (!result.protocol) {
-                throw new TypeError('Invalid \'protocol\' specification.');
+            var protocol = decodeURI(m[0].replace(/:\/\//, ''));
+            if (protocol) {
+                result.protocol = protocol;
             }
+            cs = cs.substr(m[0].length);
         }
 
         // extract user + password:
@@ -45,12 +45,11 @@
         if (cs[0] !== '/') {
             if (cs[0] === '[') {
                 // It is an IPv6, with [::] being the shortest possible
-                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+))?)/);
+                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+))?)/i);
             } else {
                 // It is either IPv4 or a name
-                m = cs.match(/(([\w-.]*)(?::([0-9]+))?)/);
+                m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+))?)/i);
             }
-
             if (m) {
                 if (m[1]) {
                     result.host = m[1];

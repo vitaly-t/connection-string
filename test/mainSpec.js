@@ -32,33 +32,28 @@ describe('protocol', function () {
     });
     it('must ignore incomplete format', function () {
         expect(parse('abc:/')).toEqual({host: 'abc', hostname: 'abc'});
-    });
-    it('must throw on invalid format', function () {
-        var error = new TypeError('Invalid \'protocol\' specification.');
-        expect(function () {
-            parse('://');
-        }).toThrow(error);
-        expect(function () {
-            parse('://///');
-        }).toThrow(error);
+        expect(parse('://')).toEqual({});
     });
     it('must decode URL-encoded characters', function () {
         expect(parse('a%20b://')).toEqual({protocol: 'a b'});
     });
     it('must support special symbols', function () {
-        expect(parse('$-_.+!*\'()://')).toEqual({protocol: '$-_.+!*\'()'});
+        expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_.+!*\'()'});
     });
 });
 
 describe('user', function () {
     it('must allow only the user', function () {
-        expect(parse('name@')).toEqual({user: 'name'});
+        expect(parse('Name@')).toEqual({user: 'Name'});
+    });
+    it('must allow user name = 0', function () {
+        expect(parse('0@')).toEqual({user: '0'});
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse('first%20name@')).toEqual({user: 'first name'});
+        expect(parse('First%20name@')).toEqual({user: 'First name'});
     });
     it('must support special symbols', function () {
-        expect(parse('$-_.+!*\'()@')).toEqual({user: '$-_.+!*\'()'});
+        expect(parse('A9z$-_.+!*\'()@')).toEqual({user: 'A9z$-_.+!*\'()'});
     });
 });
 
@@ -94,16 +89,16 @@ describe('host', function () {
             hostname: 'server'
         });
     });
-    it('must allow IPv4 addresses', function () {
-        expect(parse('1.2.3.456')).toEqual({
-            host: '1.2.3.456',
-            hostname: '1.2.3.456'
+    it('must allow special characters', function () {
+        expect(parse('one-1.TWO-23')).toEqual({
+            host: 'one-1.TWO-23',
+            hostname: 'one-1.TWO-23'
         });
     });
     it('must recognize IPv6 addresses', function () {
-        expect(parse('[2001:0db8:0000:0000:0000:ff00:0042:8329]')).toEqual({
-            host: '[2001:0db8:0000:0000:0000:ff00:0042:8329]',
-            hostname: '2001:0db8:0000:0000:0000:ff00:0042:8329'
+        expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
+            host: '[2001:0db8:0000:0000:0000:FF00:0042:8329]',
+            hostname: '2001:0db8:0000:0000:0000:FF00:0042:8329'
         });
         expect(parse('[2001:0db8]:123')).toEqual({
             host: '[2001:0db8]:123',
@@ -131,6 +126,12 @@ describe('port', function () {
             port: 12345
         });
     });
+    it('must allow port=0', function () {
+        expect(parse(':0')).toEqual({
+            host: ':0',
+            port: 0
+        });
+    });
 });
 
 describe('segments', function () {
@@ -146,6 +147,10 @@ describe('segments', function () {
     it('must recognize after protocol', function () {
         expect(parse('abc:///one')).toEqual({protocol: 'abc', segments: ['one']});
         expect(parse('abc:////one')).toEqual({protocol: 'abc', segments: ['one']});
+    });
+    it('must recognize with empty protocol', function () {
+        expect(parse(':///one')).toEqual({segments: ['one']});
+        expect(parse(':////one')).toEqual({segments: ['one']});
     });
     it('must decode URL-encoded characters', function () {
         expect(parse('/one%20/%20two')).toEqual({segments: ['one ', ' two']});
@@ -184,11 +189,15 @@ describe('params', function () {
         });
     });
     it('must support special symbols', function () {
-        expect(parse('?$-_.+!*\'()=$-_.+!*\'()')).toEqual({
+        expect(parse('?A9z$-_.+!*\'()=A9z$-_.+!*\'()')).toEqual({
             params: {
-                '$-_.+!*\'()': '$-_.+!*\'()'
+                'A9z$-_.+!*\'()': 'A9z$-_.+!*\'()'
             }
         });
+    });
+    it('must work with protocol only', function () {
+        expect(parse('://?par1=123')).toEqual({params: {par1: '123'}});
+        expect(parse(':///?par1=123')).toEqual({params: {par1: '123'}});
     });
 });
 
