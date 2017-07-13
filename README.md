@@ -30,7 +30,7 @@ and converts it into an object:
 }
 ```
 
-**NOTE:** It only sets properties that are present in the connection string.
+It only sets properties that are present in the connection string. See the [Optional Format].
 
 ## Installing
 
@@ -66,4 +66,7 @@ import {ConnectionOptions} from './connection-string/src'
 var a: ConnectionOptions = parse('protocol://');
 ```
 
-For details and examples see the [WiKi Pages](https://github.com/vitaly-t/connection-string/wiki).
+For details and examples see the [WiKi Pages].
+
+[WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki.
+[Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format.
