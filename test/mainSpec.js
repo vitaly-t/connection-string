@@ -122,7 +122,8 @@ describe('host', function () {
         expect(parse('[a-b-c]')).toEqual({});
     });
     it('must ignore the invalid ports', function () {
-        expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
+        // TODO: consider adding, or not?
+        // expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
         expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
     });
     it('must allow valid ports', function () {
@@ -145,12 +146,14 @@ describe('port', function () {
             port: 0
         });
     });
+    // TODO: consider adding, or not?
+    /*
     it('must not allow invalid terminators', function () {
         expect(parse(':12345a')).toEqual({});
         expect(parse('@:12345a')).toEqual({});
         expect(parse(':abc')).toEqual({});
         expect(parse('@:abc123')).toEqual({});
-    });
+    });*/
 });
 
 describe('segments', function () {
@@ -244,5 +247,8 @@ describe('complex', function () {
                 one: '1'
             }
         });
+    });
+    it('must not lose details after the port', function () {
+        expect(parse(':123/one')).toEqual({host: ':123', port: 123, segments: ['one']});
     });
 });
