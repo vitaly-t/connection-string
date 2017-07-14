@@ -69,7 +69,7 @@ describe('password', function () {
     });
 });
 
-describe('user+password', function () {
+describe('user + password', function () {
     it('must allow skipping both', function () {
         expect(parse('@')).toEqual({});
         expect(parse(':@')).toEqual({});
@@ -82,6 +82,10 @@ describe('host', function () {
             host: 'server',
             hostname: 'server'
         });
+    });
+    it('must skip port endings', function () {
+        expect(parse('local:123/')).toEqual({host: 'local:123', hostname: 'local', port: 123});
+        expect(parse('local:123?')).toEqual({host: 'local:123', hostname: 'local', port: 123});
     });
     it('must not allow URL characters', function () {
         expect(parse('server%20')).toEqual({
@@ -117,6 +121,15 @@ describe('host', function () {
         expect(parse('[a]:123')).toEqual({});
         expect(parse('[a-b-c]')).toEqual({});
     });
+    it('must ignore the invalid ports', function () {
+        expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
+        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
+    });
+    it('must allow valid ports', function () {
+        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '::', port: 1});
+        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '::', port: 1});
+        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '::', port: 123});
+    });
 });
 
 describe('port', function () {
@@ -131,6 +144,12 @@ describe('port', function () {
             host: ':0',
             port: 0
         });
+    });
+    it('must not allow invalid terminators', function () {
+        expect(parse(':12345a')).toEqual({});
+        expect(parse('@:12345a')).toEqual({});
+        expect(parse(':abc')).toEqual({});
+        expect(parse('@:abc123')).toEqual({});
     });
 });
 
