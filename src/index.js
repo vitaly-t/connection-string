@@ -144,6 +144,8 @@
 
     Object.defineProperty(ConnectionString.prototype, 'build', {value: build});
 
+    ConnectionString.ConnectionString = ConnectionString;
+
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {
         module.exports = ConnectionString;
@@ -152,4 +154,3 @@
         window.ConnectionString = ConnectionString;
     }
 })(this);
-

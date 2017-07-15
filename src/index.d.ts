@@ -7,7 +7,7 @@ interface IConnectionString {
     port?: number
     segments?: string[]
     params?: { [name: string]: string }
-};
+}
 
 export class ConnectionString implements IConnectionString {
     constructor(cd: string)
