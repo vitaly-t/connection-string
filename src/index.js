@@ -1,18 +1,22 @@
 (function (window) {
     'use strict';
 
-    function ConnectionString(cs) {
+    function ConnectionString(cs, defaults) {
 
         if (!(this instanceof ConnectionString)) {
-            return new ConnectionString(cs);
+            return new ConnectionString(cs, defaults);
         }
 
         if (typeof cs !== 'string') {
             throw new TypeError('Invalid connection string!');
         }
 
+        if (defaults !== undefined && defaults !== null && typeof defaults !== 'object') {
+            throw new TypeError('Invalid \'defaults\' parameter!');
+        }
+
         // remove all trailing space symbols:
-        cs = cs.replace(/^[\s]*|[\s]*$/g, '');
+        cs = trim(cs);
 
         var idx = cs.search(/[\s]/);
         if (idx >= 0) {
@@ -88,52 +92,40 @@
                 this.params = params;
             }
         }
+
+        if (defaults) {
+            this.setDefaults(defaults);
+        }
     }
 
-    function build(defaults) {
-        defaults = defaults || {};
-        var cs = {
-            protocol: this.protocol || defaults.protocol,
-            host: this.host || defaults.host,
-            hostname: this.hostname || defaults.hostname,
-            port: this.port || defaults.port,
-            user: this.user || defaults.user,
-            password: this.password || defaults.password,
-            segments: this.segments || defaults.segments,
-            params: this.params || defaults.params
-        };
-
-        if (cs.port || cs.hostname) {
-            cs.host = (cs.hostname || '') + (cs.port ? (':' + cs.port) : '');
-        }
-
+    function build() {
         var s = '';
-        if (cs.protocol) {
-            s += encodeURI(cs.protocol) + '://';
+        if (this.protocol) {
+            s += encodeURI(this.protocol) + '://';
         }
-        if (cs.user) {
-            s += encodeURI(cs.user);
-            if (cs.password) {
-                s += ':' + encodeURI(cs.password);
+        if (this.user) {
+            s += encodeURI(this.user);
+            if (this.password) {
+                s += ':' + encodeURI(this.password);
             }
             s += '@';
         } else {
-            if (cs.password) {
-                s += ':' + encodeURI(cs.password) + '@';
+            if (this.password) {
+                s += ':' + encodeURI(this.password) + '@';
             }
         }
-        if (cs.host) {
-            s += cs.host;
+        if (this.host) {
+            s += this.host;
         }
-        if (Array.isArray(cs.segments) && cs.segments.length) {
-            cs.segments.forEach(function (seg) {
+        if (Array.isArray(this.segments) && this.segments.length) {
+            this.segments.forEach(function (seg) {
                 s += '/' + encodeURI(seg);
             });
         }
-        if (cs.params) {
+        if (this.params) {
             var params = [];
-            for (var a in cs.params) {
-                params.push(encodeURI(a) + '=' + encodeURI(cs.params[a]));
+            for (var a in this.params) {
+                params.push(encodeURI(a) + '=' + encodeURI(this.params[a]));
             }
             if (params.length) {
                 s += '?' + params.join('&');
@@ -142,7 +134,50 @@
         return s;
     }
 
+    function setDefaults(defaults) {
+        if (!defaults || typeof defaults !== 'object') {
+            throw new TypeError('Invalid \'defaults\' parameter!');
+        }
+        if (!this.protocol && isText(defaults.protocol)) {
+            this.protocol = trim(defaults.protocol);
+        }
+        if (!this.host && isText(defaults.host)) {
+            this.host = trim(defaults.host);
+        }
+        if (!this.hostname && isText(defaults.hostname)) {
+            this.hostname = trim(defaults.hostname);
+        }
+        if (!this.port && defaults.port > 0) {
+            this.port = parseInt(defaults.port);
+        }
+        if (!this.user && isText(defaults.user)) {
+            this.user = trim(defaults.user);
+        }
+        if (!this.password && isText(defaults.password)) {
+            this.password = trim(defaults.password);
+        }
+        if (!this.segments && Array.isArray(defaults.segments)) {
+            this.segments = defaults.segments;
+        }
+        if (!this.params && defaults.params && typeof defaults.params === 'object') {
+            this.params = defaults.params;
+        }
+        if (this.port || this.hostname) {
+            this.host = (this.hostname || '') + (this.port >= 0 ? (':' + parseInt(this.port)) : '');
+        }
+        return this;
+    }
+
+    function isText(txt) {
+        return txt && typeof txt === 'string' && /\S/.test(txt);
+    }
+
+    function trim(txt) {
+        return txt.replace(/^[\s]*|[\s]*$/g, '');
+    }
+
     Object.defineProperty(ConnectionString.prototype, 'build', {value: build});
+    Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
 
     ConnectionString.ConnectionString = ConnectionString;
 

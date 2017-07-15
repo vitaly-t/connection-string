@@ -2,8 +2,8 @@
 
 var ConnectionString = require('../src');
 
-function parse(cs) {
-    return new ConnectionString(cs);
+function parse(cs, defaults) {
+    return new ConnectionString(cs, defaults);
 }
 
 describe('init', function () {
@@ -16,6 +16,15 @@ describe('init', function () {
             parse(123);
         }).toThrow(error);
     });
+    it('must throw on invalid defaults', function () {
+        var error = new TypeError('Invalid \'defaults\' parameter!');
+        expect(function () {
+            parse('', '');
+        }).toThrow(error);
+        expect(function () {
+            parse('', 123);
+        }).toThrow(error);
+    });
     it('must throw on inner spaces', function () {
         expect(function () {
             parse('a b');
@@ -26,6 +35,9 @@ describe('init', function () {
     });
     it('must allow an empty string', function () {
         expect(parse('')).toEqual({});
+    });
+    it('must allow empty defaults', function () {
+        expect(parse('', {})).toEqual({});
     });
     it('must support function-style calls', function () {
         // eslint-disable-next-line
@@ -300,9 +312,50 @@ describe('build', function () {
         a.params = {};
         expect(a.build()).toBe('');
     });
+    /*
     it('must use default values', function () {
         expect(parse('').build({port: 123})).toBe(':123');
         expect(parse('').build({hostname: 'name', segments: ['one']})).toBe('name/one');
         expect(parse('user@?first=').build({params: {first: 1}})).toBe('user@?first=1');
+    });*/
+});
+
+describe('setDefaults', function () {
+    it('must throw on invalid defaults', function () {
+        var error = new TypeError('Invalid \'defaults\' parameter!');
+        expect(function () {
+            parse('').setDefaults();
+        }).toThrow(error);
+        expect(function () {
+            parse('').setDefaults(123);
+        }).toThrow(error);
     });
+    it('must set the default protocol', function () {
+        expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
+    });
+    it('must set the default host', function () {
+        expect(parse('').setDefaults({host: 'abc'})).toEqual({host: 'abc'});
+        expect(parse('').setDefaults({hostname: 'abc'})).toEqual({host: 'abc', hostname: 'abc'});
+        expect(parse('').setDefaults({port: 123})).toEqual({host: ':123', port: 123});
+        expect(parse('').setDefaults({port: '123'})).toEqual({host: ':123', port: 123});
+    });
+    it('must ignore invalid ports', function () {
+        expect(parse('').setDefaults({port: ''})).toEqual({});
+        expect(parse('').setDefaults({port: 'a'})).toEqual({});
+        expect(parse('').setDefaults({port: 0})).toEqual({});
+        expect(parse('').setDefaults({port: '0'})).toEqual({});
+    });
+    it('must set the default user', function () {
+        expect(parse('').setDefaults({user: 'abc'})).toEqual({user: 'abc'});
+    });
+    it('must set the default password', function () {
+        expect(parse('').setDefaults({password: 'abc'})).toEqual({password: 'abc'});
+    });
+    it('must set the default segments', function () {
+        expect(parse('').setDefaults({segments: ['abc']})).toEqual({segments: ['abc']});
+    });
+    it('must set the default params', function () {
+        expect(parse('').setDefaults({params: {p1: 'abc'}})).toEqual({params: {p1: 'abc'}});
+    });
+
 });

@@ -6,11 +6,11 @@ interface IConnectionString {
     hostname?: string
     port?: number
     segments?: string[]
-    params?: { [name: string]: string }
+    params?: { [name: string]: any }
 }
 
 export class ConnectionString implements IConnectionString {
-    constructor(cd: string)
+    constructor(cd: string, defaults?: IConnectionString)
 
     protocol: string;
     user: string;
@@ -19,7 +19,9 @@ export class ConnectionString implements IConnectionString {
     hostname: string;
     port: number;
     segments: string[];
-    params: { [name: string]: string };
+    params: { [name: string]: any };
 
-    build(defaults?: IConnectionString): string;
+    build(): string;
+
+    setDefaults(defaults: IConnectionString): ConnectionString;
 }
