@@ -90,7 +90,7 @@ For details and examples see the [WiKi Pages].
 ## API
 
 After parsing you always get a class instance with all the properties, plus method `build`,
-which can construct a new the connection string from the current properties.
+which can construct a new connection string from the current properties.
 
 Example:
  
