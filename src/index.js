@@ -47,7 +47,7 @@
         if (cs[0] !== '/') {
             if (cs[0] === '[') {
                 // It is an IPv6, with [::] being the shortest possible
-                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+))?)/i);
+                m = cs.match(/((\[[0-9a-z:%]{2,45}])(?::([0-9]+))?)/i);
             } else {
                 // It is either IPv4 or a name
                 m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+))?)/i);
@@ -90,34 +90,50 @@
         }
     }
 
-    function build() {
-        var s = '';
-        if (this.protocol) {
-            s += encodeURI(this.protocol) + '://';
+    function build(defaults) {
+        defaults = defaults || {};
+        var cs = {
+            protocol: this.protocol || defaults.protocol,
+            host: this.host || defaults.host,
+            hostname: this.hostname || defaults.hostname,
+            port: this.port || defaults.port,
+            user: this.user || defaults.user,
+            password: this.password || defaults.password,
+            segments: this.segments || defaults.segments,
+            params: this.params || defaults.params
+        };
+
+        if (cs.port || cs.hostname) {
+            cs.host = (cs.hostname || '') + (cs.port ? (':' + cs.port) : '');
         }
-        if (this.user) {
-            s += encodeURI(this.user);
-            if (this.password) {
-                s += ':' + encodeURI(this.password);
+
+        var s = '';
+        if (cs.protocol) {
+            s += encodeURI(cs.protocol) + '://';
+        }
+        if (cs.user) {
+            s += encodeURI(cs.user);
+            if (cs.password) {
+                s += ':' + encodeURI(cs.password);
             }
             s += '@';
         } else {
-            if (this.password) {
-                s += ':' + encodeURI(this.password) + '@';
+            if (cs.password) {
+                s += ':' + encodeURI(cs.password) + '@';
             }
         }
-        if (this.host) {
-            s += this.host;
+        if (cs.host) {
+            s += cs.host;
         }
-        if (Array.isArray(this.segments) && this.segments.length) {
-            this.segments.forEach(function (seg) {
+        if (Array.isArray(cs.segments) && cs.segments.length) {
+            cs.segments.forEach(function (seg) {
                 s += '/' + encodeURI(seg);
             });
         }
-        if (this.params) {
+        if (cs.params) {
             var params = [];
-            for (var a in this.params) {
-                params.push(encodeURI(a) + '=' + encodeURI(this.params[a]));
+            for (var a in cs.params) {
+                params.push(encodeURI(a) + '=' + encodeURI(cs.params[a]));
             }
             if (params.length) {
                 s += '?' + params.join('&');
@@ -136,3 +152,4 @@
         window.ConnectionString = ConnectionString;
     }
 })(this);
+

@@ -89,15 +89,22 @@ For details and examples see the [WiKi Pages].
 
 ## API
 
-After parsing you always get a class instance with all the properties, plus method `build`,
-which can construct a new connection string from the current properties.
+After parsing you always get a class instance with all the properties, plus method `build([defaults])`,
+which can construct a new connection string from the current properties, using an optional set of defaults.
 
 Example:
  
 ```js
-var a = new ConnectionString('abc://');
-a.host = a.host || 'localhost'; // set a default host
+var a = new ConnectionString('abc://localhost');
+
 a.build(); //=> 'abc://localhost'
+
+// using defaults:
+a.build({
+    hostname: '127.0.0.1',
+    port: 12345,
+    user: 'tester'
+}); //=> 'abc://tester@localhost:12345'
 ```
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki

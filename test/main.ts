@@ -10,3 +10,11 @@ var segment1: string = a.segments[0];
 var param1: string = a.params['first'];
 
 var cs = a.build();
+var cs = a.build({});
+
+cs = a.build({
+    hostname: 'server',
+    port: 123
+});
+
+cs = a.build(new ConnectionString(''));

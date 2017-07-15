@@ -109,18 +109,18 @@ describe('host', function () {
     it('must recognize IPv6 addresses', function () {
         expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
             host: '[2001:0db8:0000:0000:0000:FF00:0042:8329]',
-            hostname: '2001:0db8:0000:0000:0000:FF00:0042:8329'
+            hostname: '[2001:0db8:0000:0000:0000:FF00:0042:8329]'
         });
         expect(parse('[2001:0db8]:123')).toEqual({
             host: '[2001:0db8]:123',
-            hostname: '2001:0db8',
+            hostname: '[2001:0db8]',
             port: 123
         });
     });
     it('must not treat IPv6 scopes as special characters', function () {
         expect(parse('[2001:0db8%20]')).toEqual({
             host: '[2001:0db8%20]',
-            hostname: '2001:0db8%20'
+            hostname: '[2001:0db8%20]'
         });
     });
     it('must skip invalid IPv6 addresses', function () {
@@ -131,12 +131,12 @@ describe('host', function () {
     it('must ignore the invalid ports', function () {
         // TODO: consider adding, or not?
         // expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
-        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
+        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '[::]'});
     });
     it('must allow valid ports', function () {
-        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '::', port: 1});
-        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '::', port: 1});
-        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '::', port: 123});
+        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '[::]', port: 1});
+        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '[::]', port: 1});
+        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '[::]', port: 123});
     });
 });
 
@@ -228,6 +228,9 @@ describe('params', function () {
         expect(parse('://?par1=123')).toEqual({params: {par1: '123'}});
         expect(parse(':///?par1=123')).toEqual({params: {par1: '123'}});
     });
+    it('it must worl with the user only', function () {
+        expect(parse('user@?p1=123')).toEqual({user: 'user', params: {p1: '123'}});
+    });
 });
 
 describe('complex', function () {
@@ -296,5 +299,10 @@ describe('build', function () {
         var a = parse('');
         a.params = {};
         expect(a.build()).toBe('');
+    });
+    it('must use default values', function () {
+        expect(parse('').build({port: 123})).toBe(':123');
+        expect(parse('').build({hostname: 'name', segments: ['one']})).toBe('name/one');
+        expect(parse('user@?first=').build({params: {first: 1}})).toBe('user@?first=1');
     });
 });
