@@ -60,26 +60,45 @@ var parse = require('connection-string');
 var obj = parse('my-server:12345');
 ```
 
+or as a class:
+
+```js
+var ConnectionString = require('connection-string');
+var obj = new ConnectionString('my-server:12345');
+```
+
 * **Browsers**
 
 ```html
 <script src="./connection-string/src"></script>
 
 <script>
-    var obj = parseConnectionString('my-server:12345');
+    var obj = new ConnectionString('my-server:12345');
 </script>
 ```
 
 * **TypeScript**
 
 ```ts
-import * as parse from 'connection-string'
-import {ConnectionOptions} from 'connection-string'
+import {ConnectionString} from 'connection-string'
 
-var a: ConnectionOptions = parse('my-server:12345');
+var a = new ConnectionString('my-server:12345');
 ```
 
 For details and examples see the [WiKi Pages].
+
+## API
+
+After parsing you always get a class instance with all the properties, plus method `build`,
+which can construct a new the connection string from the current properties.
+
+Example:
+ 
+```js
+var a = new ConnectionString('abc://');
+a.host = a.host || 'localhost'; // set a default host
+a.build(); //=> 'abc://localhost'
+```
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format

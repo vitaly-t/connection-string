@@ -1,6 +1,10 @@
 'use strict';
 
-var parse = require('../src');
+var ConnectionString = require('../src');
+
+function parse(cs) {
+    return new ConnectionString(cs);
+}
 
 describe('init', function () {
     it('must throw on a non-string', function () {
@@ -20,9 +24,12 @@ describe('init', function () {
             parse('ab\tc');
         }).toThrow(new Error('Invalid URL character at position 2'));
     });
-
     it('must allow an empty string', function () {
         expect(parse('')).toEqual({});
+    });
+    it('must support function-style calls', function () {
+        // eslint-disable-next-line
+        expect(ConnectionString('abc://')).toEqual({protocol: 'abc'});
     });
 });
 
@@ -250,5 +257,44 @@ describe('complex', function () {
     });
     it('must not lose details after the port', function () {
         expect(parse(':123/one')).toEqual({host: ':123', port: 123, segments: ['one']});
+    });
+});
+
+describe('build', function () {
+    it('must encode protocol', function () {
+        expect(parse('abc%20123://').build()).toBe('abc%20123://');
+    });
+    it('must encode user', function () {
+        expect(parse('user%20123@').build()).toBe('user%20123@');
+    });
+    it('must encode password', function () {
+        expect(parse(':pass%20123@').build()).toBe(':pass%20123@');
+    });
+    it('must support user + password', function () {
+        expect(parse('user:pass@').build()).toBe('user:pass@');
+    });
+    it('must support solo hostname', function () {
+        expect(parse('server').build()).toBe('server');
+    });
+    it('must support hostname + port', function () {
+        expect(parse('server:123').build()).toBe('server:123');
+    });
+    it('must encode segments', function () {
+        expect(parse('/a%20b').build()).toBe('/a%20b');
+        expect(parse('/a/b%20/c').build()).toBe('/a/b%20/c');
+    });
+    it('must ignore empty segment list', function () {
+        var a = parse('');
+        a.segments = [];
+        expect(a.build()).toBe('');
+    });
+    it('must encode params', function () {
+        expect(parse('?a%20b=1').build()).toBe('?a%20b=1');
+        expect(parse('?a=1&b%20=2').build()).toBe('?a=1&b%20=2');
+    });
+    it('must ignore empty parameter list', function () {
+        var a = parse('');
+        a.params = {};
+        expect(a.build()).toBe('');
     });
 });

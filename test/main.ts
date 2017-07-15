@@ -1,7 +1,6 @@
-import * as parse from '../src'
-import {ConnectionOptions} from '../src'
+import {ConnectionString} from '../src'
 
-var a: ConnectionOptions = parse('protocol://');
+var a = new ConnectionString('protocol://');
 
 if ('protocol' in a) {
     var protocol = a.protocol;
@@ -9,3 +8,5 @@ if ('protocol' in a) {
 
 var segment1: string = a.segments[0];
 var param1: string = a.params['first'];
+
+var cs = a.build();
