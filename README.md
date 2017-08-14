@@ -101,7 +101,7 @@ For details and examples see the [WiKi Pages].
 ## API
 
 Both the root function and class `ConnectionString` take a second optional parameter `defaults`.
-If it is specified, the parser will call method `setDefauts` automatically (see below). 
+If it is specified, the parser will call method `setDefaults` automatically (see below). 
 
 The object returned by the parser contains all the properties as specified in the connection string,
 plus two methods: `setDefaults` and `build` (see below).
