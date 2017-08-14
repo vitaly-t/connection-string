@@ -1,14 +1,14 @@
 {
   "name": "connection-string",
-  "version": "0.3.1",
-  "description": "URL Connection String Parser.",
+  "version": "0.4.0",
+  "description": "Advanced URL Connection String Parser.",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
   "scripts": {
     "test": "jasmine-node test",
     "coverage": "istanbul cover ./node_modules/jasmine-node/bin/jasmine-node test",
     "travis": "npm run lint && istanbul cover ./node_modules/jasmine-node/bin/jasmine-node test --captureExceptions && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "lint": "./node_modules/.bin/eslint ./lib ./test"
+    "lint": "./node_modules/.bin/eslint ./src ./test/*Spec.js"
   },
   "files": [
     "src"
@@ -38,9 +38,9 @@
     "npm": ">=1.4"
   },
   "devDependencies": {
-    "coveralls": "2.11",
-    "eslint": "^4.2.0",
-    "istanbul": "0.4",
-    "jasmine-node": "1.14"
+    "coveralls": "~2.11.16",
+    "eslint": "~4.4.1",
+    "istanbul": "~0.4.5",
+    "jasmine-node": "~1.14.5"
   }
 }

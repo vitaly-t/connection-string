@@ -1,7 +1,7 @@
 connection-string
 =================
 
-URL Connection String Parser, with fully optional syntax.
+Advanced URL Connection String Parser, with fully optional syntax.
 
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
@@ -104,7 +104,7 @@ Both the root function and class `ConnectionString` take a second optional param
 If it is specified, the parser will call method `setDefauts` automatically (see below). 
 
 The object returned by the parser contains all the properties as specified in the connection string,
-plus two methods: `setDefauilts` and `build` (see below).
+plus two methods: `setDefaults` and `build` (see below).
 
 #### Method `setDefaults`
 
@@ -112,11 +112,28 @@ plus two methods: `setDefauilts` and `build` (see below).
 setDefaults(defaults) => void
 ```
 
-The method takes an object that default values and sets those for all the properties that were not
+The method takes an object with default values and sets those for all the properties that were not
 specified within the connection string. 
 
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
 passing `defaults` into the parser/constructor.
+
+Example:
+ 
+```js
+var a = new ConnectionString('abc://localhost', {
+    // defaults:
+    port: 123,
+    user: 'guest'
+});
+// a => {
+//   protocol: 'abc',
+//   host: 'localhost',
+//   hostname: 'localhost',
+//   port: 123,
+//   user: 'guest'
+// }
+```
 
 #### Method `build`
 
@@ -124,21 +141,14 @@ passing `defaults` into the parser/constructor.
 build() => string
 ```
 
-Builds and returns the connection string from all the current properties.
+Constructs and returns the connection string from all the current properties.
 
 Example:
  
 ```js
 var a = new ConnectionString('abc://localhost');
-
-a.build(); //=> 'abc://localhost'
-
-// using defaults:
-a.build({
-    hostname: '127.0.0.1',
-    port: 12345,
-    user: 'tester'
-}); //=> 'abc://tester@localhost:12345'
+a.setDefaults({user: 'guest', port: 123});
+a.build(); //=> 'abc://guest:@localhost:123'
 ```
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki

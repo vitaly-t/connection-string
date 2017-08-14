@@ -172,7 +172,7 @@
             this.params = defaults.params;
         }
         if (this.port || this.hostname) {
-            this.host = (this.hostname || '') + (this.port >= 0 ? (':' + parseInt(this.port)) : '');
+            this.host = (this.hostname || '') + (this.port >= 0 ? (':' + this.port) : '');
         }
         return this;
     }
