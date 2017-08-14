@@ -106,40 +106,15 @@ If it is specified, the parser will call method `setDefaults` automatically (see
 The object returned by the parser contains all the properties as specified in the connection string,
 plus two methods: `setDefaults` and `build` (see below).
 
-#### Method `setDefaults`
+#### Method `setDefaults(defaults) => ConnectionString`
 
-```
-setDefaults(defaults) => void
-```
-
-The method takes an object with default values and sets those for all the properties that were not
-specified within the connection string. 
+The method takes an object with default values, sets those for all the properties that were not
+specified within the connection string, and returns the same object (itself). 
 
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
 passing `defaults` into the parser/constructor.
 
-Example:
- 
-```js
-var a = new ConnectionString('abc://localhost', {
-    // defaults:
-    port: 123,
-    user: 'guest'
-});
-// a => {
-//   protocol: 'abc',
-//   host: 'localhost',
-//   hostname: 'localhost',
-//   port: 123,
-//   user: 'guest'
-// }
-```
-
-#### Method `build`
-
-```
-build() => string
-```
+#### Method `build() => string`
 
 Constructs and returns the connection string from all the current properties.
 

@@ -11,12 +11,12 @@ if ('protocol' in a) {
 }
 
 var segment1: string = a.segments[0];
-var param1: number = a.params['first'];
+var param1: string = a.params['first'];
 
-a.params['first'] = 123;
+a.params['first'] = 'hello';
 
 a.params = {
-    first: 123,
+    first: '123',
     second: 'hello!'
 };
 
