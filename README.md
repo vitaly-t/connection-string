@@ -148,7 +148,7 @@ Example:
 ```js
 var a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest', port: 123});
-a.build(); //=> 'abc://guest:@localhost:123'
+a.build(); //=> 'abc://guest@localhost:123'
 ```
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
