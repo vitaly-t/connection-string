@@ -30,10 +30,21 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
+## Why use it?
+
+Unlike the standard URL parser, this one supports the following:
+
+* Fully optional syntax for every element in the connection string
+* Configuration of defaults for any parameter that's missing
+* Friendlier access to the URL's segments and parameters
+* TypeScript declarations are deployed with the library
+ 
 **Short-syntax examples:**
 
 * `localhost` => `{host: 'localhost', hostname: 'localhost'}`
 * `localhost:12345` => `{host: 'localhost:12345', hostname: 'localhost', port: 12345}`
+* `1.2.3.4:123` => `{host: '1.2.3.4:123', hostname: '1.2.3.4', port: 123}`
+* `[12ab:34cd]:123` => `{host: '[12ab:34cd]:123', hostname: '12ab:34cd', port: 123}`
 * `abc:///seg1?p1=val` => `{protocol: 'abc', segments: ['seg1'], params: {p1: 'val'}}`
 * `:12345` => `{host: ':12345', port: 12345}`
 * `username@` => `{user: 'username'}`
@@ -89,8 +100,31 @@ For details and examples see the [WiKi Pages].
 
 ## API
 
-After parsing you always get a class instance with all the properties, plus method `build([defaults])`,
-which can construct a new connection string from the current properties, using an optional set of defaults.
+Both the root function and class `ConnectionString` take a second optional parameter `defaults`.
+If it is specified, the parser will call method `setDefauts` automatically (see below). 
+
+The object returned by the parser contains all the properties as specified in the connection string,
+plus two methods: `setDefauilts` and `build` (see below).
+
+#### Method `setDefaults`
+
+```
+setDefaults(defaults) => void
+```
+
+The method takes an object that default values and sets those for all the properties that were not
+specified within the connection string. 
+
+You can make use of this method either explicitly, after constructing the class, or implicitly, by 
+passing `defaults` into the parser/constructor.
+
+#### Method `build`
+
+```
+build() => string
+```
+
+Builds and returns the connection string from all the current properties.
 
 Example:
  

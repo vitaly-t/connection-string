@@ -51,20 +51,29 @@
         if (cs[0] !== '/') {
             if (cs[0] === '[') {
                 // It is an IPv6, with [::] being the shortest possible
-                m = cs.match(/((\[[0-9a-z:%]{2,45}])(?::([0-9]+))?)/i);
+                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
             } else {
                 // It is either IPv4 or a name
-                m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+))?)/i);
+                m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+[^/?]*))?)/i);
             }
             if (m) {
-                if (m[1]) {
-                    this.host = m[1];
-                }
                 if (m[2]) {
                     this.hostname = m[2];
                 }
                 if (m[3]) {
-                    this.port = parseInt(m[3]);
+                    var port = parseInt(m[3]);
+                    if (isFinite(port) && port.toString() === m[3]) {
+                        this.port = port;
+                    }
+                }
+                if (this.hostname || this.port >= 0) {
+                    this.host = '';
+                    if (this.hostname) {
+                        this.host = cs[0] === '[' ? ('[' + this.hostname + ']') : this.hostname;
+                    }
+                    if (this.port >= 0) {
+                        this.host += ':' + this.port;
+                    }
                 }
                 cs = cs.substr(m[0].length);
             }

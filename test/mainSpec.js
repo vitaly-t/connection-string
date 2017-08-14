@@ -121,18 +121,18 @@ describe('host', function () {
     it('must recognize IPv6 addresses', function () {
         expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
             host: '[2001:0db8:0000:0000:0000:FF00:0042:8329]',
-            hostname: '[2001:0db8:0000:0000:0000:FF00:0042:8329]'
+            hostname: '2001:0db8:0000:0000:0000:FF00:0042:8329'
         });
         expect(parse('[2001:0db8]:123')).toEqual({
             host: '[2001:0db8]:123',
-            hostname: '[2001:0db8]',
+            hostname: '2001:0db8',
             port: 123
         });
     });
     it('must not treat IPv6 scopes as special characters', function () {
         expect(parse('[2001:0db8%20]')).toEqual({
             host: '[2001:0db8%20]',
-            hostname: '[2001:0db8%20]'
+            hostname: '2001:0db8%20'
         });
     });
     it('must skip invalid IPv6 addresses', function () {
@@ -141,14 +141,13 @@ describe('host', function () {
         expect(parse('[a-b-c]')).toEqual({});
     });
     it('must ignore the invalid ports', function () {
-        // TODO: consider adding, or not?
-        // expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
-        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '[::]'});
+        expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
+        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
     });
     it('must allow valid ports', function () {
-        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '[::]', port: 1});
-        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '[::]', port: 1});
-        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '[::]', port: 123});
+        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '::', port: 1});
+        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '::', port: 1});
+        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '::', port: 123});
     });
 });
 
@@ -165,14 +164,12 @@ describe('port', function () {
             port: 0
         });
     });
-    // TODO: consider adding, or not?
-    /*
     it('must not allow invalid terminators', function () {
         expect(parse(':12345a')).toEqual({});
         expect(parse('@:12345a')).toEqual({});
         expect(parse(':abc')).toEqual({});
         expect(parse('@:abc123')).toEqual({});
-    });*/
+    });
 });
 
 describe('segments', function () {
@@ -312,12 +309,6 @@ describe('build', function () {
         a.params = {};
         expect(a.build()).toBe('');
     });
-    /*
-    it('must use default values', function () {
-        expect(parse('').build({port: 123})).toBe(':123');
-        expect(parse('').build({hostname: 'name', segments: ['one']})).toBe('name/one');
-        expect(parse('user@?first=').build({params: {first: 1}})).toBe('user@?first=1');
-    });*/
 });
 
 describe('setDefaults', function () {
