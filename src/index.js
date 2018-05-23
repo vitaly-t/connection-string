@@ -1,6 +1,9 @@
 (function (window) {
     'use strict';
 
+    var encode = encodeURIComponent;
+    var decode = decodeURIComponent;
+
     function ConnectionString(cs, defaults) {
 
         if (!(this instanceof ConnectionString)) {
@@ -27,7 +30,7 @@
         // extract the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
         if (m) {
-            var protocol = decodeURI(m[0].replace(/:\/\//, ''));
+            var protocol = decode(m[0].replace(/:\/\//, ''));
             if (protocol) {
                 this.protocol = protocol;
             }
@@ -38,10 +41,10 @@
         m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
         if (m) {
             if (m[1]) {
-                this.user = decodeURI(m[1]);
+                this.user = decode(m[1]);
             }
             if (m[2]) {
-                this.password = decodeURI(m[2]);
+                this.password = decode(m[2]);
             }
             cs = cs.substr(m[0].length);
         }
@@ -61,9 +64,11 @@
                     this.hostname = m[2];
                 }
                 if (m[3]) {
-                    var port = parseInt(m[3]);
-                    if (isFinite(port) && port.toString() === m[3]) {
+                    var p = m[3], port = parseInt(p);
+                    if (port >= 0 && port <= 65535 && port.toString() === p) {
                         this.port = port;
+                    } else {
+                        throw new Error('Invalid port: ' + p);
                     }
                 }
                 if (this.hostname || this.port >= 0) {
@@ -83,7 +88,7 @@
         m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
             this.segments = m.map(function (s) {
-                return decodeURI(s.substr(1));
+                return decode(s.substr(1));
             });
         }
 
@@ -96,7 +101,7 @@
                 var params = {};
                 m.forEach(function (s) {
                     var a = s.split('=');
-                    params[decodeURI(a[0])] = decodeURI(a[1]);
+                    params[decode(a[0])] = decode(a[1]);
                 });
                 this.params = params;
             }
@@ -110,17 +115,17 @@
     function build() {
         var s = '';
         if (this.protocol) {
-            s += encodeURI(this.protocol) + '://';
+            s += encode(this.protocol) + '://';
         }
         if (this.user) {
-            s += encodeURI(this.user);
+            s += encode(this.user);
             if (this.password) {
-                s += ':' + encodeURI(this.password);
+                s += ':' + encode(this.password);
             }
             s += '@';
         } else {
             if (this.password) {
-                s += ':' + encodeURI(this.password) + '@';
+                s += ':' + encode(this.password) + '@';
             }
         }
         if (this.host) {
@@ -128,13 +133,13 @@
         }
         if (Array.isArray(this.segments) && this.segments.length) {
             this.segments.forEach(function (seg) {
-                s += '/' + encodeURI(seg);
+                s += '/' + encode(seg);
             });
         }
         if (this.params) {
             var params = [];
             for (var a in this.params) {
-                params.push(encodeURI(a) + '=' + encodeURI(this.params[a]));
+                params.push(encode(a) + '=' + encode(this.params[a]));
             }
             if (params.length) {
                 s += '?' + params.join('&');

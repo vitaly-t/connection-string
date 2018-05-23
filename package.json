@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Advanced URL Connection String Parser.",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
@@ -38,9 +38,9 @@
     "npm": ">=1.4"
   },
   "devDependencies": {
-    "coveralls": "~2.11.16",
-    "eslint": "~4.4.1",
-    "istanbul": "~0.4.5",
-    "jasmine-node": "~1.14.5"
+    "coveralls": "3.0.1",
+    "eslint": "4.19.1",
+    "istanbul": "0.4.5",
+    "jasmine-node": "1.14.5"
   }
 }

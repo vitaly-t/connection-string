@@ -6,6 +6,10 @@ function parse(cs, defaults) {
     return new ConnectionString(cs, defaults);
 }
 
+function create(obj) {
+    return (new ConnectionString('', obj)).build();
+}
+
 describe('init', function () {
     it('must throw on a non-string', function () {
         var error = new TypeError('Invalid connection string!');
@@ -54,7 +58,7 @@ describe('protocol', function () {
         expect(parse('://')).toEqual({});
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse('a%20b://')).toEqual({protocol: 'a b'});
+        expect(parse('a%20b%3F://')).toEqual({protocol: 'a b?'});
     });
     it('must support special symbols', function () {
         expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_.+!*\'()'});
@@ -69,7 +73,7 @@ describe('user', function () {
         expect(parse('0@')).toEqual({user: '0'});
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse('First%20name@')).toEqual({user: 'First name'});
+        expect(parse('First%20name%3F@')).toEqual({user: 'First name?'});
     });
     it('must support special symbols', function () {
         expect(parse('A9z$-_.+!*\'()@')).toEqual({user: 'A9z$-_.+!*\'()'});
@@ -81,7 +85,7 @@ describe('password', function () {
         expect(parse(':pass@')).toEqual({password: 'pass'});
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse(':pass%20123@')).toEqual({password: 'pass 123'});
+        expect(parse(':pass%20123%3F@')).toEqual({password: 'pass 123?'});
     });
     it('must support special symbols', function () {
         expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_.+!*\'()'});
@@ -140,8 +144,10 @@ describe('host', function () {
         expect(parse('[a]:123')).toEqual({});
         expect(parse('[a-b-c]')).toEqual({});
     });
-    it('must ignore the invalid ports', function () {
-        expect(parse('[::]:1a')).toEqual({host: '[::]', hostname: '::'});
+    it('must throw on invalid ports', function () {
+        expect(function () {
+            parse('[::]:1a');
+        }).toThrow('Invalid port: 1a');
         expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
     });
     it('must allow valid ports', function () {
@@ -165,8 +171,8 @@ describe('port', function () {
         });
     });
     it('must not allow invalid terminators', function () {
-        expect(parse(':12345a')).toEqual({});
-        expect(parse('@:12345a')).toEqual({});
+        //expect(parse(':12345a')).toEqual({});
+        //expect(parse('@:12345a')).toEqual({});
         expect(parse(':abc')).toEqual({});
         expect(parse('@:abc123')).toEqual({});
     });
@@ -191,7 +197,7 @@ describe('segments', function () {
         expect(parse(':////one')).toEqual({segments: ['one']});
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse('/one%20/%20two')).toEqual({segments: ['one ', ' two']});
+        expect(parse('/one%20/%3Ftwo')).toEqual({segments: ['one ', '?two']});
     });
     it('must support special symbols', function () {
         expect(parse('/$-_.+!*\'()')).toEqual({segments: ['$-_.+!*\'()']});
@@ -220,9 +226,9 @@ describe('params', function () {
         });
     });
     it('must decode URL-encoded characters', function () {
-        expect(parse('?a%20b=test')).toEqual({
+        expect(parse('?a%20b=test%3Fhere')).toEqual({
             params: {
-                'a b': 'test'
+                'a b': 'test?here'
             }
         });
     });
@@ -254,10 +260,10 @@ describe('complex', function () {
         });
     });
     it('protocol + params', function () {
-        expect(parse('a:///?one=1')).toEqual({
+        expect(parse('a:///?one=1%3F2')).toEqual({
             protocol: 'a',
             params: {
-                one: '1'
+                one: '1?2'
             }
         });
         expect(parse('a:////?one=1')).toEqual({
@@ -274,13 +280,13 @@ describe('complex', function () {
 
 describe('build', function () {
     it('must encode protocol', function () {
-        expect(parse('abc%20123://').build()).toBe('abc%20123://');
+        expect(create({protocol: 'abc 123?456'})).toBe('abc%20123%3F456://');
     });
     it('must encode user', function () {
-        expect(parse('user%20123@').build()).toBe('user%20123@');
+        expect(create({user: 'user 1?2'})).toBe('user%201%3F2@');
     });
     it('must encode password', function () {
-        expect(parse(':pass%20123@').build()).toBe(':pass%20123@');
+        expect(create({password: 'pass 1?2'})).toBe(':pass%201%3F2@');
     });
     it('must support user + password', function () {
         expect(parse('user:pass@').build()).toBe('user:pass@');
