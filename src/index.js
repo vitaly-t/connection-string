@@ -139,7 +139,12 @@
         if (this.params) {
             var params = [];
             for (var a in this.params) {
-                params.push(encode(a) + '=' + encode(this.params[a]));
+                var value = this.params[a];
+                // TODO: This needs some good testing, including the reverse parsing:
+                if (typeof value !== 'string') {
+                    value = JSON.stringify(value);
+                }
+                params.push(encode(a) + '=' + encode(value));
             }
             if (params.length) {
                 s += '?' + params.join('&');
