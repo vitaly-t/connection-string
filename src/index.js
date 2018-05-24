@@ -170,12 +170,30 @@
         if (!this.password && isText(defaults.password)) {
             this.password = trim(defaults.password);
         }
+        // TODO: This needs more test coverage:
         if (!this.segments && Array.isArray(defaults.segments)) {
-            this.segments = defaults.segments;
+            var s = defaults.segments.filter(isText);
+            if (s.length) {
+                this.segments = s;
+            }
         }
-        // TODO: Default for parameters should allow merging logic.
-        if (!this.params && defaults.params && typeof defaults.params === 'object') {
-            this.params = defaults.params;
+        // TODO: This needs more test coverage:
+        if (defaults.params && typeof defaults.params === 'object') {
+            var keys = Object.keys(defaults.params);
+            if (keys.length) {
+                if (this.params) {
+                    for (var a in defaults.params) {
+                        if (!(a in this.params)) {
+                            this.params[a] = defaults.params[a];
+                        }
+                    }
+                } else {
+                    this.params = {};
+                    for (var b in defaults.params) {
+                        this.params[b] = defaults.params[b];
+                    }
+                }
+            }
         }
         if (this.port || this.hostname) {
             this.host = (this.hostname || '') + (this.port >= 0 ? (':' + this.port) : '');
