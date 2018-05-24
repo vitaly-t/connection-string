@@ -10,7 +10,7 @@ interface IConnectionString {
 }
 
 export class ConnectionString implements IConnectionString {
-    constructor(cd: string, defaults?: IConnectionString)
+    constructor(cs: string, defaults?: IConnectionString)
 
     protocol?: string;
     user?: string;
