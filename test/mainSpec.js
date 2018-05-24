@@ -307,8 +307,13 @@ describe('build', function () {
         expect(a.build()).toBe('');
     });
     it('must encode params', function () {
-        expect(parse('?a%20b=1').build()).toBe('?a%20b=1');
-        expect(parse('?a=1&b%20=2').build()).toBe('?a=1&b%20=2');
+        var obj = {
+            text: 1,
+            values: ['one', true]
+        };
+        var a = parse('', {params: {value1: obj, value2: 'text'}});
+        var b = parse(a.build());
+        expect(JSON.parse(b.params.value1)).toEqual(obj);
     });
     it('must ignore empty parameter list', function () {
         var a = parse('');
@@ -353,6 +358,21 @@ describe('setDefaults', function () {
     });
     it('must set the default params', function () {
         expect(parse('').setDefaults({params: {p1: 'abc'}})).toEqual({params: {p1: 'abc'}});
+    });
+    it('must skip empty params', function () {
+        expect(parse('').setDefaults({params: {}})).toEqual({});
+    });
+    it('must merge params', function () {
+        expect(parse('?value1=1').setDefaults({params: {value1: 0, value2: 2}})).toEqual({
+            params: {
+                value1: '1',
+                value2: 2
+            }
+        });
+    });
+    it('must ignore empty segments', function () {
+        expect(parse('').setDefaults({segments: ['', 123, true, '  ']})).toEqual({});
+        expect(parse('').setDefaults({segments: 123})).toEqual({});
     });
 
 });

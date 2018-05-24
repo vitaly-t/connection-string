@@ -36,6 +36,7 @@ Unlike the standard URL parser, this one supports the following:
 
 * Fully optional syntax for every element in the connection string
 * Configuration of defaults for any parameter that's missing
+* Construction of a connection string from all parameters
 * Friendlier access to the URL's segments and parameters
 * TypeScript declarations are deployed with the library
  
@@ -68,14 +69,22 @@ $ npm install connection-string
 
 ```js
 const parse = require('connection-string');
-const obj = parse('my-server:12345');
+
+const obj1 = parse('my-server:12345');
+
+// with a default:
+const obj2 = parse('my-server:12345', {user: 'admin'});
 ```
 
 or as a class:
 
 ```js
 const ConnectionString = require('connection-string');
-const obj = new ConnectionString('my-server:12345');
+
+const obj1 = new ConnectionString('my-server:12345');
+
+// with a default:
+const obj2 = new ConnectionString('my-server:12345', {user: 'admin'});
 ```
 
 * **Browsers**
@@ -116,7 +125,7 @@ passing `defaults` into the parser/constructor.
 
 #### Method `build() => string`
 
-Constructs and returns the connection string from all the current properties.
+Constructs and returns a connection string from all the current properties.
 
 Example:
  
@@ -125,6 +134,9 @@ const a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest', port: 123});
 a.build(); //=> 'abc://guest@localhost:123'
 ```
+
+For any parameter within `params`, if the value is not a string, it will be converted into a JSON
+string first, and then URL-encrypted.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format

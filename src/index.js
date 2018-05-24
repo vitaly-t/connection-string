@@ -140,7 +140,6 @@
             var params = [];
             for (var a in this.params) {
                 var value = this.params[a];
-                // TODO: This needs some good testing, including the reverse parsing:
                 if (typeof value !== 'string') {
                     value = JSON.stringify(value);
                 }
@@ -175,14 +174,12 @@
         if (!this.password && isText(defaults.password)) {
             this.password = trim(defaults.password);
         }
-        // TODO: This needs more test coverage:
         if (!this.segments && Array.isArray(defaults.segments)) {
             var s = defaults.segments.filter(isText);
             if (s.length) {
                 this.segments = s;
             }
         }
-        // TODO: This needs more test coverage:
         if (defaults.params && typeof defaults.params === 'object') {
             var keys = Object.keys(defaults.params);
             if (keys.length) {
