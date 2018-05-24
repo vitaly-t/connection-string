@@ -136,7 +136,7 @@ a.build(); //=> 'abc://guest@localhost:123'
 ```
 
 For any parameter within `params`, if the value is not a string, it will be converted into a JSON
-string first, and then URL-encrypted.
+string first, and then URL-encoded.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
