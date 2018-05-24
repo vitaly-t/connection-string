@@ -173,6 +173,7 @@
         if (!this.segments && Array.isArray(defaults.segments)) {
             this.segments = defaults.segments;
         }
+        // TODO: Default for parameters should allow merging logic.
         if (!this.params && defaults.params && typeof defaults.params === 'object') {
             this.params = defaults.params;
         }

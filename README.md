@@ -67,15 +67,15 @@ $ npm install connection-string
 * **Node.js**
 
 ```js
-var parse = require('connection-string');
-var obj = parse('my-server:12345');
+const parse = require('connection-string');
+const obj = parse('my-server:12345');
 ```
 
 or as a class:
 
 ```js
-var ConnectionString = require('connection-string');
-var obj = new ConnectionString('my-server:12345');
+const ConnectionString = require('connection-string');
+const obj = new ConnectionString('my-server:12345');
 ```
 
 * **Browsers**
@@ -93,7 +93,7 @@ var obj = new ConnectionString('my-server:12345');
 ```ts
 import {ConnectionString} from 'connection-string'
 
-var a = new ConnectionString('my-server:12345');
+const a = new ConnectionString('my-server:12345');
 ```
 
 For details and examples see the [WiKi Pages].
@@ -121,7 +121,7 @@ Constructs and returns the connection string from all the current properties.
 Example:
  
 ```js
-var a = new ConnectionString('abc://localhost');
+const a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest', port: 123});
 a.build(); //=> 'abc://guest@localhost:123'
 ```
