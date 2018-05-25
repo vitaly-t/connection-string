@@ -339,12 +339,11 @@ describe('setDefaults', function () {
         expect(parse('').setDefaults({host: 'abc'})).toEqual({host: 'abc'});
         expect(parse('').setDefaults({hostname: 'abc'})).toEqual({host: 'abc', hostname: 'abc'});
         expect(parse('').setDefaults({port: 123})).toEqual({host: ':123', port: 123});
-        expect(parse('').setDefaults({port: '123'})).toEqual({host: ':123', port: 123});
     });
     it('must ignore invalid ports', function () {
-        expect(parse('').setDefaults({port: ''})).toEqual({});
+        expect(parse('').setDefaults({port: '123'})).toEqual({});
         expect(parse('').setDefaults({port: 'a'})).toEqual({});
-        expect(parse('').setDefaults({port: 0})).toEqual({});
+        expect(parse('').setDefaults({port: -1})).toEqual({});
         expect(parse('').setDefaults({port: '0'})).toEqual({});
     });
     it('must set the default user', function () {

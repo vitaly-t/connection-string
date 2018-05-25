@@ -3,6 +3,7 @@
 
     var encode = encodeURIComponent;
     var decode = decodeURIComponent;
+    var invalidDefaults = 'Invalid \'defaults\' parameter!';
 
     function ConnectionString(cs, defaults) {
 
@@ -15,7 +16,7 @@
         }
 
         if (defaults !== undefined && defaults !== null && typeof defaults !== 'object') {
-            throw new TypeError('Invalid \'defaults\' parameter!');
+            throw new TypeError(invalidDefaults);
         }
 
         // remove all trailing space symbols:
@@ -154,27 +155,28 @@
 
     function setDefaults(defaults) {
         if (!defaults || typeof defaults !== 'object') {
-            throw new TypeError('Invalid \'defaults\' parameter!');
+            throw new TypeError(invalidDefaults);
         }
-        if (!this.protocol && isText(defaults.protocol)) {
+        if (!('protocol' in this) && isText(defaults.protocol)) {
             this.protocol = trim(defaults.protocol);
         }
-        if (!this.host && isText(defaults.host)) {
+        if (!('host' in this) && isText(defaults.host)) {
             this.host = trim(defaults.host);
         }
-        if (!this.hostname && isText(defaults.hostname)) {
+        if (!('hostname' in this) && isText(defaults.hostname)) {
             this.hostname = trim(defaults.hostname);
         }
-        if (!this.port && defaults.port > 0) {
-            this.port = parseInt(defaults.port);
+        var p = defaults.port;
+        if (!('port' in this) && Number.isInteger(p) && p >= 0 && p <= 65535) {
+            this.port = p;
         }
-        if (!this.user && isText(defaults.user)) {
+        if (!('user' in this) && isText(defaults.user)) {
             this.user = trim(defaults.user);
         }
-        if (!this.password && isText(defaults.password)) {
+        if (!('password' in this) && isText(defaults.password)) {
             this.password = trim(defaults.password);
         }
-        if (!this.segments && Array.isArray(defaults.segments)) {
+        if (!('segments' in this) && Array.isArray(defaults.segments)) {
             var s = defaults.segments.filter(isText);
             if (s.length) {
                 this.segments = s;
