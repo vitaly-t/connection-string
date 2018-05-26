@@ -138,8 +138,17 @@
                 s += ':' + encode(this.password) + '@';
             }
         }
-        if (this.host) {
-            s += this.host;
+        if (Array.isArray(this.hosts)) {
+            s += this.hosts.map(function (h) {
+                var a = '';
+                if (h.name) {
+                    a += h.name;
+                }
+                if (h.port) {
+                    a += ':' + h.port;
+                }
+                return a;
+            }).join();
         }
         if (Array.isArray(this.segments) && this.segments.length) {
             this.segments.forEach(function (seg) {
@@ -169,12 +178,33 @@
         if (!('protocol' in this) && isText(defaults.protocol)) {
             this.protocol = trim(defaults.protocol);
         }
-        if (!('hostname' in this) && isText(defaults.hostname)) {
-            this.hostname = trim(defaults.hostname);
-        }
-        var p = defaults.port;
-        if (!('port' in this) && Number.isInteger(p) && p >= 0 && p <= 65535) {
-            this.port = p;
+        if (Array.isArray(defaults.hosts)) {
+            var hosts = Array.isArray(this.hosts) ? this.hosts : [];
+            var obj, found;
+            defaults.hosts.forEach(function (dh) {
+                // TODO: Plus add ignoring case ;)
+                found = false;
+                for (var i = 0; i < hosts.length; i++) {
+                    if (hosts[i].name === dh.name && hosts[i].port === dh.port) {
+                        found = true;
+                        break;
+                    }
+                }
+                // TODO: Should do better than just logical check here:
+                if (!found) {
+                    obj = {};
+                    if (dh.name) {
+                        obj.name = dh.name;
+                    }
+                    if (dh.port) {
+                        obj.port = dh.port;
+                    }
+                    hosts.push(obj);
+                }
+            });
+            if (obj) {
+                this.hosts = hosts; // if anything changed;
+            }
         }
         if (!('user' in this) && isText(defaults.user)) {
             this.user = trim(defaults.user);
@@ -204,9 +234,6 @@
                     }
                 }
             }
-        }
-        if ('port' in this || 'hostname' in this) {
-            this.host = (this.hostname || '') + (this.port >= 0 ? (':' + this.port) : '');
         }
         return this;
     }

@@ -151,24 +151,23 @@ describe('host', function () {
         expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
     });
     it('must allow valid ports', function () {
-        expect(parse('[::]:1')).toEqual({host: '[::]:1', hostname: '::', port: 1});
-        expect(parse('[::]:1/')).toEqual({host: '[::]:1', hostname: '::', port: 1});
-        expect(parse('[::]:123?')).toEqual({host: '[::]:123', hostname: '::', port: 123});
+        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1}]});
+        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1}]});
+        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123}]});
     });
 });
 
 describe('port', function () {
     it('must allow without server', function () {
         expect(parse(':12345')).toEqual({
-            host: ':12345',
-            port: 12345
+            hosts: [
+                {port: 12345}]
         });
     });
-    it('must allow port=0', function () {
-        expect(parse(':0')).toEqual({
-            host: ':0',
-            port: 0
-        });
+    it('must not allow port=0', function () {
+        expect(function () {
+            parse(':0');
+        }).toThrow('Invalid port: 0');
     });
     it('must not allow invalid terminators', function () {
         //expect(parse(':12345a')).toEqual({});
@@ -274,7 +273,7 @@ describe('complex', function () {
         });
     });
     it('must not lose details after the port', function () {
-        expect(parse(':123/one')).toEqual({host: ':123', port: 123, segments: ['one']});
+        expect(parse(':123/one')).toEqual({hosts: [{port: 123}], segments: ['one']});
     });
 });
 
@@ -337,8 +336,8 @@ describe('setDefaults', function () {
     });
     it('must set the default hostname and port', function () {
         expect(parse('').setDefaults({host: 'abc'})).toEqual({}); // cannot set the host directly
-        expect(parse('').setDefaults({hostname: 'abc'})).toEqual({host: 'abc', hostname: 'abc'});
-        expect(parse('').setDefaults({port: 123})).toEqual({host: ':123', port: 123});
+        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc'}]});
+        expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });
     it('must ignore invalid ports', function () {
         expect(parse('').setDefaults({port: '123'})).toEqual({});
