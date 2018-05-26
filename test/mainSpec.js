@@ -54,7 +54,7 @@ describe('protocol', function () {
         expect(parse('abc://')).toEqual({protocol: 'abc'});
     });
     it('must ignore incomplete format', function () {
-        expect(parse('abc:/')).toEqual({host: 'abc', hostname: 'abc'});
+        expect(parse('abc:/')).toEqual({hosts: [{name: 'abc'}]});
         expect(parse('://')).toEqual({});
     });
     it('must decode URL-encoded characters', function () {
@@ -62,6 +62,94 @@ describe('protocol', function () {
     });
     it('must support special symbols', function () {
         expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_.+!*\'()'});
+    });
+});
+
+describe('hosts', function () {
+    it('must allow without port', function () {
+        expect(parse('server')).toEqual({
+            hosts: [{
+                name: 'server'
+            }]
+        });
+    });
+    it('must ignore port endings', function () {
+        expect(parse('local:123/')).toEqual({hosts: [{name: 'local', port: 123}]});
+        expect(parse('local:123?')).toEqual({hosts: [{name: 'local', port: 123}]});
+    });
+    it('must allow URL characters', function () {
+        expect(parse('server%201,server%3F2')).toEqual({
+            hosts: [{
+                name: 'server 1'
+            }, {
+                name: 'server?2'
+            }]
+        });
+    });
+    it('must allow special symbols', function () {
+        expect(parse('one-1.TWO-23,three-%3F.sock')).toEqual({
+            hosts: [{
+                name: 'one-1.TWO-23'
+            }, {
+                name: 'three-?.sock'
+            }]
+        });
+    });
+    it('must recognize IPv6 addresses', function () {
+        expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
+            hosts: [{
+                name: '2001:0db8:0000:0000:0000:FF00:0042:8329'
+            }]
+        });
+        expect(parse('[2001:0db8]:123')).toEqual({
+            hosts: [{
+                name: '2001:0db8',
+                port: 123
+            }]
+        });
+    });
+    it('must not treat IPv6 scopes as special characters', function () {
+        expect(parse('[2001:0db8%20]')).toEqual({
+            hosts: [{
+                name: '2001:0db8%20'
+            }]
+        });
+    });
+    it('must skip invalid IPv6 addresses', function () {
+        expect(parse('[]')).toEqual({});
+        expect(parse('[a]:123')).toEqual({});
+        expect(parse('[a-b-c]')).toEqual({});
+    });
+    it('must throw on invalid ports', function () {
+        expect(function () {
+            parse('[::]:1a');
+        }).toThrow('Invalid port: 1a');
+        expect(parse('[::]:abc')).toEqual({hosts: [{name: '::'}]});
+    });
+    it('must allow valid ports', function () {
+        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1}]});
+        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1}]});
+        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123}]});
+    });
+});
+
+describe('port', function () {
+    it('must allow without server', function () {
+        expect(parse(':12345')).toEqual({
+            hosts: [
+                {port: 12345}]
+        });
+    });
+    it('must not allow port=0', function () {
+        expect(function () {
+            parse(':0');
+        }).toThrow('Invalid port: 0');
+    });
+    it('must not allow invalid terminators', function () {
+        //expect(parse(':12345a')).toEqual({});
+        //expect(parse('@:12345a')).toEqual({});
+        expect(parse(':abc')).toEqual({});
+        expect(parse('@:abc123')).toEqual({});
     });
 });
 
@@ -96,84 +184,6 @@ describe('user + password', function () {
     it('must allow skipping both', function () {
         expect(parse('@')).toEqual({});
         expect(parse(':@')).toEqual({});
-    });
-});
-
-describe('host', function () {
-    it('must allow without port', function () {
-        expect(parse('server')).toEqual({
-            host: 'server',
-            hostname: 'server'
-        });
-    });
-    it('must skip port endings', function () {
-        expect(parse('local:123/')).toEqual({host: 'local:123', hostname: 'local', port: 123});
-        expect(parse('local:123?')).toEqual({host: 'local:123', hostname: 'local', port: 123});
-    });
-    it('must not allow URL characters', function () {
-        expect(parse('server%20')).toEqual({
-            host: 'server',
-            hostname: 'server'
-        });
-    });
-    it('must allow special characters', function () {
-        expect(parse('one-1.TWO-23')).toEqual({
-            host: 'one-1.TWO-23',
-            hostname: 'one-1.TWO-23'
-        });
-    });
-    it('must recognize IPv6 addresses', function () {
-        expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
-            host: '[2001:0db8:0000:0000:0000:FF00:0042:8329]',
-            hostname: '2001:0db8:0000:0000:0000:FF00:0042:8329'
-        });
-        expect(parse('[2001:0db8]:123')).toEqual({
-            host: '[2001:0db8]:123',
-            hostname: '2001:0db8',
-            port: 123
-        });
-    });
-    it('must not treat IPv6 scopes as special characters', function () {
-        expect(parse('[2001:0db8%20]')).toEqual({
-            host: '[2001:0db8%20]',
-            hostname: '2001:0db8%20'
-        });
-    });
-    it('must skip invalid IPv6 addresses', function () {
-        expect(parse('[]')).toEqual({});
-        expect(parse('[a]:123')).toEqual({});
-        expect(parse('[a-b-c]')).toEqual({});
-    });
-    it('must throw on invalid ports', function () {
-        expect(function () {
-            parse('[::]:1a');
-        }).toThrow('Invalid port: 1a');
-        expect(parse('[::]:abc')).toEqual({host: '[::]', hostname: '::'});
-    });
-    it('must allow valid ports', function () {
-        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1}]});
-        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1}]});
-        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123}]});
-    });
-});
-
-describe('port', function () {
-    it('must allow without server', function () {
-        expect(parse(':12345')).toEqual({
-            hosts: [
-                {port: 12345}]
-        });
-    });
-    it('must not allow port=0', function () {
-        expect(function () {
-            parse(':0');
-        }).toThrow('Invalid port: 0');
-    });
-    it('must not allow invalid terminators', function () {
-        //expect(parse(':12345a')).toEqual({});
-        //expect(parse('@:12345a')).toEqual({});
-        expect(parse(':abc')).toEqual({});
-        expect(parse('@:abc123')).toEqual({});
     });
 });
 

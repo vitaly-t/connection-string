@@ -50,8 +50,8 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extract hostname + port:
-        // if it starts now with `/`, it is the first segment, or else it is hostname:port
+        // extract hosts details:
+        // if it starts now with `/`, it is the first segment, or else it is the first host:port
         if (cs[0] !== '/') {
 
             var endOfHosts = cs.search(/\/|\?/);
@@ -60,18 +60,19 @@
 
             for (var i = 0; i < hosts.length; i++) {
                 var host = hosts[i];
-                var h = {};
+                var h = {}, isIPv6 = false;
 
                 if (host[0] === '[') {
                     // It is an IPv6, with [::] being the shortest possible
                     m = host.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
+                    isIPv6 = true;
                 } else {
                     // It is either IPv4 or a name
-                    m = host.match(/(([a-z0-9.-]*)(?::([0-9]+[^/?]*))?)/i);
+                    m = host.match(/(([a-z0-9%.-]*)(?::([0-9]+[^/?]*))?)/i);
                 }
                 if (m) {
                     if (m[2]) {
-                        h.name = m[2];
+                        h.name = isIPv6 ? m[2] : decode(m[2]);
                     }
                     if (m[3]) {
                         var p = m[3], port = parseInt(p);
@@ -142,7 +143,7 @@
             s += this.hosts.map(function (h) {
                 var a = '';
                 if (h.name) {
-                    a += h.name;
+                    a += encode(h.name);
                 }
                 if (h.port) {
                     a += ':' + h.port;
