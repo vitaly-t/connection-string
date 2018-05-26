@@ -53,35 +53,44 @@
         // extract hostname + port:
         // if it starts now with `/`, it is the first segment, or else it is hostname:port
         if (cs[0] !== '/') {
-            if (cs[0] === '[') {
-                // It is an IPv6, with [::] being the shortest possible
-                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
-            } else {
-                // It is either IPv4 or a name
-                m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+[^/?]*))?)/i);
+
+            var endOfHosts = cs.search(/\/|\?/);
+
+            var hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
+
+            for (var i = 0; i < hosts.length; i++) {
+                var host = hosts[i];
+                var h = {};
+
+                if (host[0] === '[') {
+                    // It is an IPv6, with [::] being the shortest possible
+                    m = host.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
+                } else {
+                    // It is either IPv4 or a name
+                    m = host.match(/(([a-z0-9.-]*)(?::([0-9]+[^/?]*))?)/i);
+                }
+                if (m) {
+                    if (m[2]) {
+                        h.name = m[2];
+                    }
+                    if (m[3]) {
+                        var p = m[3], port = parseInt(p);
+                        if (port > 0 && port <= 65535 && port.toString() === p) {
+                            h.port = port;
+                        } else {
+                            throw new Error('Invalid port: ' + p);
+                        }
+                    }
+                    if (h.name || h.port) {
+                        if (!this.hosts) {
+                            this.hosts = [];
+                        }
+                        this.hosts.push(h);
+                    }
+                }
             }
-            if (m) {
-                if (m[2]) {
-                    this.hostname = m[2];
-                }
-                if (m[3]) {
-                    var p = m[3], port = parseInt(p);
-                    if (port >= 0 && port <= 65535 && port.toString() === p) {
-                        this.port = port;
-                    } else {
-                        throw new Error('Invalid port: ' + p);
-                    }
-                }
-                if (this.hostname || this.port >= 0) {
-                    this.host = '';
-                    if (this.hostname) {
-                        this.host = cs[0] === '[' ? ('[' + this.hostname + ']') : this.hostname;
-                    }
-                    if (this.port >= 0) {
-                        this.host += ':' + this.port;
-                    }
-                }
-                cs = cs.substr(m[0].length);
+            if (endOfHosts >= 0) {
+                cs = cs.substr(endOfHosts);
             }
         }
 

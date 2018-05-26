@@ -1,7 +1,11 @@
+interface IHost {
+    name?: string
+    port?: number
+}
+
 interface IConnectionDefaults {
     protocol?: string
-    hostname?: string
-    port?: number
+    hosts?: Array<IHost>;
     user?: string
     password?: string
     segments?: string[]
@@ -12,9 +16,7 @@ export class ConnectionString {
     constructor(cs: string, defaults?: IConnectionDefaults)
 
     protocol?: string;
-    host?: string;
-    hostname?: string;
-    port?: number;
+    hosts?: Array<IHost>;
     user?: string;
     password?: string;
     segments?: string[];
