@@ -335,8 +335,8 @@ describe('setDefaults', function () {
     it('must set the default protocol', function () {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
     });
-    it('must set the default host', function () {
-        expect(parse('').setDefaults({host: 'abc'})).toEqual({host: 'abc'});
+    it('must set the default hostname and port', function () {
+        expect(parse('').setDefaults({host: 'abc'})).toEqual({}); // cannot set the host directly
         expect(parse('').setDefaults({hostname: 'abc'})).toEqual({host: 'abc', hostname: 'abc'});
         expect(parse('').setDefaults({port: 123})).toEqual({host: ':123', port: 123});
     });

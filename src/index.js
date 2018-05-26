@@ -160,9 +160,6 @@
         if (!('protocol' in this) && isText(defaults.protocol)) {
             this.protocol = trim(defaults.protocol);
         }
-        if (!('host' in this) && isText(defaults.host)) {
-            this.host = trim(defaults.host);
-        }
         if (!('hostname' in this) && isText(defaults.hostname)) {
             this.hostname = trim(defaults.hostname);
         }
@@ -185,7 +182,7 @@
         if (defaults.params && typeof defaults.params === 'object') {
             var keys = Object.keys(defaults.params);
             if (keys.length) {
-                if (this.params) {
+                if (this.params && typeof(this.params) === 'object') {
                     for (var a in defaults.params) {
                         if (!(a in this.params)) {
                             this.params[a] = defaults.params[a];
@@ -199,7 +196,7 @@
                 }
             }
         }
-        if (this.port || this.hostname) {
+        if ('port' in this || 'hostname' in this) {
             this.host = (this.hostname || '') + (this.port >= 0 ? (':' + this.port) : '');
         }
         return this;
@@ -213,7 +210,7 @@
         return txt.replace(/^[\s]*|[\s]*$/g, '');
     }
 
-    // istanbul ignore next
+    /* istanbul ignore next */
     Number.isInteger = Number.isInteger || function (value) {
         return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
     };
