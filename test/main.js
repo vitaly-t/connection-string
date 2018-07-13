@@ -19,8 +19,7 @@ a.params = {
 var cs = a.build();
 a.setDefaults({});
 a.setDefaults({
-    hostname: 'server',
-    port: 123
+    user: ''
 });
 cs = a.build();
 var qq = a.setDefaults(new src_1.ConnectionString(''));

@@ -50,38 +50,48 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extract hostname + port:
-        // if it starts now with `/`, it is the first segment, or else it is hostname:port
+        // extract hosts details:
+        // if it starts now with `/`, it is the first segment, or else it is the first host:port
         if (cs[0] !== '/') {
-            if (cs[0] === '[') {
-                // It is an IPv6, with [::] being the shortest possible
-                m = cs.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
-            } else {
-                // It is either IPv4 or a name
-                m = cs.match(/(([a-z0-9.-]*)(?::([0-9]+[^/?]*))?)/i);
+
+            var endOfHosts = cs.search(/\/|\?/);
+
+            var hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
+
+            for (var i = 0; i < hosts.length; i++) {
+                var host = hosts[i];
+                var h = {}, isIPv6 = false;
+
+                if (host[0] === '[') {
+                    // It is an IPv6, with [::] being the shortest possible
+                    m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
+                    isIPv6 = true;
+                } else {
+                    // It is either IPv4 or a name
+                    m = host.match(/(([a-z0-9%.-]*)(?::(-?[0-9]+[^/?]*))?)/i);
+                }
+                if (m) {
+                    if (m[2]) {
+                        h.name = isIPv6 ? m[2] : decode(m[2]);
+                    }
+                    if (m[3]) {
+                        var p = m[3], port = parseInt(p);
+                        if (port > 0 && port < 65536 && port.toString() === p) {
+                            h.port = port;
+                        } else {
+                            throw new Error('Invalid port: ' + p);
+                        }
+                    }
+                    if (h.name || h.port) {
+                        if (!this.hosts) {
+                            this.hosts = [];
+                        }
+                        this.hosts.push(h);
+                    }
+                }
             }
-            if (m) {
-                if (m[2]) {
-                    this.hostname = m[2];
-                }
-                if (m[3]) {
-                    var p = m[3], port = parseInt(p);
-                    if (port >= 0 && port <= 65535 && port.toString() === p) {
-                        this.port = port;
-                    } else {
-                        throw new Error('Invalid port: ' + p);
-                    }
-                }
-                if (this.hostname || this.port >= 0) {
-                    this.host = '';
-                    if (this.hostname) {
-                        this.host = cs[0] === '[' ? ('[' + this.hostname + ']') : this.hostname;
-                    }
-                    if (this.port >= 0) {
-                        this.host += ':' + this.port;
-                    }
-                }
-                cs = cs.substr(m[0].length);
+            if (endOfHosts >= 0) {
+                cs = cs.substr(endOfHosts);
             }
         }
 
@@ -129,8 +139,17 @@
                 s += ':' + encode(this.password) + '@';
             }
         }
-        if (this.host) {
-            s += this.host;
+        if (Array.isArray(this.hosts)) {
+            s += this.hosts.map(function (h) {
+                var a = '';
+                if (h.name) {
+                    a += encode(h.name);
+                }
+                if (h.port) {
+                    a += ':' + h.port;
+                }
+                return a;
+            }).join();
         }
         if (Array.isArray(this.segments) && this.segments.length) {
             this.segments.forEach(function (seg) {
@@ -160,12 +179,32 @@
         if (!('protocol' in this) && isText(defaults.protocol)) {
             this.protocol = trim(defaults.protocol);
         }
-        if (!('hostname' in this) && isText(defaults.hostname)) {
-            this.hostname = trim(defaults.hostname);
-        }
-        var p = defaults.port;
-        if (!('port' in this) && Number.isInteger(p) && p >= 0 && p <= 65535) {
-            this.port = p;
+        if (Array.isArray(defaults.hosts)) {
+            var hosts = Array.isArray(this.hosts) ? this.hosts : [];
+            var obj, found;
+            defaults.hosts.forEach(function (dh) {
+                found = false;
+                for (var i = 0; i < hosts.length; i++) {
+                    if (equalStrings(hosts[i].name, dh.name) && hosts[i].port === dh.port) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    obj = {};
+                    if (isText(dh.name)) {
+                        obj.name = dh.name;
+                    }
+                    var port = parseInt(dh.port);
+                    if (port > 0 && port < 65536) {
+                        obj.port = port;
+                    }
+                    hosts.push(obj);
+                }
+            });
+            if (obj) {
+                this.hosts = hosts; // if anything changed;
+            }
         }
         if (!('user' in this) && isText(defaults.user)) {
             this.user = trim(defaults.user);
@@ -196,9 +235,6 @@
                 }
             }
         }
-        if ('port' in this || 'hostname' in this) {
-            this.host = (this.hostname || '') + (this.port >= 0 ? (':' + this.port) : '');
-        }
         return this;
     }
 
@@ -208,6 +244,10 @@
 
     function trim(txt) {
         return txt.replace(/^[\s]*|[\s]*$/g, '');
+    }
+
+    function equalStrings(str1, str2) {
+        return (typeof str1 === 'string' && typeof str2 === 'string') && str1.toUpperCase() === str2.toUpperCase();
     }
 
     /* istanbul ignore next */

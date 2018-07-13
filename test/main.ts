@@ -24,8 +24,7 @@ var cs = a.build();
 a.setDefaults({});
 
 a.setDefaults({
-    hostname: 'server',
-    port: 123
+    user: ''
 });
 
 cs = a.build();
