@@ -140,14 +140,18 @@ describe('port', function () {
                 {port: 12345}]
         });
     });
-    it('must not allow port=0', function () {
+    it('must not allow 0 or negative ports', function () {
         expect(function () {
             parse(':0');
         }).toThrow('Invalid port: 0');
+        expect(function () {
+            parse(':-1');
+        }).toThrow('Invalid port: -1');
     });
     it('must not allow invalid terminators', function () {
-        //expect(parse(':12345a')).toEqual({});
-        //expect(parse('@:12345a')).toEqual({});
+        expect(function () {
+            parse(':12345a');
+        }).toThrow('Invalid port: 12345a');
         expect(parse(':abc')).toEqual({});
         expect(parse('@:abc123')).toEqual({});
     });
@@ -303,6 +307,9 @@ describe('build', function () {
     it('must support solo hostname', function () {
         expect(parse('server').build()).toBe('server');
     });
+    it('must support solo port', function () {
+        expect(parse(':123').build()).toBe(':123');
+    });
     it('must support hostname + port', function () {
         expect(parse('server:123').build()).toBe('server:123');
     });
@@ -345,7 +352,15 @@ describe('setDefaults', function () {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
     });
     it('must set the default hostname and port', function () {
-        expect(parse('').setDefaults({host: 'abc'})).toEqual({}); // cannot set the host directly
+        expect(parse('my-host').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'my-host'}, {name: 'abc'}]});
+        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host'}]})).toEqual({hosts: [{name: 'my-host'}]});
+        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 222}]})).toEqual({
+            hosts: [{name: 'my-host'}, {
+                name: 'my-host',
+                port: 222
+            }]
+        });
+        expect(parse(':111').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 111}, {port: 123}]});
         expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc'}]});
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });

@@ -64,11 +64,11 @@
 
                 if (host[0] === '[') {
                     // It is an IPv6, with [::] being the shortest possible
-                    m = host.match(/(\[([0-9a-z:%]{2,45})](?::([0-9]+[^/?]*))?)/i);
+                    m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
                     isIPv6 = true;
                 } else {
                     // It is either IPv4 or a name
-                    m = host.match(/(([a-z0-9%.-]*)(?::([0-9]+[^/?]*))?)/i);
+                    m = host.match(/(([a-z0-9%.-]*)(?::(-?[0-9]+[^/?]*))?)/i);
                 }
                 if (m) {
                     if (m[2]) {
@@ -76,7 +76,7 @@
                     }
                     if (m[3]) {
                         var p = m[3], port = parseInt(p);
-                        if (port > 0 && port <= 65535 && port.toString() === p) {
+                        if (port > 0 && port < 65536 && port.toString() === p) {
                             h.port = port;
                         } else {
                             throw new Error('Invalid port: ' + p);
@@ -183,22 +183,21 @@
             var hosts = Array.isArray(this.hosts) ? this.hosts : [];
             var obj, found;
             defaults.hosts.forEach(function (dh) {
-                // TODO: Plus add ignoring case ;)
                 found = false;
                 for (var i = 0; i < hosts.length; i++) {
-                    if (hosts[i].name === dh.name && hosts[i].port === dh.port) {
+                    if (equalStrings(hosts[i].name, dh.name) && hosts[i].port === dh.port) {
                         found = true;
                         break;
                     }
                 }
-                // TODO: Should do better than just logical check here:
                 if (!found) {
                     obj = {};
-                    if (dh.name) {
+                    if (isText(dh.name)) {
                         obj.name = dh.name;
                     }
-                    if (dh.port) {
-                        obj.port = dh.port;
+                    var port = parseInt(dh.port);
+                    if (port > 0 && port < 65536) {
+                        obj.port = port;
                     }
                     hosts.push(obj);
                 }
@@ -245,6 +244,10 @@
 
     function trim(txt) {
         return txt.replace(/^[\s]*|[\s]*$/g, '');
+    }
+
+    function equalStrings(str1, str2) {
+        return (typeof str1 === 'string' && typeof str2 === 'string') && str1.toUpperCase() === str2.toUpperCase();
     }
 
     /* istanbul ignore next */
