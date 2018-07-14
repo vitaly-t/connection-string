@@ -24,7 +24,8 @@ var cs = a.build();
 a.setDefaults({});
 
 a.setDefaults({
-    user: ''
+    user: '',
+    password: ''
 });
 
 cs = a.build();

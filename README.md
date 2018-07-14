@@ -34,7 +34,7 @@ Unlike the standard URL parser, this one supports the following:
 
 * Multiple hosts - for connecting to multiple servers
 * Fully optional syntax for every element in the connection string
-* Configuration of defaults for any parameter that's missing
+* Configuration of defaults for any missing parameter
 * Construction of a connection string from all parameters
 * Friendlier access to the URL's segments and parameters
 * TypeScript declarations are deployed with the library
@@ -50,11 +50,11 @@ Unlike the standard URL parser, this one supports the following:
 * `username@` => `{user: 'username'}`
 * `:pass123@` => `{password: 'pass123'}`
 * `/seg1/seg2` => `{segments: ['seg1', 'seg2']}`
-* `?param1=1&param2=2` => `{params: {param1: '1', param2: '2'}}`
+* `?p1=1&p2=2` => `{params: {p1: '1', p2: '2'}}`
 
-For a complete list of short-syntax examples see the [Optional Format].
+For more short-syntax examples see [Optional Format].
 
-All browsers and Node.js versions are supported.
+All browsers are supported, plus Node.js v4.0 and newer.
 
 ## Installing
 
@@ -71,8 +71,9 @@ const parse = require('connection-string');
 
 const obj1 = parse('my-server:12345');
 
-// with a default:
-const obj2 = parse('my-server:12345', {user: 'admin'});
+// with a default value:
+parse('my-server:12345', {user: 'admin'});
+//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345}]}
 ```
 
 or as a class:
@@ -82,8 +83,9 @@ const ConnectionString = require('connection-string');
 
 const obj1 = new ConnectionString('my-server:12345');
 
-// with a default:
+// with a default value:
 const obj2 = new ConnectionString('my-server:12345', {user: 'admin'});
+//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345}]}
 ```
 
 * **Browsers**
@@ -116,11 +118,11 @@ plus two methods: `setDefaults` and `build` (see below).
 
 #### Method `setDefaults(defaults) => ConnectionString`
 
-The method takes an object with default values, sets those for all the properties that were not
+The method takes an object with default values, and sets those for all the properties that were not
 specified within the connection string, and returns the same object (itself). 
 
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
-passing `defaults` into the parser/constructor.
+passing the `defaults` object into the parser/constructor.
 
 #### Method `build() => string`
 

@@ -239,7 +239,7 @@
     }
 
     function isText(txt) {
-        return txt && typeof txt === 'string' && /\S/.test(txt);
+        return typeof txt === 'string' && /\S/.test(txt);
     }
 
     function trim(txt) {
@@ -250,21 +250,16 @@
         return (typeof str1 === 'string' && typeof str2 === 'string') && str1.toUpperCase() === str2.toUpperCase();
     }
 
-    /* istanbul ignore next */
-    Number.isInteger = Number.isInteger || function (value) {
-        return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
-    };
-
     Object.defineProperty(ConnectionString.prototype, 'build', {value: build});
     Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
 
-    ConnectionString.ConnectionString = ConnectionString;
+    ConnectionString.ConnectionString = ConnectionString; // to make it more TypeScript-friendly
 
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {
-        module.exports = ConnectionString;
+        module.exports = ConnectionString; // inside Node.js
     }
     else {
-        window.ConnectionString = ConnectionString;
+        window.ConnectionString = ConnectionString; // inside a browser
     }
 })(this);

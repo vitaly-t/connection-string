@@ -19,7 +19,8 @@ a.params = {
 var cs = a.build();
 a.setDefaults({});
 a.setDefaults({
-    user: ''
+    user: '',
+    password: ''
 });
 cs = a.build();
 var qq = a.setDefaults(new src_1.ConnectionString(''));
