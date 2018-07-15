@@ -20,7 +20,7 @@ a.params = {
     second: 'hello!'
 };
 
-let cs = a.build();
+let cs = a.toString();
 a.setDefaults({
     hosts: [
         {name: '[::]', port: 123, isIPv6: true}
@@ -32,6 +32,6 @@ a.setDefaults({
     password: ''
 });
 
-cs = a.build();
+cs = a.toString();
 
 const qq: ConnectionString = a.setDefaults(new ConnectionString(''));

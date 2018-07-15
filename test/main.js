@@ -16,7 +16,7 @@ a.params = {
     first: '123',
     second: 'hello!'
 };
-var cs = a.build();
+var cs = a.toString();
 a.setDefaults({
     hosts: [
         { name: '[::]', port: 123, isIPv6: true }
@@ -26,5 +26,5 @@ a.setDefaults({
     user: '',
     password: ''
 });
-cs = a.build();
+cs = a.toString();
 var qq = a.setDefaults(new src_1.ConnectionString(''));
