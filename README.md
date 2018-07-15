@@ -117,7 +117,7 @@ Both the root function and class `ConnectionString` take a second optional param
 If it is specified, the parser will call method `setDefaults` automatically (see below). 
 
 The object returned by the parser contains all the properties as specified in the connection string,
-plus two methods: `setDefaults` and `build` (see below).
+plus two methods: `setDefaults` and `toString` (see below).
 
 #### Method `setDefaults(defaults) => ConnectionString`
 
@@ -127,7 +127,7 @@ specified within the connection string, and returns the same object (itself).
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
 passing the `defaults` object into the parser/constructor.
 
-#### Method `build() => string`
+#### Method `toString() => string`
 
 Constructs and returns a connection string from all the current properties.
 
@@ -136,7 +136,7 @@ Example:
 ```js
 const a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest'});
-a.build(); //=> 'abc://guest@localhost'
+a.toString(); //=> 'abc://guest@localhost'
 ```
 
 For any parameter within `params`, if the value is not a string, it will be converted into a JSON

@@ -7,7 +7,7 @@ function parse(cs, defaults) {
 }
 
 function create(obj) {
-    return (new ConnectionString('', obj)).build();
+    return (new ConnectionString('', obj)).toString();
 }
 
 describe('init', () => {
@@ -299,7 +299,7 @@ describe('complex', () => {
     });
 });
 
-describe('build', () => {
+describe('toString', () => {
     it('must encode protocol', () => {
         expect(create({protocol: 'abc 123?456'})).toBe('abc%20123%3F456://');
     });
@@ -310,33 +310,33 @@ describe('build', () => {
         expect(create({password: 'pass 1?2'})).toBe(':pass%201%3F2@');
     });
     it('must support user + password', () => {
-        expect(parse('user:pass@').build()).toBe('user:pass@');
+        expect(parse('user:pass@').toString()).toBe('user:pass@');
     });
     it('must encode non-IPv6 host name', () => {
-        expect(parse('one%20two%20three!').build()).toBe('one%20two%20three');
+        expect(parse('one%20two%20three!').toString()).toBe('one%20two%20three');
     });
     it('must not encode IPv6 host name', () => {
-        expect(parse('[123::%20:%20:456]').build()).toBe('[123::%20:%20:456]');
+        expect(parse('[123::%20:%20:456]').toString()).toBe('[123::%20:%20:456]');
     });
     it('must support solo hostname', () => {
-        expect(parse('server').build()).toBe('server');
-        expect(parse('[123::]').build()).toBe('[123::]');
+        expect(parse('server').toString()).toBe('server');
+        expect(parse('[123::]').toString()).toBe('[123::]');
     });
     it('must support solo port', () => {
-        expect(parse(':123').build()).toBe(':123');
+        expect(parse(':123').toString()).toBe(':123');
     });
     it('must support hostname + port', () => {
-        expect(parse('server:123').build()).toBe('server:123');
-        expect(parse('[::]:123').build()).toBe('[::]:123');
+        expect(parse('server:123').toString()).toBe('server:123');
+        expect(parse('[::]:123').toString()).toBe('[::]:123');
     });
     it('must encode segments', () => {
-        expect(parse('/a%20b').build()).toBe('/a%20b');
-        expect(parse('/a/b%20/c').build()).toBe('/a/b%20/c');
+        expect(parse('/a%20b').toString()).toBe('/a%20b');
+        expect(parse('/a/b%20/c').toString()).toBe('/a/b%20/c');
     });
     it('must ignore empty segment list', () => {
         const a = parse('');
         a.segments = [];
-        expect(a.build()).toBe('');
+        expect(a.toString()).toBe('');
     });
     it('must encode params', () => {
         const obj = {
@@ -344,13 +344,13 @@ describe('build', () => {
             values: ['one', true]
         };
         const a = parse('', {params: {value1: obj, value2: 'text'}});
-        const b = parse(a.build());
+        const b = parse(a.toString());
         expect(JSON.parse(b.params.value1)).toEqual(obj);
     });
     it('must ignore empty parameter list', () => {
         const a = parse('');
         a.params = {};
-        expect(a.build()).toBe('');
+        expect(a.toString()).toBe('');
     });
 });
 

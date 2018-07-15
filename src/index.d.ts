@@ -2,6 +2,7 @@ interface IHost {
     name?: string
     port?: number
     isIPv6?: boolean
+    toString?: () => string
 }
 
 interface IConnectionDefaults {
@@ -23,7 +24,7 @@ export class ConnectionString {
     segments?: string[];
     params?: { [name: string]: string };
 
-    build(): string;
+    toString(): string;
 
     setDefaults(defaults: IConnectionDefaults): ConnectionString;
 }

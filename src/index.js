@@ -87,6 +87,9 @@
                         if (!this.hosts) {
                             this.hosts = [];
                         }
+                        Object.defineProperty(h, 'toString', {
+                            value: fullHostName.bind(null, h)
+                        });
                         this.hosts.push(h);
                     }
                 }
@@ -124,7 +127,7 @@
         }
     }
 
-    function build() {
+    function toString() {
         var s = '';
         if (this.protocol) {
             s += encode(this.protocol) + '://';
@@ -193,6 +196,9 @@
                     if (port > 0 && port < 65536) {
                         obj.port = port;
                     }
+                    Object.defineProperty(obj, 'toString', {
+                        value: fullHostName.bind(null, obj)
+                    });
                     hosts.push(obj);
                 }
             });
@@ -259,7 +265,7 @@
         return (typeof str1 === 'string' && typeof str2 === 'string') && str1.toUpperCase() === str2.toUpperCase();
     }
 
-    Object.defineProperty(ConnectionString.prototype, 'build', {value: build});
+    Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
     Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
 
     ConnectionString.ConnectionString = ConnectionString; // to make it more TypeScript-friendly
