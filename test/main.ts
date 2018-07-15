@@ -1,17 +1,17 @@
 import {ConnectionString} from '../src'
 
-var a = new ConnectionString('protocol://');
-var b = new ConnectionString('protocol://', {});
-var c = new ConnectionString('protocol://', {
+const a = new ConnectionString('protocol://');
+const b = new ConnectionString('protocol://', {});
+const c = new ConnectionString('protocol://', {
     segments: ['one', 'two']
 });
 
 if ('protocol' in a) {
-    var protocol = a.protocol;
+    const protocol = a.protocol;
 }
 
-var segment1: string = a.segments[0];
-var param1: string = a.params['first'];
+const segment1: string = a.segments[0];
+const param1: string = a.params['first'];
 
 a.params['first'] = 'hello';
 
@@ -20,8 +20,12 @@ a.params = {
     second: 'hello!'
 };
 
-var cs = a.build();
-a.setDefaults({});
+let cs = a.build();
+a.setDefaults({
+    hosts: [
+        {name: '[::]', port: 123, isIPv6: true}
+    ]
+});
 
 a.setDefaults({
     user: '',
@@ -30,4 +34,4 @@ a.setDefaults({
 
 cs = a.build();
 
-var qq: ConnectionString = a.setDefaults(new ConnectionString(''));
+const qq: ConnectionString = a.setDefaults(new ConnectionString(''));

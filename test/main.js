@@ -17,7 +17,11 @@ a.params = {
     second: 'hello!'
 };
 var cs = a.build();
-a.setDefaults({});
+a.setDefaults({
+    hosts: [
+        { name: '[::]', port: 123, isIPv6: true }
+    ]
+});
 a.setDefaults({
     user: '',
     password: ''
