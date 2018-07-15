@@ -1,6 +1,7 @@
 interface IHost {
     name?: string
     port?: number
+    isIPv6?: boolean
 }
 
 interface IConnectionDefaults {

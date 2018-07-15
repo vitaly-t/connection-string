@@ -1,6 +1,6 @@
 'use strict';
 
-var ConnectionString = require('../src');
+const ConnectionString = require('../src');
 
 function parse(cs, defaults) {
     return new ConnectionString(cs, defaults);
@@ -10,146 +10,154 @@ function create(obj) {
     return (new ConnectionString('', obj)).build();
 }
 
-describe('init', function () {
-    it('must throw on a non-string', function () {
-        var error = new TypeError('Invalid connection string!');
-        expect(function () {
+describe('init', () => {
+    it('must throw on a non-string', () => {
+        const error = new TypeError('Invalid connection string!');
+        expect(() => {
             parse();
         }).toThrow(error);
-        expect(function () {
+        expect(() => {
             parse(123);
         }).toThrow(error);
     });
-    it('must throw on invalid defaults', function () {
-        var error = new TypeError('Invalid \'defaults\' parameter!');
-        expect(function () {
+    it('must throw on invalid defaults', () => {
+        const error = new TypeError('Invalid \'defaults\' parameter!');
+        expect(() => {
             parse('', '');
         }).toThrow(error);
-        expect(function () {
+        expect(() => {
             parse('', 123);
         }).toThrow(error);
     });
-    it('must throw on inner spaces', function () {
-        expect(function () {
+    it('must throw on inner spaces', () => {
+        expect(() => {
             parse('a b');
         }).toThrow(new Error('Invalid URL character at position 1'));
-        expect(function () {
+        expect(() => {
             parse('ab\tc');
         }).toThrow(new Error('Invalid URL character at position 2'));
     });
-    it('must allow an empty string', function () {
+    it('must allow an empty string', () => {
         expect(parse('')).toEqual({});
     });
-    it('must allow empty defaults', function () {
+    it('must allow empty defaults', () => {
         expect(parse('', {})).toEqual({});
     });
-    it('must support function-style calls', function () {
-        // eslint-disable-next-line
-        expect(ConnectionString('abc://')).toEqual({protocol: 'abc'});
+    it('must support function-style calls', () => {
+        const cn = ConnectionString;
+        expect(cn('abc://')).toEqual({protocol: 'abc'});
     });
 });
 
-describe('protocol', function () {
-    it('must recognize standard format', function () {
+describe('protocol', () => {
+    it('must recognize standard format', () => {
         expect(parse('abc://')).toEqual({protocol: 'abc'});
     });
-    it('must ignore incomplete format', function () {
-        expect(parse('abc:/')).toEqual({hosts: [{name: 'abc'}]});
+    it('must ignore incomplete format', () => {
+        expect(parse('abc:/')).toEqual({hosts: [{name: 'abc', isIPv6: false}]});
         expect(parse('://')).toEqual({});
     });
-    it('must decode URL-encoded characters', function () {
+    it('must decode URL-encoded characters', () => {
         expect(parse('a%20b%3F://')).toEqual({protocol: 'a b?'});
     });
-    it('must support special symbols', function () {
+    it('must support special symbols', () => {
         expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_.+!*\'()'});
     });
 });
 
-describe('hosts', function () {
-    it('must allow without port', function () {
+describe('hosts', () => {
+    it('must allow without port', () => {
         expect(parse('server')).toEqual({
             hosts: [{
-                name: 'server'
+                name: 'server',
+                isIPv6: false
             }]
         });
     });
-    it('must ignore port endings', function () {
-        expect(parse('local:123/')).toEqual({hosts: [{name: 'local', port: 123}]});
-        expect(parse('local:123?')).toEqual({hosts: [{name: 'local', port: 123}]});
+    it('must ignore port endings', () => {
+        expect(parse('local:123/')).toEqual({hosts: [{name: 'local', port: 123, isIPv6: false}]});
+        expect(parse('local:123?')).toEqual({hosts: [{name: 'local', port: 123, isIPv6: false}]});
     });
-    it('must allow URL characters', function () {
+    it('must allow URL characters', () => {
         expect(parse('server%201,server%3F2')).toEqual({
             hosts: [{
-                name: 'server 1'
+                name: 'server 1',
+                isIPv6: false
             }, {
-                name: 'server?2'
+                name: 'server?2',
+                isIPv6: false
             }]
         });
     });
-    it('must allow special symbols', function () {
+    it('must allow special symbols', () => {
         expect(parse('one-1.TWO-23,three-%3F.sock')).toEqual({
             hosts: [{
-                name: 'one-1.TWO-23'
+                name: 'one-1.TWO-23',
+                isIPv6: false
             }, {
-                name: 'three-?.sock'
+                name: 'three-?.sock',
+                isIPv6: false
             }]
         });
     });
-    it('must recognize IPv6 addresses', function () {
+    it('must recognize IPv6 addresses', () => {
         expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
             hosts: [{
-                name: '2001:0db8:0000:0000:0000:FF00:0042:8329'
+                name: '2001:0db8:0000:0000:0000:FF00:0042:8329',
+                isIPv6: true
             }]
         });
         expect(parse('[2001:0db8]:123')).toEqual({
             hosts: [{
                 name: '2001:0db8',
-                port: 123
+                port: 123,
+                isIPv6: true
             }]
         });
     });
-    it('must not treat IPv6 scopes as special characters', function () {
+    it('must not treat IPv6 scopes as special characters', () => {
         expect(parse('[2001:0db8%20]')).toEqual({
             hosts: [{
-                name: '2001:0db8%20'
+                name: '2001:0db8%20',
+                isIPv6: true
             }]
         });
     });
-    it('must skip invalid IPv6 addresses', function () {
+    it('must skip invalid IPv6 addresses', () => {
         expect(parse('[]')).toEqual({});
         expect(parse('[a]:123')).toEqual({});
         expect(parse('[a-b-c]')).toEqual({});
     });
-    it('must throw on invalid ports', function () {
-        expect(function () {
+    it('must throw on invalid ports', () => {
+        expect(() => {
             parse('[::]:1a');
         }).toThrow('Invalid port: 1a');
-        expect(parse('[::]:abc')).toEqual({hosts: [{name: '::'}]});
+        expect(parse('[::]:abc')).toEqual({hosts: [{name: '::', isIPv6: true}]});
     });
-    it('must allow valid ports', function () {
-        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1}]});
-        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1}]});
-        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123}]});
+    it('must allow valid ports', () => {
+        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1, isIPv6: true}]});
+        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1, isIPv6: true}]});
+        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123, isIPv6: true}]});
     });
 });
 
-describe('port', function () {
-    it('must allow without server', function () {
+describe('port', () => {
+    it('must allow without server', () => {
         expect(parse(':12345')).toEqual({
             hosts: [
                 {port: 12345}]
         });
     });
-    it('must not allow 0 or negative ports', function () {
-        expect(function () {
+    it('must not allow 0 or negative ports', () => {
+        expect(() => {
             parse(':0');
         }).toThrow('Invalid port: 0');
-        expect(function () {
+        expect(() => {
             parse(':-1');
         }).toThrow('Invalid port: -1');
     });
-    it('must not allow invalid terminators', function () {
-        expect(function () {
+    it('must not allow invalid terminators', () => {
+        expect(() => {
             parse(':12345a');
         }).toThrow('Invalid port: 12345a');
         expect(parse(':abc')).toEqual({});
@@ -157,72 +165,72 @@ describe('port', function () {
     });
 });
 
-describe('user', function () {
-    it('must allow only the user', function () {
+describe('user', () => {
+    it('must allow only the user', () => {
         expect(parse('Name@')).toEqual({user: 'Name'});
     });
-    it('must allow user name = 0', function () {
+    it('must allow user name = 0', () => {
         expect(parse('0@')).toEqual({user: '0'});
     });
-    it('must decode URL-encoded characters', function () {
+    it('must decode URL-encoded characters', () => {
         expect(parse('First%20name%3F@')).toEqual({user: 'First name?'});
     });
-    it('must support special symbols', function () {
+    it('must support special symbols', () => {
         expect(parse('A9z$-_.+!*\'()@')).toEqual({user: 'A9z$-_.+!*\'()'});
     });
 });
 
-describe('password', function () {
-    it('must allow only the password', function () {
+describe('password', () => {
+    it('must allow only the password', () => {
         expect(parse(':pass@')).toEqual({password: 'pass'});
     });
-    it('must decode URL-encoded characters', function () {
+    it('must decode URL-encoded characters', () => {
         expect(parse(':pass%20123%3F@')).toEqual({password: 'pass 123?'});
     });
-    it('must support special symbols', function () {
+    it('must support special symbols', () => {
         expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_.+!*\'()'});
     });
 });
 
-describe('user + password', function () {
-    it('must allow skipping both', function () {
+describe('user + password', () => {
+    it('must allow skipping both', () => {
         expect(parse('@')).toEqual({});
         expect(parse(':@')).toEqual({});
     });
 });
 
-describe('segments', function () {
-    it('must ignore empty segments', function () {
+describe('segments', () => {
+    it('must ignore empty segments', () => {
         expect(parse('/')).toEqual({});
         expect(parse('//')).toEqual({});
         expect(parse('///')).toEqual({});
         expect(parse('//')).toEqual({});
     });
-    it('must enumerate all segments', function () {
+    it('must enumerate all segments', () => {
         expect(parse('/one/two')).toEqual({segments: ['one', 'two']});
     });
-    it('must recognize after protocol', function () {
+    it('must recognize after protocol', () => {
         expect(parse('abc:///one')).toEqual({protocol: 'abc', segments: ['one']});
         expect(parse('abc:////one')).toEqual({protocol: 'abc', segments: ['one']});
     });
-    it('must recognize with empty protocol', function () {
+    it('must recognize with empty protocol', () => {
         expect(parse(':///one')).toEqual({segments: ['one']});
         expect(parse(':////one')).toEqual({segments: ['one']});
     });
-    it('must decode URL-encoded characters', function () {
+    it('must decode URL-encoded characters', () => {
         expect(parse('/one%20/%3Ftwo')).toEqual({segments: ['one ', '?two']});
     });
-    it('must support special symbols', function () {
+    it('must support special symbols', () => {
         expect(parse('/$-_.+!*\'()')).toEqual({segments: ['$-_.+!*\'()']});
     });
 });
 
-describe('params', function () {
-    it('must support lack of parameters', function () {
+describe('params', () => {
+    it('must support lack of parameters', () => {
         expect(parse('?')).toEqual({});
         expect(parse('/?')).toEqual({});
     });
-    it('must support short parameters', function () {
+    it('must support short parameters', () => {
         expect(parse('?a=1&b=2')).toEqual({
             params: {
                 a: '1',
@@ -230,7 +238,7 @@ describe('params', function () {
             }
         });
     });
-    it('must ignore empty parameters', function () {
+    it('must ignore empty parameters', () => {
         expect(parse('?a=1&b=&c=3')).toEqual({
             params: {
                 a: '1',
@@ -238,31 +246,31 @@ describe('params', function () {
             }
         });
     });
-    it('must decode URL-encoded characters', function () {
+    it('must decode URL-encoded characters', () => {
         expect(parse('?a%20b=test%3Fhere')).toEqual({
             params: {
                 'a b': 'test?here'
             }
         });
     });
-    it('must support special symbols', function () {
+    it('must support special symbols', () => {
         expect(parse('?A9z$-_.+!*\'()=A9z$-_.+!*\'()')).toEqual({
             params: {
                 'A9z$-_.+!*\'()': 'A9z$-_.+!*\'()'
             }
         });
     });
-    it('must work with protocol only', function () {
+    it('must work with protocol only', () => {
         expect(parse('://?par1=123')).toEqual({params: {par1: '123'}});
         expect(parse(':///?par1=123')).toEqual({params: {par1: '123'}});
     });
-    it('it must worl with the user only', function () {
+    it('it must worl with the user only', () => {
         expect(parse('user@?p1=123')).toEqual({user: 'user', params: {p1: '123'}});
     });
 });
 
-describe('complex', function () {
-    it('protocol + segment', function () {
+describe('complex', () => {
+    it('protocol + segment', () => {
         expect(parse('a:///seg')).toEqual({
             protocol: 'a',
             segments: ['seg']
@@ -272,7 +280,7 @@ describe('complex', function () {
             segments: ['seg']
         });
     });
-    it('protocol + params', function () {
+    it('protocol + params', () => {
         expect(parse('a:///?one=1%3F2')).toEqual({
             protocol: 'a',
             params: {
@@ -286,106 +294,134 @@ describe('complex', function () {
             }
         });
     });
-    it('must not lose details after the port', function () {
+    it('must not lose details after the port', () => {
         expect(parse(':123/one')).toEqual({hosts: [{port: 123}], segments: ['one']});
     });
 });
 
-describe('build', function () {
-    it('must encode protocol', function () {
+describe('build', () => {
+    it('must encode protocol', () => {
         expect(create({protocol: 'abc 123?456'})).toBe('abc%20123%3F456://');
     });
-    it('must encode user', function () {
+    it('must encode user', () => {
         expect(create({user: 'user 1?2'})).toBe('user%201%3F2@');
     });
-    it('must encode password', function () {
+    it('must encode password', () => {
         expect(create({password: 'pass 1?2'})).toBe(':pass%201%3F2@');
     });
-    it('must support user + password', function () {
+    it('must support user + password', () => {
         expect(parse('user:pass@').build()).toBe('user:pass@');
     });
-    it('must support solo hostname', function () {
-        expect(parse('server').build()).toBe('server');
+    it('must encode non-IPv6 host name', () => {
+        expect(parse('one%20two%20three!').build()).toBe('one%20two%20three');
     });
-    it('must support solo port', function () {
+    it('must not encode IPv6 host name', () => {
+        expect(parse('[123::%20:%20:456]').build()).toBe('[123::%20:%20:456]');
+    });
+    it('must support solo hostname', () => {
+        expect(parse('server').build()).toBe('server');
+        expect(parse('[123::]').build()).toBe('[123::]');
+    });
+    it('must support solo port', () => {
         expect(parse(':123').build()).toBe(':123');
     });
-    it('must support hostname + port', function () {
+    it('must support hostname + port', () => {
         expect(parse('server:123').build()).toBe('server:123');
+        expect(parse('[::]:123').build()).toBe('[::]:123');
     });
-    it('must encode segments', function () {
+    it('must encode segments', () => {
         expect(parse('/a%20b').build()).toBe('/a%20b');
         expect(parse('/a/b%20/c').build()).toBe('/a/b%20/c');
     });
-    it('must ignore empty segment list', function () {
-        var a = parse('');
+    it('must ignore empty segment list', () => {
+        const a = parse('');
         a.segments = [];
         expect(a.build()).toBe('');
     });
-    it('must encode params', function () {
-        var obj = {
+    it('must encode params', () => {
+        const obj = {
             text: 1,
             values: ['one', true]
         };
-        var a = parse('', {params: {value1: obj, value2: 'text'}});
-        var b = parse(a.build());
+        const a = parse('', {params: {value1: obj, value2: 'text'}});
+        const b = parse(a.build());
         expect(JSON.parse(b.params.value1)).toEqual(obj);
     });
-    it('must ignore empty parameter list', function () {
-        var a = parse('');
+    it('must ignore empty parameter list', () => {
+        const a = parse('');
         a.params = {};
         expect(a.build()).toBe('');
     });
 });
 
-describe('setDefaults', function () {
-    it('must throw on invalid defaults', function () {
-        var error = new TypeError('Invalid \'defaults\' parameter!');
-        expect(function () {
+describe('setDefaults', () => {
+    it('must throw on invalid defaults', () => {
+        const error = new TypeError('Invalid \'defaults\' parameter!');
+        expect(() => {
             parse('').setDefaults();
         }).toThrow(error);
-        expect(function () {
+        expect(() => {
             parse('').setDefaults(123);
         }).toThrow(error);
     });
-    it('must set the default protocol', function () {
+    it('must set the default protocol', () => {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
     });
-    it('must set the default hostname and port', function () {
-        expect(parse('my-host').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'my-host'}, {name: 'abc'}]});
-        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host'}]})).toEqual({hosts: [{name: 'my-host'}]});
-        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 222}]})).toEqual({
-            hosts: [{name: 'my-host'}, {
+    it('must set the default hostname and port', () => {
+        expect(parse('my-host').setDefaults({hosts: [{name: '::', isIPv6: true}]})).toEqual({
+            hosts: [{
                 name: 'my-host',
-                port: 222
+                isIPv6: false
+            }, {name: '::', isIPv6: true}]
+        });
+        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host'}]})).toEqual({
+            hosts: [{
+                name: 'my-host',
+                isIPv6: false
             }]
         });
-        expect(parse(':111').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 111}, {port: 123}]});
-        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc'}]});
+        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 222}]})).toEqual({
+            hosts: [
+                {
+                    name: 'my-host', isIPv6: false
+                },
+                {
+                    name: 'my-host',
+                    port: 222,
+                    isIPv6: false
+                }
+            ]
+        });
+        expect(parse(':111').setDefaults({hosts: [{port: 123}]})).toEqual({
+            hosts: [{
+                port: 111
+            }, {port: 123}]
+        });
+        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc', isIPv6: false}]});
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });
-    it('must ignore invalid ports', function () {
+    it('must ignore invalid ports', () => {
         expect(parse('').setDefaults({port: '123'})).toEqual({});
         expect(parse('').setDefaults({port: 'a'})).toEqual({});
         expect(parse('').setDefaults({port: -1})).toEqual({});
         expect(parse('').setDefaults({port: '0'})).toEqual({});
     });
-    it('must set the default user', function () {
+    it('must set the default user', () => {
         expect(parse('').setDefaults({user: 'abc'})).toEqual({user: 'abc'});
     });
-    it('must set the default password', function () {
+    it('must set the default password', () => {
         expect(parse('').setDefaults({password: 'abc'})).toEqual({password: 'abc'});
     });
-    it('must set the default segments', function () {
+    it('must set the default segments', () => {
         expect(parse('').setDefaults({segments: ['abc']})).toEqual({segments: ['abc']});
     });
-    it('must set the default params', function () {
+    it('must set the default params', () => {
         expect(parse('').setDefaults({params: {p1: 'abc'}})).toEqual({params: {p1: 'abc'}});
     });
-    it('must skip empty params', function () {
+    it('must skip empty params', () => {
         expect(parse('').setDefaults({params: {}})).toEqual({});
     });
-    it('must merge params', function () {
+    it('must merge params', () => {
         expect(parse('?value1=1').setDefaults({params: {value1: 0, value2: 2}})).toEqual({
             params: {
                 value1: '1',
@@ -393,7 +429,7 @@ describe('setDefaults', function () {
             }
         });
     });
-    it('must ignore empty segments', function () {
+    it('must ignore empty segments', () => {
         expect(parse('').setDefaults({segments: ['', 123, true, '  ']})).toEqual({});
         expect(parse('').setDefaults({segments: 123})).toEqual({});
     });

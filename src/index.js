@@ -73,6 +73,7 @@
                 if (m) {
                     if (m[2]) {
                         h.name = isIPv6 ? m[2] : decode(m[2]);
+                        h.isIPv6 = isIPv6;
                     }
                     if (m[3]) {
                         var p = m[3], port = parseInt(p);
@@ -140,16 +141,7 @@
             }
         }
         if (Array.isArray(this.hosts)) {
-            s += this.hosts.map(function (h) {
-                var a = '';
-                if (h.name) {
-                    a += encode(h.name);
-                }
-                if (h.port) {
-                    a += ':' + h.port;
-                }
-                return a;
-            }).join();
+            s += this.hosts.map(fullHostName).join();
         }
         if (Array.isArray(this.segments) && this.segments.length) {
             this.segments.forEach(function (seg) {
@@ -185,7 +177,8 @@
             defaults.hosts.forEach(function (dh) {
                 found = false;
                 for (var i = 0; i < hosts.length; i++) {
-                    if (equalStrings(hosts[i].name, dh.name) && hosts[i].port === dh.port) {
+                    var thisHost = fullHostName(hosts[i]), defHost = fullHostName(dh);
+                    if (equalStrings(thisHost, defHost)) {
                         found = true;
                         break;
                     }
@@ -194,6 +187,7 @@
                     obj = {};
                     if (isText(dh.name)) {
                         obj.name = dh.name;
+                        obj.isIPv6 = !!dh.isIPv6;
                     }
                     var port = parseInt(dh.port);
                     if (port > 0 && port < 65536) {
@@ -236,6 +230,21 @@
             }
         }
         return this;
+    }
+
+    function fullHostName(obj) {
+        var a = '';
+        if (obj.name) {
+            if (obj.isIPv6) {
+                a = '[' + obj.name + ']';
+            } else {
+                a = encode(obj.name);
+            }
+        }
+        if (obj.port) {
+            a += ':' + obj.port;
+        }
+        return a;
     }
 
     function isText(txt) {

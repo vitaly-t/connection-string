@@ -9,7 +9,7 @@ Advanced URL Connection String Parser, with fully optional syntax.
 Takes a URL connection string (with every element being optional): 
 
 ```
-protocol://user:password@hostA:123,hostB:456/seg1/seg2?p1=val1&p2=val2
+protocol://user:password@host1:123,[abcd::]:456/seg1/seg2?p1=val1&p2=val2
 ```
 
 and converts it into an object that contains only what's specified:
@@ -19,7 +19,10 @@ and converts it into an object that contains only what's specified:
     protocol: 'protocol',
     user: 'user',
     password: 'password',
-    hosts: [{name: 'hostA', port: 123}, {name: 'hostB', port: 456}],
+    hosts: [
+            {name: 'host1', port: 123, isIPv6: false},
+            {name: 'abcd::', port: 456, isIPv6: true}
+            ],
     segments: ['seg1', 'seg2'],
     params: {
         p1: 'val1',
@@ -41,10 +44,10 @@ Unlike the standard URL parser, this one supports the following:
  
 **Short-syntax examples:**
 
-* `localhost` => `{hosts: [{name: 'localhost'}]`
-* `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345}]`
-* `1.2.3.4:123` => `{hosts: [name: '1.2.3.4', port: 123}]`
-* `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123}]`
+* `localhost` => `{hosts: [{name: 'localhost', isIPv6: false}]`
+* `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, isIPv6: false}]`
+* `1.2.3.4:123` => `{hosts: [name: '1.2.3.4', port: 123, isIPv6: false}]`
+* `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123, isIPv6: true}]`
 * `abc:///seg1?p1=val` => `{protocol: 'abc', segments: ['seg1'], params: {p1: 'val'}}`
 * `:12345` => `{hosts: [{port: 12345}]`
 * `username@` => `{user: 'username'}`
@@ -73,7 +76,7 @@ const obj1 = parse('my-server:12345');
 
 // with a default value:
 parse('my-server:12345', {user: 'admin'});
-//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345}]}
+//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
 ```
 
 or as a class:
@@ -85,7 +88,7 @@ const obj1 = new ConnectionString('my-server:12345');
 
 // with a default value:
 const obj2 = new ConnectionString('my-server:12345', {user: 'admin'});
-//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345}]}
+//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
 ```
 
 * **Browsers**
