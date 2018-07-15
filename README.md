@@ -129,7 +129,8 @@ passing the `defaults` object into the parser/constructor.
 
 #### Method `toString() => string`
 
-Constructs and returns a connection string from all the current properties.
+When called on the root object of type `ConnectionString`, the method constructs and returns
+a connection string from all the current properties.
 
 Example:
  
@@ -141,6 +142,18 @@ a.toString(); //=> 'abc://guest@localhost'
 
 For any parameter within `params`, if the value is not a string, it will be converted into a JSON
 string first, and then URL-encoded.
+
+You can also call `toString()` on both `hosts` property of the object, and individual host
+objects, if you want to generate a complete host name from the current properties.
+
+Example:
+
+```js
+const a = new ConnectionString('abc://my-host:123,[abcd::]:456');
+a.hosts.toString(); //=> 'my-host:123,[abcd::]:456'
+a.hosts[0].toString(); //=> 'my-host:123'
+a.hosts[1].toString(); //=> '[abcd::]:456'
+```
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
