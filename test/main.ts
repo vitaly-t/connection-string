@@ -1,4 +1,4 @@
-import {ConnectionString} from '../src'
+import {ConnectionString, IHost} from '../src'
 
 const a = new ConnectionString('protocol://');
 const b = new ConnectionString('protocol://', {});
@@ -36,3 +36,5 @@ a.setDefaults({
 cs = a.toString();
 
 const qq: ConnectionString = a.setDefaults(new ConnectionString(''));
+
+const parseHost: IHost = ConnectionString.parseHost('abc');

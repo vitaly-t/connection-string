@@ -29,3 +29,4 @@ a.setDefaults({
 });
 cs = a.toString();
 var qq = a.setDefaults(new src_1.ConnectionString(''));
+var parseHost = src_1.ConnectionString.parseHost('abc');

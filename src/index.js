@@ -23,11 +23,7 @@
         cs = trim(cs);
 
         // validating URL symbols:
-        var idx = cs.search(/[^A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=%]/);
-        if (idx >= 0) {
-            var s = JSON.stringify(cs[idx]).replace(/^"|"$/g, '\'');
-            throw new Error('Invalid URL character ' + s + ' at position ' + idx);
-        }
+        validateUrl(cs);
 
         // extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
@@ -56,45 +52,18 @@
             // if it starts with `/`, it is the first segment, no hosts specified
 
             var endOfHosts = cs.search(/\/|\?/);
-
             var hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
 
-            for (var i = 0; i < hosts.length; i++) {
-                var host = hosts[i];
-                var h = {}, isIPv6 = false;
+            hosts.forEach(function (str) {
+                var host = parseHost(str);
+                if (host) {
+                    if (!this.hosts) {
+                        this.hosts = [];
+                    }
+                    this.hosts.push(host);
+                }
+            }, this);
 
-                if (host[0] === '[') {
-                    // This is IPv6, with [::] being the shortest possible
-                    m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
-                    isIPv6 = true;
-                } else {
-                    // It is either IPv4 or a name
-                    m = host.match(/(([a-z0-9%.-]*)(?::(-?[0-9]+[^/?]*))?)/i);
-                }
-                if (m) {
-                    if (m[2]) {
-                        h.name = isIPv6 ? m[2] : decode(m[2]);
-                        h.isIPv6 = isIPv6;
-                    }
-                    if (m[3]) {
-                        var p = m[3], port = parseInt(p);
-                        if (port > 0 && port < 65536 && port.toString() === p) {
-                            h.port = port;
-                        } else {
-                            throw new Error('Invalid port: ' + p);
-                        }
-                    }
-                    if (h.name || h.port) {
-                        if (!this.hosts) {
-                            this.hosts = [];
-                        }
-                        Object.defineProperty(h, 'toString', {
-                            value: fullHostName.bind(null, h)
-                        });
-                        this.hosts.push(h);
-                    }
-                }
-            }
             if (endOfHosts >= 0) {
                 cs = cs.substr(endOfHosts);
             }
@@ -109,7 +78,7 @@
         }
 
         // extracting parameters:
-        idx = cs.indexOf('?');
+        var idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
             m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%]+)/g);
@@ -126,6 +95,54 @@
         if (defaults) {
             this.setDefaults(defaults);
         }
+    }
+
+    function validateUrl(url) {
+        var idx = url.search(/[^A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=%]/);
+        if (idx >= 0) {
+            var s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
+            throw new Error('Invalid URL character ' + s + ' at position ' + idx);
+        }
+    }
+
+    function parseHost(host, external) {
+        if (external) {
+            if (typeof host !== 'string') {
+                throw new TypeError('Invalid \'host\' parameter!');
+            }
+            host = trim(host);
+        }
+        var m, isIPv6 = false;
+        if (host[0] === '[') {
+            // This is IPv6, with [::] being the shortest possible
+            m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
+            isIPv6 = true;
+        } else {
+            // It is either IPv4 or a name
+            m = host.match(/(([a-z0-9%.-]*)(?::(-?[0-9]+[^/?]*))?)/i);
+        }
+        if (m) {
+            var h = {};
+            if (m[2]) {
+                h.name = isIPv6 ? m[2] : decode(m[2]);
+                h.isIPv6 = isIPv6;
+            }
+            if (m[3]) {
+                var p = m[3], port = parseInt(p);
+                if (port > 0 && port < 65536 && port.toString() === p) {
+                    h.port = port;
+                } else {
+                    throw new Error('Invalid port: ' + p);
+                }
+            }
+            if (h.name || h.port) {
+                Object.defineProperty(h, 'toString', {
+                    value: fullHostName.bind(null, h)
+                });
+                return h;
+            }
+        }
+        return null;
     }
 
     function toString() {
@@ -278,6 +295,11 @@
 
     Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
     Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
+    Object.defineProperty(ConnectionString, 'parseHost', {
+        value: function (host) {
+            return parseHost(host, true);
+        }
+    });
 
     ConnectionString.ConnectionString = ConnectionString; // to make it TypeScript-friendly
 
