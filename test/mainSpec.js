@@ -435,3 +435,30 @@ describe('setDefaults', () => {
     });
 
 });
+
+describe('parseHost', () => {
+    const parseHost = ConnectionString.parseHost;
+    it('must throw on invalid host', () => {
+        const error = 'Invalid \'host\' parameter!';
+        expect(() => {
+            parseHost();
+        }).toThrow(error);
+        expect(() => {
+            parseHost(123);
+        }).toThrow(error);
+    });
+    it('must allow empty hosts', () => {
+        expect(parseHost('')).toBeNull();
+        expect(parseHost(':')).toBeNull();
+    });
+    it('must trim hosts', () => {
+        expect(parseHost('      ')).toBeNull();
+        expect(parseHost('   :   ')).toBeNull();
+        expect(parseHost('\r\n \t  abc\r\n')).toEqual({name: 'abc', isIPv6: false});
+    });
+    it('must parse valid hosts', () => {
+        expect(parseHost('a')).toEqual({name: 'a', isIPv6: false});
+        expect(parseHost('a:123')).toEqual({name: 'a', port: 123, isIPv6: false});
+        expect(parseHost('[::]:123')).toEqual({name: '::', port: 123, isIPv6: true});
+    });
+});

@@ -7,7 +7,7 @@ interface IHost {
 
 interface IConnectionDefaults {
     protocol?: string
-    hosts?: Array<IHost>;
+    hosts?: Array<IHost>
     user?: string
     password?: string
     segments?: string[]
@@ -24,7 +24,10 @@ export class ConnectionString {
     segments?: string[];
     params?: { [name: string]: string };
 
-    toString(): string;
+    static parseHost(host: string): IHost
 
-    setDefaults(defaults: IConnectionDefaults): ConnectionString;
+    toString(): string
+
+    setDefaults(defaults: IConnectionDefaults): ConnectionString
+
 }

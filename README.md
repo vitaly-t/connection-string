@@ -156,5 +156,23 @@ a.hosts[0].toString(); //=> 'my-host:123'
 a.hosts[1].toString(); //=> '[abcd::]:456'
 ```
 
+### Method `static parseHost(host) => {name,port,isIPv6} | null`
+
+If you use an external list of default hosts, you may need to parse them separately,
+before you can use them as correct defaults, which is what this static method does.
+
+```js
+const h = ConnectionString.parseHost('[abcd::]:111');
+//=> {name: 'abcd', port: 123, isIPv6: true}
+
+const a = new ConnectionString('test://localhost:222/dbname', {hosts: [h]});
+//=> {protocol: 'test', hosts: [{name: 'localhost', port: 222, isIPv6: false}], segments: ['dbname']}
+
+a.toString();
+//=> test://localhost:222,[abcd::]:111/dbname
+```
+
+If no host information found, the method returns `null`.
+
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
