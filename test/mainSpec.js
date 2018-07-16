@@ -32,10 +32,10 @@ describe('init', () => {
     it('must throw on inner spaces', () => {
         expect(() => {
             parse('a b');
-        }).toThrow(new Error('Invalid URL character at position 1'));
+        }).toThrow('Invalid URL character \' \' at position 1');
         expect(() => {
             parse('ab\tc');
-        }).toThrow(new Error('Invalid URL character at position 2'));
+        }).toThrow('Invalid URL character \'\\t\' at position 2');
     });
     it('must allow an empty string', () => {
         expect(parse('')).toEqual({});

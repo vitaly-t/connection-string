@@ -25,7 +25,8 @@
         // validating URL symbols:
         var idx = cs.search(/[^A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=%]/);
         if (idx >= 0) {
-            throw new Error('Invalid URL character at position ' + idx);
+            var s = JSON.stringify(cs[idx]).replace(/^"|"$/g, '\'');
+            throw new Error('Invalid URL character ' + s + ' at position ' + idx);
         }
 
         // extracting the protocol:
