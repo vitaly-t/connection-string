@@ -8,6 +8,7 @@ var c = new src_1.ConnectionString('protocol://', {
 });
 if ('protocol' in a) {
     var protocol = a.protocol;
+    var pass = a.password;
 }
 var segment1 = a.segments[0];
 var param1 = a.params['first'];

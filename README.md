@@ -57,7 +57,7 @@ Unlike the standard URL parser, this one supports the following:
 
 For more short-syntax examples see [Optional Format].
 
-All browsers are supported, plus Node.js v4.0 and newer.
+All browsers are supported, plus Node.js v4.0 and later.
 
 ## Installing
 
@@ -119,7 +119,7 @@ If it is specified, the parser will call method `setDefaults` automatically (see
 The object returned by the parser contains all the properties as specified in the connection string,
 plus two methods: `setDefaults` and `toString` (see below).
 
-#### Method `setDefaults(defaults) => ConnectionString`
+### Method `setDefaults(defaults) => ConnectionString`
 
 The method takes an object with default values, and sets those for all the properties that were not
 specified within the connection string, and returns the same object (itself). 
@@ -127,12 +127,12 @@ specified within the connection string, and returns the same object (itself).
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
 passing the `defaults` object into the parser/constructor.
 
-#### Method `toString() => string`
+### Method `toString() => string`
 
-When called on the root object of type `ConnectionString`, the method constructs and returns
-a connection string from all the current properties.
+For the root `ConnectionString` object, the method constructs and returns a connection string from
+all the current properties.
 
-Example:
+**Example:**
  
 ```js
 const a = new ConnectionString('abc://localhost');
@@ -146,7 +146,7 @@ string first, and then URL-encoded.
 You can also call `toString()` on both `hosts` property of the object, and individual host
 objects, if you want to generate a complete host name from the current properties.
 
-Example:
+**Example:**
 
 ```js
 const a = new ConnectionString('abc://my-host:123,[abcd::]:456');

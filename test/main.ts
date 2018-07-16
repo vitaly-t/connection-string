@@ -8,6 +8,7 @@ const c = new ConnectionString('protocol://', {
 
 if ('protocol' in a) {
     const protocol = a.protocol;
+    const pass = a.password;
 }
 
 const segment1: string = a.segments[0];
