@@ -198,34 +198,38 @@
         // Missing default hosts are merged with the existing ones:
         if (Array.isArray(defaults.hosts)) {
             var hosts = Array.isArray(this.hosts) ? this.hosts : [];
-            var obj, found;
-            defaults.hosts.forEach(function (dh) {
-                found = false;
-                for (var i = 0; i < hosts.length; i++) {
-                    var thisHost = fullHostName(hosts[i]), defHost = fullHostName(dh);
-                    if (equalStrings(thisHost, defHost)) {
-                        found = true;
-                        break;
+            defaults.hosts.filter(function (d) {
+                return d && typeof d === 'object';
+            })
+                .forEach(function (dh) {
+                    var found = false;
+                    for (var i = 0; i < hosts.length; i++) {
+                        var thisHost = fullHostName(hosts[i]), defHost = fullHostName(dh);
+                        if (equalStrings(thisHost, defHost)) {
+                            found = true;
+                            break;
+                        }
                     }
-                }
-                if (!found) {
-                    obj = {};
-                    if (isText(dh.name)) {
-                        obj.name = dh.name;
-                        obj.isIPv6 = !!dh.isIPv6;
+                    if (!found) {
+                        var obj = {};
+                        if (isText(dh.name)) {
+                            obj.name = dh.name;
+                            obj.isIPv6 = !!dh.isIPv6;
+                        }
+                        var port = parseInt(dh.port);
+                        if (port > 0 && port < 65536) {
+                            obj.port = port;
+                        }
+                        if (obj.name || obj.port) {
+                            Object.defineProperty(obj, 'toString', {
+                                value: fullHostName.bind(null, obj)
+                            });
+                            hosts.push(obj);
+                        }
                     }
-                    var port = parseInt(dh.port);
-                    if (port > 0 && port < 65536) {
-                        obj.port = port;
-                    }
-                    Object.defineProperty(obj, 'toString', {
-                        value: fullHostName.bind(null, obj)
-                    });
-                    hosts.push(obj);
-                }
-            });
-            if (obj) {
-                this.hosts = hosts; // If anything changed;
+                });
+            if (hosts.length) {
+                this.hosts = hosts;
             }
         }
 

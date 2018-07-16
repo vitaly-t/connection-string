@@ -436,6 +436,12 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({segments: ['', 123, true, '  ']})).toEqual({});
         expect(parse('').setDefaults({segments: 123})).toEqual({});
     });
+    it('must ignore invalid and empty hosts', () => {
+        expect(parse('').setDefaults({hosts: 1})).toEqual({});
+        expect(parse('').setDefaults({hosts: []})).toEqual({});
+        expect(parse('').setDefaults({hosts: [1, 2, 3]})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{}, {}, {}]})).toEqual({});
+    });
 
 });
 
