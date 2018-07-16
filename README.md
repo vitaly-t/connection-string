@@ -159,7 +159,7 @@ a.hosts[1].toString(); //=> '[abcd::]:456'
 ### `static parseHost(host) => {name,port,isIPv6} | null`
 
 If you use an external list of default hosts, you may need to parse them separately,
-using this method, so they can be passed in as correct defaults.
+using this method, so they can be passed in as valid objects.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');

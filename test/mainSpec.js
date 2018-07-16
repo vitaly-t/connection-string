@@ -256,7 +256,7 @@ describe('params', () => {
     it('must support special symbols', () => {
         expect(parse('?A9z$-_.+!*\'()=A9z$-_.+!*\'()')).toEqual({
             params: {
-                'A9z$-_.+!*\'()': 'A9z$-_.+!*\'()'
+                'A9z$-_.+!*\'()': 'A9z$-_. !*\'()'
             }
         });
     });
@@ -264,8 +264,11 @@ describe('params', () => {
         expect(parse('://?par1=123')).toEqual({params: {par1: '123'}});
         expect(parse(':///?par1=123')).toEqual({params: {par1: '123'}});
     });
-    it('it must worl with the user only', () => {
+    it('it must work with the user only', () => {
         expect(parse('user@?p1=123')).toEqual({user: 'user', params: {p1: '123'}});
+    });
+    it('must convert each plus to a space', () => {
+        expect(parse('?p1=1+2+3')).toEqual({params: {p1: '1 2 3'}});
     });
 });
 

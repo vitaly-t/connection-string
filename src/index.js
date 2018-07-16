@@ -19,13 +19,13 @@
             throw new TypeError(invalidDefaults);
         }
 
-        // removing all trailing space symbols:
+        // Removing all trailing space symbols:
         cs = trim(cs);
 
-        // validating URL symbols:
+        // Validating URL symbols:
         validateUrl(cs);
 
-        // extracting the protocol:
+        // Extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
         if (m) {
             var protocol = decode(m[0].replace(/:\/\//, ''));
@@ -35,7 +35,7 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extracting user + password:
+        // Extracting user + password:
         m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
         if (m) {
             if (m[1]) {
@@ -47,15 +47,15 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extracting hosts details:
+        // Extracting hosts details...
+        // (if it starts with `/`, it is the first segment, so no hosts specified)
         if (cs[0] !== '/') {
-            // if it starts with `/`, it is the first segment, no hosts specified
 
             var endOfHosts = cs.search(/\/|\?/);
             var hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
 
-            hosts.forEach(function (str) {
-                var host = parseHost(str);
+            hosts.forEach(function (h) {
+                var host = parseHost(h);
                 if (host) {
                     if (!this.hosts) {
                         this.hosts = [];
@@ -69,7 +69,7 @@
             }
         }
 
-        // extracting segments:
+        // Extracting segments:
         m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
             this.segments = m.map(function (s) {
@@ -77,7 +77,7 @@
             });
         }
 
-        // extracting parameters:
+        // Extracting parameters:
         var idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
@@ -86,7 +86,8 @@
                 var params = {};
                 m.forEach(function (s) {
                     var a = s.split('=');
-                    params[decode(a[0])] = decode(a[1]);
+                    var value = a[1].replace(/\+/g, ' ');
+                    params[decode(a[0])] = decode(value);
                 });
                 this.params = params;
             }
@@ -224,7 +225,7 @@
                 }
             });
             if (obj) {
-                this.hosts = hosts; // if anything changed;
+                this.hosts = hosts; // If anything changed;
             }
         }
 
@@ -301,13 +302,13 @@
         }
     });
 
-    ConnectionString.ConnectionString = ConnectionString; // to make it TypeScript-friendly
+    ConnectionString.ConnectionString = ConnectionString; // To make it TypeScript-friendly
 
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {
-        module.exports = ConnectionString; // inside Node.js
+        module.exports = ConnectionString; // Inside Node.js
     }
     else {
-        window.ConnectionString = ConnectionString; // inside a browser
+        window.ConnectionString = ConnectionString; // Inside a browser
     }
 })(this);
