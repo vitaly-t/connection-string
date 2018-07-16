@@ -163,7 +163,7 @@ using this method, so they can be passed in as correct defaults.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
-//=> {name: 'abcd', port: 123, isIPv6: true}
+//=> {name: 'abcd::', port: 111, isIPv6: true}
 
 const a = new ConnectionString('test://localhost:222/dbname', {hosts: [h]});
 //=> {protocol: 'test', hosts: [{name: 'localhost', port: 222, isIPv6: false}], segments: ['dbname']}
