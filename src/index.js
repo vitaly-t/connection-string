@@ -19,16 +19,16 @@
             throw new TypeError(invalidDefaults);
         }
 
-        // remove all trailing space symbols:
+        // removing all trailing space symbols:
         cs = trim(cs);
 
-        var idx = cs.search(/[\s]/);
+        // validating URL symbols:
+        var idx = cs.search(/[^A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=%]/);
         if (idx >= 0) {
-            // no space symbols allowed inside the URL:
             throw new Error('Invalid URL character at position ' + idx);
         }
 
-        // extract the protocol:
+        // extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
         if (m) {
             var protocol = decode(m[0].replace(/:\/\//, ''));
@@ -38,7 +38,7 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extract user + password:
+        // extracting user + password:
         m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
         if (m) {
             if (m[1]) {
@@ -50,9 +50,9 @@
             cs = cs.substr(m[0].length);
         }
 
-        // extract hosts details:
-        // if it starts now with `/`, it is the first segment, or else it is the first host:port
+        // extracting hosts details:
         if (cs[0] !== '/') {
+            // if it starts with `/`, it is the first segment, no hosts specified
 
             var endOfHosts = cs.search(/\/|\?/);
 
@@ -63,7 +63,7 @@
                 var h = {}, isIPv6 = false;
 
                 if (host[0] === '[') {
-                    // It is an IPv6, with [::] being the shortest possible
+                    // This is IPv6, with [::] being the shortest possible
                     m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
                     isIPv6 = true;
                 } else {
@@ -99,7 +99,7 @@
             }
         }
 
-        // extract segments:
+        // extracting segments:
         m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
             this.segments = m.map(function (s) {
@@ -107,7 +107,7 @@
             });
         }
 
-        // extract parameters:
+        // extracting parameters:
         idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
@@ -171,9 +171,12 @@
         if (!defaults || typeof defaults !== 'object') {
             throw new TypeError(invalidDefaults);
         }
+
         if (!('protocol' in this) && isText(defaults.protocol)) {
             this.protocol = trim(defaults.protocol);
         }
+
+        // Missing default hosts are merged with the existing ones:
         if (Array.isArray(defaults.hosts)) {
             var hosts = Array.isArray(this.hosts) ? this.hosts : [];
             var obj, found;
@@ -206,18 +209,25 @@
                 this.hosts = hosts; // if anything changed;
             }
         }
+
         if (!('user' in this) && isText(defaults.user)) {
             this.user = trim(defaults.user);
         }
+
         if (!('password' in this) && isText(defaults.password)) {
             this.password = trim(defaults.password);
         }
+
+        // Since the order of segments is usually important, we set default
+        // segments as they are, but only when they are missing completely:
         if (!('segments' in this) && Array.isArray(defaults.segments)) {
             var s = defaults.segments.filter(isText);
             if (s.length) {
                 this.segments = s;
             }
         }
+
+        // Missing default params are merged with the existing ones:
         if (defaults.params && typeof defaults.params === 'object') {
             var keys = Object.keys(defaults.params);
             if (keys.length) {
@@ -268,7 +278,7 @@
     Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
     Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
 
-    ConnectionString.ConnectionString = ConnectionString; // to make it more TypeScript-friendly
+    ConnectionString.ConnectionString = ConnectionString; // to make it TypeScript-friendly
 
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {

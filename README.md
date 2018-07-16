@@ -127,6 +127,10 @@ specified within the connection string, and returns the same object (itself).
 You can make use of this method either explicitly, after constructing the class, or implicitly, by 
 passing the `defaults` object into the parser/constructor.
 
+Please note that while missing defaults for `hosts` and `params` are merged with the existing ones,
+`segments` are not, since their order is usually important, so the defaults for `segments` are only
+used when no segment exists.
+
 ### Method `toString() => string`
 
 For the root `ConnectionString` object, the method constructs and returns a connection string from
@@ -139,9 +143,6 @@ const a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest'});
 a.toString(); //=> 'abc://guest@localhost'
 ```
-
-For any parameter within `params`, if the value is not a string, it will be converted into a JSON
-string first, and then URL-encoded.
 
 You can also call `toString()` on both `hosts` property of the object, and individual host
 objects, if you want to generate a complete host name from the current properties.
