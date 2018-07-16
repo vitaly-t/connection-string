@@ -12,7 +12,7 @@ function create(obj) {
 
 describe('init', () => {
     it('must throw on a non-string', () => {
-        const error = new TypeError('Invalid connection string!');
+        const error = 'Invalid connection string!';
         expect(() => {
             parse();
         }).toThrow(error);
@@ -21,7 +21,7 @@ describe('init', () => {
         }).toThrow(error);
     });
     it('must throw on invalid defaults', () => {
-        const error = new TypeError('Invalid \'defaults\' parameter!');
+        const error = 'Invalid \'defaults\' parameter!';
         expect(() => {
             parse('', '');
         }).toThrow(error);
@@ -356,7 +356,7 @@ describe('toString', () => {
 
 describe('setDefaults', () => {
     it('must throw on invalid defaults', () => {
-        const error = new TypeError('Invalid \'defaults\' parameter!');
+        const error = 'Invalid \'defaults\' parameter!';
         expect(() => {
             parse('').setDefaults();
         }).toThrow(error);
