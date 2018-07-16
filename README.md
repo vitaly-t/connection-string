@@ -6,7 +6,7 @@ Advanced URL Connection String Parser, with fully optional syntax.
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
 
-Takes a URL connection string (with every element being optional): 
+Takes a URL connection string (with every element being optional):
 
 ```
 protocol://user:password@host1:123,[abcd::]:456/seg1/seg2?p1=val1&p2=val2
@@ -41,7 +41,7 @@ Unlike the standard URL parser, this one supports the following:
 * Construction of a connection string from all parameters
 * Friendlier access to the URL's segments and parameters
 * TypeScript declarations are deployed with the library
- 
+
 **Short-syntax examples:**
 
 * `localhost` => `{hosts: [{name: 'localhost', isIPv6: false}]`
@@ -114,30 +114,30 @@ For details and examples see the [WiKi Pages].
 ## API
 
 Both the root function and class `ConnectionString` take a second optional parameter `defaults`.
-If it is specified, the parser will call method `setDefaults` automatically (see below). 
+If it is specified, the parser will call method `setDefaults` automatically (see below).
 
 The object returned by the parser contains all the properties as specified in the connection string,
 plus two methods: `setDefaults` and `toString` (see below).
 
-### Method `setDefaults(defaults) => ConnectionString`
+### `setDefaults(defaults) => ConnectionString`
 
 The method takes an object with default values, and sets those for all the properties that were not
-specified within the connection string, and returns the same object (itself). 
+specified within the connection string, and returns the same object (itself).
 
-You can make use of this method either explicitly, after constructing the class, or implicitly, by 
+You can make use of this method either explicitly, after constructing the class, or implicitly, by
 passing the `defaults` object into the parser/constructor.
 
 Please note that while missing defaults for `hosts` and `params` are merged with the existing ones,
 `segments` are not, since their order is usually important, so the defaults for `segments` are only
 used when no segment exists.
 
-### Method `toString() => string`
+### `toString() => string`
 
 For the root `ConnectionString` object, the method constructs and returns a connection string from
 all the current properties.
 
 **Example:**
- 
+
 ```js
 const a = new ConnectionString('abc://localhost');
 a.setDefaults({user: 'guest'});
@@ -156,10 +156,10 @@ a.hosts[0].toString(); //=> 'my-host:123'
 a.hosts[1].toString(); //=> '[abcd::]:456'
 ```
 
-### Method `static parseHost(host) => {name,port,isIPv6} | null`
+### `static parseHost(host) => {name,port,isIPv6} | null`
 
 If you use an external list of default hosts, you may need to parse them separately,
-before you can use them as correct defaults, which is what this static method does.
+using this method, so they can be passed in as correct defaults.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
