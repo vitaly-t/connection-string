@@ -172,7 +172,7 @@ a.toString();
 //=> test://localhost:222,[abcd::]:111/dbname
 ```
 
-If no host information found, the method returns `null`.
+If no valid host information found, the method returns `null`.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
