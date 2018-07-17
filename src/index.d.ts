@@ -1,8 +1,12 @@
+interface IEncodingOptions {
+    encodeDollar?: boolean
+}
+
 interface IHost {
     name?: string
     port?: number
     isIPv6?: boolean
-    toString?: () => string
+    toString?: (options?: IEncodingOptions) => string
 }
 
 interface IConnectionDefaults {
@@ -26,7 +30,7 @@ export class ConnectionString {
 
     static parseHost(host: string): IHost
 
-    toString(): string
+    toString(options?: IEncodingOptions): string
 
     setDefaults(defaults: IConnectionDefaults): ConnectionString
 

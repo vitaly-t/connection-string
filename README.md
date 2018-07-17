@@ -126,7 +126,7 @@ You can call this method either directly or when parsing/constructing the connec
 
 The method returns itself (the current object).
 
-### `toString() => string`
+### `toString(options) => string`
 
 For the root `ConnectionString` object, the method generates a connection string from it.
 
@@ -149,6 +149,12 @@ a.hosts.toString(); //=> 'my-host:123,[abcd::]:456'
 a.hosts[0].toString(); //=> 'my-host:123'
 a.hosts[1].toString(); //=> '[abcd::]:456'
 ```
+
+The method takes one optional parameter - the URL encoding options, which currently supports only `encodeDollar` flag.
+
+By default, `$` is not URL-encoded, as it is not used often, and even when it is used, it is usually either in the password
+or a parameter name, where encoding is typically not needed. But if you do need `$` encoded (into `%24`), pass in options
+as `{encodeDollar: true}`.
 
 ### `static parseHost(host) => {name,port,isIPv6} | null`
 

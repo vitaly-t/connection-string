@@ -1,8 +1,6 @@
 (function (window) {
     'use strict';
 
-    var encode = encodeURIComponent;
-    var decode = decodeURIComponent;
     var invalidDefaults = 'Invalid \'defaults\' parameter!';
 
     function ConnectionString(cs, defaults) {
@@ -120,7 +118,7 @@
             isIPv6 = true;
         } else {
             // It is either IPv4 or a name
-            m = host.match(/(([a-z0-9%.-]*)(?::(-?[0-9]+[^/?]*))?)/i);
+            m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9]+[^/?]*))?)/i);
         }
         if (m) {
             var h = {};
@@ -138,7 +136,9 @@
             }
             if (h.name || h.port) {
                 Object.defineProperty(h, 'toString', {
-                    value: fullHostName.bind(null, h)
+                    value: function (options) {
+                        return fullHostName(h, options);
+                    }
                 });
                 return h;
             }
@@ -146,28 +146,31 @@
         return null;
     }
 
-    function toString() {
+    function toString(options) {
         var s = '';
+        options = options || {};
         if (this.protocol) {
-            s += encode(this.protocol) + '://';
+            s += encode(this.protocol, options) + '://';
         }
         if (this.user) {
-            s += encode(this.user);
+            s += encode(this.user, options);
             if (this.password) {
-                s += ':' + encode(this.password);
+                s += ':' + encode(this.password, options);
             }
             s += '@';
         } else {
             if (this.password) {
-                s += ':' + encode(this.password) + '@';
+                s += ':' + encode(this.password, options) + '@';
             }
         }
         if (Array.isArray(this.hosts)) {
-            s += this.hosts.map(fullHostName).join();
+            s += this.hosts.map(function (h) {
+                return fullHostName(h, options);
+            }).join();
         }
         if (Array.isArray(this.segments) && this.segments.length) {
             this.segments.forEach(function (seg) {
-                s += '/' + encode(seg);
+                s += '/' + encode(seg, options);
             });
         }
         if (this.params) {
@@ -177,7 +180,7 @@
                 if (typeof value !== 'string') {
                     value = JSON.stringify(value);
                 }
-                params.push(encode(a) + '=' + encode(value));
+                params.push(encode(a, options) + '=' + encode(value, options));
             }
             if (params.length) {
                 s += '?' + params.join('&');
@@ -222,7 +225,9 @@
                         }
                         if (obj.name || obj.port) {
                             Object.defineProperty(obj, 'toString', {
-                                value: fullHostName.bind(null, obj)
+                                value: function (options) {
+                                    return fullHostName(obj, options);
+                                }
                             });
                             hosts.push(obj);
                         }
@@ -271,19 +276,29 @@
         return this;
     }
 
-    function fullHostName(obj) {
+    function fullHostName(obj, options) {
+        options = options || {};
         var a = '';
         if (obj.name) {
             if (obj.isIPv6) {
                 a = '[' + obj.name + ']';
             } else {
-                a = encode(obj.name);
+                a = encode(obj.name, options);
             }
         }
         if (obj.port) {
             a += ':' + obj.port;
         }
         return a;
+    }
+
+    function encode(text, options) {
+        text = encodeURIComponent(text);
+        return options.encodeDollar ? text : text.replace(/%24/g, '$');
+    }
+
+    function decode(text) {
+        return decodeURIComponent(text);
     }
 
     function isText(txt) {

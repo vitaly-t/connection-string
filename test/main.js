@@ -17,7 +17,7 @@ a.params = {
     first: '123',
     second: 'hello!'
 };
-var cs = a.toString();
+var cs = a.toString({ encodeDollar: true });
 a.setDefaults({
     hosts: [
         { name: '[::]', port: 123, isIPv6: true }
@@ -27,6 +27,6 @@ a.setDefaults({
     user: '',
     password: ''
 });
-cs = a.toString();
+cs = a.toString({ encodeDollar: true });
 var qq = a.setDefaults(new src_1.ConnectionString(''));
 var parseHost = src_1.ConnectionString.parseHost('abc');
