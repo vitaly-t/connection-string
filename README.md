@@ -150,7 +150,7 @@ a.hosts[0].toString(); //=> 'my-host:123'
 a.hosts[1].toString(); //=> '[abcd::]:456'
 ```
 
-The method takes one optional parameter - the URL encoding options, which currently supports only `encodeDollar` flag.
+The method takes one optional parameter - URL encoding options, which currently supports only `encodeDollar` flag.
 
 By default, `$` is not URL-encoded, as it is not used often, and even when it is used, it is usually either in the password
 or a parameter name, where encoding is typically not needed. But if you do need `$` encoded (into `%24`), pass in options
