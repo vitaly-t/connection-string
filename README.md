@@ -113,39 +113,39 @@ For details and examples see the [WiKi Pages].
 
 ## API
 
-Both the root function and class `ConnectionString` take a second optional parameter `defaults`.
-If it is specified, the parser will call method `setDefaults` automatically (see below).
+When parsing a connection string, via the function or class constructor, you can pass in optional
+object `defaults`, to automatically call `setDefaults` in the end, to provide defaults for the
+values that are missing. See the method below.
 
-The object returned by the parser contains all the properties as specified in the connection string,
-plus two methods: `setDefaults` and `toString` (see below).
+The object returned by the parser contains only what is present in the connection string,
+combined with the defaults, if those were specified, plus methods as documented further.
 
 ### `setDefaults(defaults) => ConnectionString`
 
-The method takes an object with default values, and sets those for all the properties that were not
-specified within the connection string, and returns the same object (itself).
+The method takes an object with default values, and safely combines it with what's missing in the current object.
 
-You can make use of this method either explicitly, after constructing the class, or implicitly, by
-passing the `defaults` object into the parser/constructor.
+Please note that while missing defaults for `hosts` and `params` are merged with the existing sets, `segments` are not,
+since their order is often important, so the defaults for `segments` are only used when there are no segments
+in the current object, though you can override segments manually, just like everything else in the object.
 
-Please note that while missing defaults for `hosts` and `params` are merged with the existing ones,
-`segments` are not, since their order is usually important, so the defaults for `segments` are only
-used when no segment exists.
+You can call this method either directly or when parsing/constructing the connection string, as the second parameter.
+
+The method returns itself (the current object).
 
 ### `toString() => string`
 
-For the root `ConnectionString` object, the method constructs and returns a connection string from
-all the current properties.
+For the root `ConnectionString` object, the method generates a connection string from it.
 
 **Example:**
 
 ```js
 const a = new ConnectionString('abc://localhost');
-a.setDefaults({user: 'guest'});
-a.toString(); //=> 'abc://guest@localhost'
+a.setDefaults({user: 'guest', password: 'pass123'});
+a.toString(); //=> 'abc://guest:pass123@localhost'
 ```
 
-You can also call `toString()` on both `hosts` property of the object, and individual host
-objects, if you want to generate a complete host name from the current properties.
+You can also call `toString()` on both `hosts` property of the object, and individual host objects,
+if you want to generate a complete host name from the current properties.
 
 **Example:**
 
@@ -158,8 +158,8 @@ a.hosts[1].toString(); //=> '[abcd::]:456'
 
 ### `static parseHost(host) => {name,port,isIPv6} | null`
 
-If you use an external list of default hosts, you may need to parse them separately,
-using this method, so they can be passed in as valid objects.
+When using an external list of default hosts, you may need to parse them independently, using this method,
+so they can be correctly processed by method `setDefault`.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
@@ -170,7 +170,7 @@ a.toString();
 //=> test://localhost:222,[abcd::]:111/dbname
 ```
 
-If no valid host information found, the method returns `null`.
+If no valid host information is found, the method returns `null`.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
