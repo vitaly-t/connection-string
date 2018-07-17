@@ -9,7 +9,7 @@ Advanced URL Connection String Parser, with fully optional syntax.
 Takes a URL connection string (with every element being optional):
 
 ```
-protocol://user:password@host1:123,[abcd::]:456/seg1/seg2?p1=val1&p2=val2
+protocol://user:password@host1:123,[abcd::]:456/seg1/seg2?p1=val1&msg=hello+world!
 ```
 
 and converts it into an object that contains only what's specified:
@@ -26,34 +26,33 @@ and converts it into an object that contains only what's specified:
     segments: ['seg1', 'seg2'],
     params: {
         p1: 'val1',
-        p2: 'val2'
+        msg: 'hello world!'
     }
 }
 ```
 
-## Why use it?
+## Rationale
 
-Unlike the standard URL parser, this one supports the following:
+Unlike the default URL parser, this one supports the following:
 
 * Multiple hosts - for connecting to multiple servers
 * Fully optional syntax for every element in the connection string
-* Configuration of defaults for any missing parameter
-* Construction of a connection string from all parameters
-* Friendlier access to the URL's segments and parameters
+* Automatic defaults configuration for missing parameters
+* Re-construction of a connection string from object
+* Friendlier access to all of the URL's details
 * TypeScript declarations are deployed with the library
 
 **Short-syntax examples:**
 
 * `localhost` => `{hosts: [{name: 'localhost', isIPv6: false}]`
 * `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, isIPv6: false}]`
-* `1.2.3.4:123` => `{hosts: [name: '1.2.3.4', port: 123, isIPv6: false}]`
 * `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123, isIPv6: true}]`
 * `abc:///seg1?p1=val` => `{protocol: 'abc', segments: ['seg1'], params: {p1: 'val'}}`
 * `:12345` => `{hosts: [{port: 12345}]`
 * `username@` => `{user: 'username'}`
 * `:pass123@` => `{password: 'pass123'}`
 * `/seg1/seg2` => `{segments: ['seg1', 'seg2']}`
-* `?p1=1&p2=2` => `{params: {p1: '1', p2: '2'}}`
+* `?p1=1&p2=a+b` => `{params: {p1: '1', p2: 'a b'}}`
 
 For more short-syntax examples see [Optional Format].
 
@@ -72,11 +71,8 @@ $ npm install connection-string
 ```js
 const parse = require('connection-string');
 
-const obj1 = parse('my-server:12345');
-
-// with a default value:
-parse('my-server:12345', {user: 'admin'});
-//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
+const obj = parse('my-server:12345');
+//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
 ```
 
 or as a class:
@@ -84,11 +80,8 @@ or as a class:
 ```js
 const ConnectionString = require('connection-string');
 
-const obj1 = new ConnectionString('my-server:12345');
-
-// with a default value:
-const obj2 = new ConnectionString('my-server:12345', {user: 'admin'});
-//=> {user: 'admin', hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
+const obj = new ConnectionString('my-server:12345');
+//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
 ```
 
 * **Browsers**
@@ -107,9 +100,10 @@ const obj2 = new ConnectionString('my-server:12345', {user: 'admin'});
 import {ConnectionString} from 'connection-string'
 
 const a = new ConnectionString('my-server:12345');
+//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
 ```
 
-For details and examples see the [WiKi Pages].
+See also [WiKi Pages] for more examples and documentation.
 
 ## API
 
@@ -159,7 +153,7 @@ a.hosts[1].toString(); //=> '[abcd::]:456'
 ### `static parseHost(host) => {name,port,isIPv6} | null`
 
 When using an external list of default hosts, you may need to parse them independently, using this method,
-so they can be correctly processed by method `setDefault`.
+so they can be correctly processed by method `setDefaults`.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
