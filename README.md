@@ -31,6 +31,9 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
+It implements a superset of [mongodb connection string spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
+which served as a great inspirational basis, but was extended to be more flexible and generic.
+
 ## Rationale
 
 Unlike the default URL parser, this one supports the following:
