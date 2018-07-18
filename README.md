@@ -32,7 +32,7 @@ and converts it into an object that contains only what's specified:
 ```
 
 This library implements a superset of [Mongodb Connection String Spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
-which served as a great inspirational basis, but extended to be more flexible and generic.
+which served as a great inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
 
 ## Rationale
 

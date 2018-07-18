@@ -33,5 +33,4 @@ export class ConnectionString {
     toString(options?: IEncodingOptions): string
 
     setDefaults(defaults: IConnectionDefaults): ConnectionString
-
 }
