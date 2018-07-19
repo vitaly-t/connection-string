@@ -54,7 +54,7 @@ Unlike the default URL parser, this one supports the following:
 * `:12345` => `{hosts: [{port: 12345}]`
 * `username@` => `{user: 'username'}`
 * `:pass123@` => `{password: 'pass123'}`
-* `/one/two` => `{path: ['seg1', 'seg2']}`
+* `/one/two` => `{path: ['one', 'two']}`
 * `?p1=1&p2=a+b` => `{params: {p1: '1', p2: 'a b'}}`
 
 For more short-syntax examples see [Optional Format].
