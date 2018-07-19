@@ -14,7 +14,7 @@ interface IConnectionDefaults {
     hosts?: Array<IHost>
     user?: string
     password?: string
-    segments?: string[]
+    path?: string[]
     params?: { [name: string]: string }
 }
 
@@ -25,7 +25,7 @@ export class ConnectionString {
     hosts?: Array<IHost>;
     user?: string;
     password?: string;
-    segments?: string[];
+    path?: string[];
     params?: { [name: string]: string };
 
     static parseHost(host: string): IHost

@@ -4,13 +4,13 @@ var src_1 = require("../src");
 var a = new src_1.ConnectionString('protocol://');
 var b = new src_1.ConnectionString('protocol://', {});
 var c = new src_1.ConnectionString('protocol://', {
-    segments: ['one', 'two']
+    path: ['one', 'two']
 });
 if ('protocol' in a) {
     var protocol = a.protocol;
     var pass = a.password;
 }
-var segment1 = a.segments[0];
+var segment1 = a.path[0];
 var param1 = a.params['first'];
 a.params['first'] = 'hello';
 a.params = {

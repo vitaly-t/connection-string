@@ -20,6 +20,15 @@ describe('init', () => {
             parse(123);
         }).toThrow(error);
     });
+    it('must throw on invalid symbols', () => {
+        const invalidSymbols = '`"#^<>{}\\| \r\n\t';
+        invalidSymbols.split('').forEach(s => {
+            const a = JSON.stringify(s).replace(/^"|"$/g, '\'');
+            expect(() => {
+                parse('a' + s + 'b');
+            }).toThrow('Invalid URL character ' + a + ' at position 1');
+        });
+    });
     it('must throw on invalid defaults', () => {
         const error = 'Invalid \'defaults\' parameter!';
         expect(() => {
@@ -199,29 +208,29 @@ describe('user + password', () => {
     });
 });
 
-describe('segments', () => {
-    it('must ignore empty segments', () => {
+describe('path', () => {
+    it('must ignore empty path', () => {
         expect(parse('/')).toEqual({});
         expect(parse('//')).toEqual({});
         expect(parse('///')).toEqual({});
         expect(parse('//')).toEqual({});
     });
-    it('must enumerate all segments', () => {
-        expect(parse('/one/two')).toEqual({segments: ['one', 'two']});
+    it('must enumerate all path segments', () => {
+        expect(parse('/one/two')).toEqual({path: ['one', 'two']});
     });
     it('must recognize after protocol', () => {
-        expect(parse('abc:///one')).toEqual({protocol: 'abc', segments: ['one']});
-        expect(parse('abc:////one')).toEqual({protocol: 'abc', segments: ['one']});
+        expect(parse('abc:///one')).toEqual({protocol: 'abc', path: ['one']});
+        expect(parse('abc:////one')).toEqual({protocol: 'abc', path: ['one']});
     });
     it('must recognize with empty protocol', () => {
-        expect(parse(':///one')).toEqual({segments: ['one']});
-        expect(parse(':////one')).toEqual({segments: ['one']});
+        expect(parse(':///one')).toEqual({path: ['one']});
+        expect(parse(':////one')).toEqual({path: ['one']});
     });
     it('must decode URL-encoded characters', () => {
-        expect(parse('/one%20/%3Ftwo')).toEqual({segments: ['one ', '?two']});
+        expect(parse('/one%20/%3Ftwo')).toEqual({path: ['one ', '?two']});
     });
     it('must support special symbols', () => {
-        expect(parse('/$-_.+!*\'()')).toEqual({segments: ['$-_.+!*\'()']});
+        expect(parse('/$-_.+!*\'()')).toEqual({path: ['$-_.+!*\'()']});
     });
 });
 
@@ -273,14 +282,14 @@ describe('params', () => {
 });
 
 describe('complex', () => {
-    it('protocol + segment', () => {
-        expect(parse('a:///seg')).toEqual({
+    it('protocol + path', () => {
+        expect(parse('a:///path')).toEqual({
             protocol: 'a',
-            segments: ['seg']
+            path: ['path']
         });
-        expect(parse('a:////seg')).toEqual({
+        expect(parse('a:////path')).toEqual({
             protocol: 'a',
-            segments: ['seg']
+            path: ['path']
         });
     });
     it('protocol + params', () => {
@@ -298,7 +307,7 @@ describe('complex', () => {
         });
     });
     it('must not lose details after the port', () => {
-        expect(parse(':123/one')).toEqual({hosts: [{port: 123}], segments: ['one']});
+        expect(parse(':123/one')).toEqual({hosts: [{port: 123}], path: ['one']});
     });
 });
 
@@ -332,13 +341,13 @@ describe('toString', () => {
         expect(parse('server:123').toString()).toBe('server:123');
         expect(parse('[::]:123').toString()).toBe('[::]:123');
     });
-    it('must encode segments', () => {
+    it('must encode path segments', () => {
         expect(parse('/a%20b').toString()).toBe('/a%20b');
         expect(parse('/a/b%20/c').toString()).toBe('/a/b%20/c');
     });
-    it('must ignore empty segment list', () => {
+    it('must ignore empty path', () => {
         const a = parse('');
-        a.segments = [];
+        a.path = [];
         expect(a.toString()).toBe('');
     });
     it('must encode params', () => {
@@ -452,8 +461,8 @@ describe('setDefaults', () => {
     it('must set the default password', () => {
         expect(parse('').setDefaults({password: 'abc'})).toEqual({password: 'abc'});
     });
-    it('must set the default segments', () => {
-        expect(parse('').setDefaults({segments: ['abc']})).toEqual({segments: ['abc']});
+    it('must set the default path', () => {
+        expect(parse('').setDefaults({path: ['abc']})).toEqual({path: ['abc']});
     });
     it('must set the default params', () => {
         expect(parse('').setDefaults({params: {p1: 'abc'}})).toEqual({params: {p1: 'abc'}});
@@ -469,9 +478,9 @@ describe('setDefaults', () => {
             }
         });
     });
-    it('must ignore empty segments', () => {
-        expect(parse('').setDefaults({segments: ['', 123, true, '  ']})).toEqual({});
-        expect(parse('').setDefaults({segments: 123})).toEqual({});
+    it('must ignore empty path segments', () => {
+        expect(parse('').setDefaults({path: ['', 123, true, '  ']})).toEqual({});
+        expect(parse('').setDefaults({path: 123})).toEqual({});
     });
     it('must ignore invalid and empty hosts', () => {
         expect(parse('').setDefaults({hosts: 1})).toEqual({});

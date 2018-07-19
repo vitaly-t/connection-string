@@ -46,7 +46,7 @@
         }
 
         // Extracting hosts details...
-        // (if it starts with `/`, it is the first segment, so no hosts specified)
+        // (if it starts with `/`, it is the first path segment, so no hosts specified)
         if (cs[0] !== '/') {
 
             var endOfHosts = cs.search(/\/|\?/);
@@ -67,10 +67,10 @@
             }
         }
 
-        // Extracting segments:
+        // Extracting the path:
         m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
-            this.segments = m.map(function (s) {
+            this.path = m.map(function (s) {
                 return decode(s.substr(1));
             });
         }
@@ -97,7 +97,7 @@
     }
 
     function validateUrl(url) {
-        var idx = url.search(/[^A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=%]/);
+        var idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=%]/);
         if (idx >= 0) {
             var s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
             throw new Error('Invalid URL character ' + s + ' at position ' + idx);
@@ -168,8 +168,8 @@
                 return fullHostName(h, options);
             }).join();
         }
-        if (Array.isArray(this.segments) && this.segments.length) {
-            this.segments.forEach(function (seg) {
+        if (Array.isArray(this.path) && this.path.length) {
+            this.path.forEach(function (seg) {
                 s += '/' + encode(seg, options);
             });
         }
@@ -246,12 +246,12 @@
             this.password = trim(defaults.password);
         }
 
-        // Since the order of segments is usually important, we set default
-        // segments as they are, but only when they are missing completely:
-        if (!('segments' in this) && Array.isArray(defaults.segments)) {
-            var s = defaults.segments.filter(isText);
+        // Since the order of path segments is usually important, we set default
+        // path segments as they are, but only when they are missing completely:
+        if (!('path' in this) && Array.isArray(defaults.path)) {
+            var s = defaults.path.filter(isText);
             if (s.length) {
-                this.segments = s;
+                this.path = s;
             }
         }
 

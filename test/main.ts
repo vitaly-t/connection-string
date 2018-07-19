@@ -3,7 +3,7 @@ import {ConnectionString, IHost} from '../src'
 const a = new ConnectionString('protocol://');
 const b = new ConnectionString('protocol://', {});
 const c = new ConnectionString('protocol://', {
-    segments: ['one', 'two']
+    path: ['one', 'two']
 });
 
 if ('protocol' in a) {
@@ -11,7 +11,7 @@ if ('protocol' in a) {
     const pass = a.password;
 }
 
-const segment1: string = a.segments[0];
+const segment1: string = a.path[0];
 const param1: string = a.params['first'];
 
 a.params['first'] = 'hello';

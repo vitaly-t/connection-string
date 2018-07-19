@@ -9,7 +9,7 @@ Advanced URL Connection String Parser, with fully optional syntax.
 Takes a URL connection string (with every element being optional):
 
 ```
-protocol://user:password@host1:123,[abcd::]:456/seg1/seg2?p1=val1&msg=hello+world!
+protocol://user:password@host1:123,[abcd::]:456/one/two2?p1=val1&msg=hello+world!
 ```
 
 and converts it into an object that contains only what's specified:
@@ -23,7 +23,7 @@ and converts it into an object that contains only what's specified:
             {name: 'host1', port: 123, isIPv6: false},
             {name: 'abcd::', port: 456, isIPv6: true}
             ],
-    segments: ['seg1', 'seg2'],
+    path: ['one', 'two'],
     params: {
         p1: 'val1',
         msg: 'hello world!'
@@ -50,11 +50,11 @@ Unlike the default URL parser, this one supports the following:
 * `localhost` => `{hosts: [{name: 'localhost', isIPv6: false}]`
 * `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, isIPv6: false}]`
 * `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123, isIPv6: true}]`
-* `abc:///seg1?p1=val` => `{protocol: 'abc', segments: ['seg1'], params: {p1: 'val'}}`
+* `abc:///one?p1=val` => `{protocol: 'abc', path: ['one'], params: {p1: 'val'}}`
 * `:12345` => `{hosts: [{port: 12345}]`
 * `username@` => `{user: 'username'}`
 * `:pass123@` => `{password: 'pass123'}`
-* `/seg1/seg2` => `{segments: ['seg1', 'seg2']}`
+* `/one/two` => `{path: ['seg1', 'seg2']}`
 * `?p1=1&p2=a+b` => `{params: {p1: '1', p2: 'a b'}}`
 
 For more short-syntax examples see [Optional Format].
@@ -121,9 +121,9 @@ combined with the defaults, if those were specified, plus methods as documented 
 
 The method takes an object with default values, and safely combines it with what's missing in the current object.
 
-Please note that while missing defaults for `hosts` and `params` are merged with the existing sets, `segments` are not,
-since their order is often important, so the defaults for `segments` are only used when there are no segments
-in the current object, though you can override segments manually, just like everything else in the object.
+Please note that while missing defaults for `hosts` and `params` are merged with the existing sets, for the `path` they are not,
+since their order is often important, so the defaults for `path` are only used when there are no path segments
+in the current object, though you can override the path manually, just like everything else in the object.
 
 You can call this method either directly or when parsing/constructing the connection string, as the second parameter.
 
