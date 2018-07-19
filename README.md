@@ -59,7 +59,7 @@ Unlike the default URL parser, this one supports the following:
 
 For more short-syntax examples see [Optional Format].
 
-All browsers are supported, plus Node.js v4.0 and later.
+All modern browsers are supported, plus Node.js v4.0 and later.
 
 ## Installing
 
