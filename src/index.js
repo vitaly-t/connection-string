@@ -34,7 +34,7 @@
         }
 
         // Extracting user + password:
-        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
+        m = cs.match(/^([\w-_.+!*'()$%& ]*):?([\w-_.+!*'()$%& ]*)@/);
         if (m) {
             if (m[1]) {
                 this.user = decode(m[1]);
@@ -68,7 +68,7 @@
         }
 
         // Extracting the path:
-        m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
+        m = cs.match(/\/([\w-_.+!*'()$% ]+)/g);
         if (m) {
             this.path = m.map(function (s) {
                 return decode(s.substr(1));
@@ -79,7 +79,7 @@
         var idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
-            m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%]+)/g);
+            m = cs.match(/([\w-_.+!*'()$% ]+)=([\w-_.+!*'()$% ]+)/g);
             if (m) {
                 var params = {};
                 m.forEach(function (s) {
@@ -97,7 +97,7 @@
     }
 
     function validateUrl(url) {
-        var idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=%]/);
+        var idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=% ]/);
         if (idx >= 0) {
             var s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
             throw new Error('Invalid URL character ' + s + ' at position ' + idx);

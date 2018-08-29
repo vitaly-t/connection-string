@@ -21,7 +21,7 @@ describe('init', () => {
         }).toThrow(error);
     });
     it('must throw on invalid symbols', () => {
-        const invalidSymbols = '`"#^<>{}\\| \r\n\t';
+        const invalidSymbols = '`"#^<>{}\\|\r\n\t';
         invalidSymbols.split('').forEach(s => {
             const a = JSON.stringify(s).replace(/^"|"$/g, '\'');
             expect(() => {
@@ -38,10 +38,7 @@ describe('init', () => {
             parse('', 123);
         }).toThrow(error);
     });
-    it('must throw on inner spaces', () => {
-        expect(() => {
-            parse('a b');
-        }).toThrow('Invalid URL character \' \' at position 1');
+    it('must throw on inner tabs', () => {
         expect(() => {
             parse('ab\tc');
         }).toThrow('Invalid URL character \'\\t\' at position 2');
