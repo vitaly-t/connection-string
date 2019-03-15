@@ -21,7 +21,7 @@ a.params = {
     second: 'hello!'
 };
 
-let cs = a.toString({encodeDollar: true});
+let cs = a.toString({encodeDollar: true, plusForSpace: true});
 a.setDefaults({
     hosts: [
         {name: '[::]', port: 123, isIPv6: true}
@@ -33,8 +33,11 @@ a.setDefaults({
     password: ''
 });
 
-cs = a.toString({encodeDollar: true});
+cs = a.toString({encodeDollar: true, plusForSpace: true});
 
 const qq: ConnectionString = a.setDefaults(new ConnectionString(''));
 
 const parseHost: IHost = ConnectionString.parseHost('abc');
+
+parseHost.toString({});
+

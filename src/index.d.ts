@@ -1,5 +1,6 @@
 interface IEncodingOptions {
     encodeDollar?: boolean
+    plusForSpace?: boolean
 }
 
 interface IHost {
