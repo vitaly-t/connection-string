@@ -369,8 +369,8 @@ describe('toString', () => {
         expect(parse('abc%20$://user$:pa$$@host$name.com/seg$?par$=1$2').toString({encodeDollar: true})).toBe('abc%20%24://user%24:pa%24%24@host%24name.com/seg%24?par%24=1%242');
     });
     it('must use plus for params when required', () => {
-        expect(parse('?a=1+2').toString()).toBe('?a=1%202');
-        expect(parse('?a=1+2').toString({plusForSpace: true})).toBe('?a=1+2');
+        expect(parse('?a=+1++2').toString()).toBe('?a=%201%20%202');
+        expect(parse('?a=+1++2').toString({plusForSpace: true})).toBe('?a=+1++2');
     });
 });
 
