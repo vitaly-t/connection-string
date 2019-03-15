@@ -153,12 +153,14 @@ a.hosts[0].toString(); //=> 'my-host:123'
 a.hosts[1].toString(); //=> '[abcd::]:456'
 ```
 
-The method takes one optional parameter - URL encoding options, which currently supports only `encodeDollar` flag.
+The method takes one optional parameter - URL encoding options:
 
-By default, `$` is not URL-encoded, as it is not used often, and even when it is used, it is usually either in the password
-or a parameter name, where encoding is typically not needed. But if you do need `$` encoded (into `%24`), pass in options
-as `{encodeDollar: true}`.
+* `encodeDollar` - Boolean (false), indicates whether `$` should be encoded as `%24`. By default, `$` is not URL-encoded,
+as it is not used very often, and even when it is used, it is usually either in the password or a parameter name, where encoding
+is typically not needed. But if you do need `$` encoded everywhere, pass in `{encodeDollar: true}`.
 
+* `plusForSpace` - Boolean (false), it is used only for parameter values, to encode spaces as `+` instead of `%20`. 
+ 
 ### `static parseHost(host) => {name,port,isIPv6} | null`
 
 When using an external list of default hosts, you may need to parse them independently, using this method,

@@ -180,7 +180,11 @@
                 if (typeof value !== 'string') {
                     value = JSON.stringify(value);
                 }
-                params.push(encode(a, options) + '=' + encode(value, options));
+                value = encode(value, options);
+                if (options.plusForSpace) {
+                    value = value.replace(/%20/g, '+');
+                }
+                params.push(encode(a, options) + '=' + value);
             }
             if (params.length) {
                 s += '?' + params.join('&');
@@ -259,7 +263,7 @@
         if (defaults.params && typeof defaults.params === 'object') {
             var keys = Object.keys(defaults.params);
             if (keys.length) {
-                if (this.params && typeof(this.params) === 'object') {
+                if (this.params && typeof (this.params) === 'object') {
                     for (var a in defaults.params) {
                         if (!(a in this.params)) {
                             this.params[a] = defaults.params[a];
@@ -326,8 +330,7 @@
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {
         module.exports = ConnectionString; // Inside Node.js
-    }
-    else {
+    } else {
         window.ConnectionString = ConnectionString; // Inside a browser
     }
 })(this);
