@@ -111,20 +111,30 @@
             }
             host = trim(host);
         }
-        var m, isIPv6 = false;
+        var m, isIPv6;
         if (host[0] === '[') {
             // This is IPv6, with [::] being the shortest possible
             m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
             isIPv6 = true;
         } else {
-            // It is either IPv4 or a name
+            // It is either IPv4 or domain/socket
             m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9]+[^/?]*))?)/i);
         }
         if (m) {
             var h = {};
             if (m[2]) {
-                h.name = isIPv6 ? m[2] : decode(m[2]);
-                h.isIPv6 = isIPv6;
+                if (isIPv6) {
+                    h.name = m[2];
+                    h.type = 'IPv6';
+                } else {
+                    if (m[2].match(/([0-9]{1,3}.){3}[0-9]{1,3}/)) {
+                        h.name = m[2];
+                        h.type = 'IPv4';
+                    } else {
+                        h.name = decode(m[2]);
+                        h.type = m[2].match(/.*\.socket$/i) ? 'socket' : 'domain';
+                    }
+                }
             }
             if (m[3]) {
                 var p = m[3], port = parseInt(p);
@@ -221,7 +231,8 @@
                         var obj = {};
                         if (isText(dh.name)) {
                             obj.name = dh.name;
-                            obj.isIPv6 = !!dh.isIPv6;
+                            // TODO: Need to parse the name when the type is missing here:
+                            obj.type = dh.type; // type can be missing here
                         }
                         var port = parseInt(dh.port);
                         if (port > 0 && port < 65536) {
@@ -284,7 +295,7 @@
         options = options || {};
         var a = '';
         if (obj.name) {
-            if (obj.isIPv6) {
+            if (obj.type === 'IPv6') {
                 a = '[' + obj.name + ']';
             } else {
                 a = encode(obj.name, options);
@@ -325,7 +336,7 @@
         }
     });
 
-    ConnectionString.ConnectionString = ConnectionString; // To make it TypeScript-friendly
+    ConnectionString.ConnectionString = ConnectionString; // To make it more TypeScript-friendly
 
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {

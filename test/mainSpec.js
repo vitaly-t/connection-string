@@ -63,7 +63,7 @@ describe('protocol', () => {
         expect(parse('abc://')).toEqual({protocol: 'abc'});
     });
     it('must ignore incomplete format', () => {
-        expect(parse('abc:/')).toEqual({hosts: [{name: 'abc', isIPv6: false}]});
+        expect(parse('abc:/')).toEqual({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('://')).toEqual({});
     });
     it('must decode URL-encoded characters', () => {
@@ -450,7 +450,7 @@ describe('setDefaults', () => {
                 port: 111
             }, {port: 123}]
         });
-        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc', isIPv6: false}]});
+        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });
     it('must ignore invalid ports', () => {
@@ -513,11 +513,11 @@ describe('parseHost', () => {
     it('must trim hosts', () => {
         expect(parseHost('      ')).toBeNull();
         expect(parseHost('   :   ')).toBeNull();
-        expect(parseHost('\r\n \t  abc\r\n')).toEqual({name: 'abc', isIPv6: false});
+        expect(parseHost('\r\n \t  abc\r\n')).toEqual({name: 'abc', type: 'domain'});
     });
     it('must parse valid hosts', () => {
-        expect(parseHost('a')).toEqual({name: 'a', isIPv6: false});
-        expect(parseHost('a:123')).toEqual({name: 'a', port: 123, isIPv6: false});
-        expect(parseHost('[::]:123')).toEqual({name: '::', port: 123, isIPv6: true});
+        expect(parseHost('a')).toEqual({name: 'a', type: 'domain'});
+        expect(parseHost('a:123')).toEqual({name: 'a', port: 123, type: 'domain'});
+        expect(parseHost('[::]:123')).toEqual({name: '::', port: 123, type: 'IPv6'});
     });
 });

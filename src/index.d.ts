@@ -1,3 +1,10 @@
+declare enum HostType {
+    domain = 'domain',
+    socket = 'socket',
+    IPv4 = 'IPv4',
+    IPv6 = 'IPv6'
+}
+
 interface IEncodingOptions {
     encodeDollar?: boolean
     plusForSpace?: boolean
@@ -6,7 +13,7 @@ interface IEncodingOptions {
 interface IHost {
     name?: string
     port?: number
-    isIPv6?: boolean
+    type?: HostType
     toString?: (options?: IEncodingOptions) => string
 }
 
