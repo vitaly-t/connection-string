@@ -1,5 +1,3 @@
-// TODO: setDefaults issue accepting :: or [::], inconsistent with the host parsing.
-
 (function (window) {
     'use strict';
 
@@ -123,7 +121,7 @@
         var m, isIPv6;
         if (host[0] === '[') {
             // This is IPv6, with [::] being the shortest possible
-            m = host.match(/(\[([0-9a-z:%]{2,45})](?::(-?[0-9]+[^/?]*))?)/i);
+            m = host.match(/((\[[0-9a-z:%]{2,45}])(?::(-?[0-9]+[^/?]*))?)/i);
             isIPv6 = true;
         } else {
             // It is either IPv4 or domain/socket
@@ -310,11 +308,7 @@
         options = options || {};
         var a = '';
         if (obj.name) {
-            if (obj.type === hostType.IPv6) {
-                a = '[' + obj.name + ']';
-            } else {
-                a = encode(obj.name, options);
-            }
+            a = obj.type === hostType.IPv6 ? obj.name : encode(obj.name, options);
         }
         if (obj.port) {
             a += ':' + obj.port;

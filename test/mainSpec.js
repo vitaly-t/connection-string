@@ -133,13 +133,13 @@ describe('hosts', () => {
     it('must recognize IPv6 addresses', () => {
         expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
             hosts: [{
-                name: '2001:0db8:0000:0000:0000:FF00:0042:8329',
+                name: '[2001:0db8:0000:0000:0000:FF00:0042:8329]',
                 type: 'IPv6'
             }]
         });
         expect(parse('[2001:0db8]:123')).toEqual({
             hosts: [{
-                name: '2001:0db8',
+                name: '[2001:0db8]',
                 port: 123,
                 type: 'IPv6'
             }]
@@ -148,7 +148,7 @@ describe('hosts', () => {
     it('must not treat IPv6 scopes as special characters', () => {
         expect(parse('[2001:0db8%20]')).toEqual({
             hosts: [{
-                name: '2001:0db8%20',
+                name: '[2001:0db8%20]',
                 type: 'IPv6'
             }]
         });
@@ -162,12 +162,12 @@ describe('hosts', () => {
         expect(() => {
             parse('[::]:1a');
         }).toThrow('Invalid port: 1a');
-        expect(parse('[::]:abc')).toEqual({hosts: [{name: '::', type: 'IPv6'}]});
+        expect(parse('[::]:abc')).toEqual({hosts: [{name: '[::]', type: 'IPv6'}]});
     });
     it('must allow valid ports', () => {
-        expect(parse('[::]:1')).toEqual({hosts: [{name: '::', port: 1, type: 'IPv6'}]});
-        expect(parse('[::]:1/')).toEqual({hosts: [{name: '::', port: 1, type: 'IPv6'}]});
-        expect(parse('[::]:123?')).toEqual({hosts: [{name: '::', port: 123, type: 'IPv6'}]});
+        expect(parse('[::]:1')).toEqual({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
+        expect(parse('[::]:1/')).toEqual({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
+        expect(parse('[::]:123?')).toEqual({hosts: [{name: '[::]', port: 123, type: 'IPv6'}]});
     });
 });
 
@@ -547,6 +547,6 @@ describe('parseHost', () => {
     it('must parse valid hosts', () => {
         expect(parseHost('a')).toEqual({name: 'a', type: 'domain'});
         expect(parseHost('a:123')).toEqual({name: 'a', port: 123, type: 'domain'});
-        expect(parseHost('[::]:123')).toEqual({name: '::', port: 123, type: 'IPv6'});
+        expect(parseHost('[::]:123')).toEqual({name: '[::]', port: 123, type: 'IPv6'});
     });
 });

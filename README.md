@@ -20,8 +20,8 @@ and converts it into an object that contains only what's specified:
     user: 'user',
     password: 'password',
     hosts: [
-            {name: 'host1', port: 123, isIPv6: false},
-            {name: 'abcd::', port: 456, isIPv6: true}
+            {name: 'host1', port: 123, type: 'domain'},
+            {name: '[abcd::]', port: 456, type: 'IPv6'}
             ],
     path: ['one', 'two'],
     params: {
@@ -47,9 +47,9 @@ Unlike the default URL parser, this one supports the following:
 
 **Short-syntax examples:**
 
-* `localhost` => `{hosts: [{name: 'localhost', isIPv6: false}]`
-* `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, isIPv6: false}]`
-* `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123, isIPv6: true}]`
+* `localhost` => `{hosts: [{name: 'localhost', type: 'domain'}]`
+* `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, type: 'domain'}]`
+* `[12ab:34cd]:123` => `{hosts: [{name: '12ab:34cd', port: 123, type: 'IPv6'}]`
 * `abc:///one?p1=val` => `{protocol: 'abc', path: ['one'], params: {p1: 'val'}}`
 * `:12345` => `{hosts: [{port: 12345}]`
 * `username@` => `{user: 'username'}`
@@ -75,7 +75,7 @@ $ npm install connection-string
 const parse = require('connection-string');
 
 const obj = parse('my-server:12345');
-//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
+//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
 ```
 
 or as a class:
@@ -84,7 +84,7 @@ or as a class:
 const ConnectionString = require('connection-string');
 
 const obj = new ConnectionString('my-server:12345');
-//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
+//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
 ```
 
 * **Browsers**
@@ -103,7 +103,7 @@ const obj = new ConnectionString('my-server:12345');
 import {ConnectionString} from 'connection-string'
 
 const a = new ConnectionString('my-server:12345');
-//=> {hosts: [{name: 'my-server', port: 12345, isIPv6: false}]}
+//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
 ```
 
 See also [WiKi Pages] for more examples and documentation.
@@ -161,14 +161,14 @@ is typically not needed. But if you do need `$` encoded everywhere, pass in `{en
 
 * `plusForSpace` - Boolean (false), it is used only for parameter values, to encode spaces as `+` instead of `%20`. 
  
-### `static parseHost(host) => {name,port,isIPv6} | null`
+### `static parseHost(host) => {name,port,type} | null`
 
 When using an external list of default hosts, you may need to parse them independently, using this method,
 so they can be correctly processed by method `setDefaults`.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
-//=> {name: 'abcd::', port: 111, isIPv6: true}
+//=> {name: 'abcd::', port: 111, type: 'IPv6'}
 
 const a = new ConnectionString('test://localhost:222/dbname', {hosts: [h]});
 a.toString();
