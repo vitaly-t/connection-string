@@ -1,7 +1,16 @@
+// TODO: setDefaults issue accepting :: or [::], inconsistent with the host parsing.
+
 (function (window) {
     'use strict';
 
     var invalidDefaults = 'Invalid \'defaults\' parameter!';
+
+    var hostType = {
+        domain: 'domain',
+        socket: 'socket',
+        IPv4: 'IPv4',
+        IPv6: 'IPv6'
+    };
 
     function ConnectionString(cs, defaults) {
 
@@ -125,14 +134,14 @@
             if (m[2]) {
                 if (isIPv6) {
                     h.name = m[2];
-                    h.type = 'IPv6';
+                    h.type = hostType.IPv6;
                 } else {
-                    if (m[2].match(/([0-9]{1,3}.){3}[0-9]{1,3}/)) {
+                    if (m[2].match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)) {
                         h.name = m[2];
-                        h.type = 'IPv4';
+                        h.type = hostType.IPv4;
                     } else {
                         h.name = decode(m[2]);
-                        h.type = m[2].match(/.*\.sock$/i) ? 'socket' : 'domain';
+                        h.type = m[2].match(/.*\.sock$/i) ? hostType.socket : hostType.domain;
                     }
                 }
             }
@@ -231,14 +240,13 @@
                         var obj = {};
                         if (isText(dh.name)) {
                             obj.name = dh.name;
-                            var types = ['domain', 'socket', 'IPv4', 'IPv6'];
-                            if (!dh.type || types.indexOf(dh.type) === -1) {
+                            if (dh.type && dh.type in hostType) {
+                                obj.type = dh.type;
+                            } else {
                                 var t = parseHost(dh.name);
                                 if (t) {
                                     obj.type = t.type;
                                 }
-                            } else {
-                                obj.type = dh.type;
                             }
                         }
                         var port = parseInt(dh.port);
@@ -302,7 +310,7 @@
         options = options || {};
         var a = '';
         if (obj.name) {
-            if (obj.type === 'IPv6') {
+            if (obj.type === hostType.IPv6) {
                 a = '[' + obj.name + ']';
             } else {
                 a = encode(obj.name, options);
@@ -344,6 +352,7 @@
     });
 
     ConnectionString.ConnectionString = ConnectionString; // To make it more TypeScript-friendly
+    ConnectionString.HostType = hostType;
 
     /* istanbul ignore else */
     if (typeof module === 'object' && module && typeof module.exports === 'object') {

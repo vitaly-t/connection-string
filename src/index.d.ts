@@ -1,8 +1,8 @@
 declare enum HostType {
-    domain = 'domain',
-    socket = 'socket',
-    IPv4 = 'IPv4',
-    IPv6 = 'IPv6'
+    domain,
+    socket,
+    IPv4,
+    IPv6
 }
 
 interface IEncodingOptions {

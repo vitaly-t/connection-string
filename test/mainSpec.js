@@ -109,6 +109,27 @@ describe('hosts', () => {
             }]
         });
     });
+    it('must recognize valid IPv4 addresses', () => {
+        expect(parse('255.255.255.255')).toEqual({
+            hosts: [{
+                name: '255.255.255.255',
+                type: 'IPv4'
+            }]
+        });
+        expect(parse('255.255.255')).toEqual({
+            hosts: [{
+                name: '255.255.255',
+                type: 'domain'
+            }]
+        });
+        expect(parse('255.255.255.255:123')).toEqual({
+            hosts: [{
+                name: '255.255.255.255',
+                port: 123,
+                type: 'IPv4'
+            }]
+        });
+    });
     it('must recognize IPv6 addresses', () => {
         expect(parse('[2001:0db8:0000:0000:0000:FF00:0042:8329]')).toEqual({
             hosts: [{
@@ -421,12 +442,18 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
     });
     it('must set the default hostname and port', () => {
-        expect(parse('my-host').setDefaults({hosts: [{name: '::', type: 'IPv6'}]})).toEqual({
+        expect(parse('').setDefaults({hosts: [{name: '::', type: 'IPv6'}]})).toEqual({
+            hosts: [{
+                name: '::',
+                type: 'IPv6'
+            }]
+        });
+        expect(parse('my-host').setDefaults({hosts: [{name: '::', type: 'bla-bla'}]})).toEqual({
             hosts: [{
                 name: 'my-host',
                 type: 'domain'
             }, {
-                name: '::', type: 'IPv6'
+                name: '::'
             }]
         });
         expect(parse('my-host').setDefaults({hosts: [{name: 'my-host'}]})).toEqual({
