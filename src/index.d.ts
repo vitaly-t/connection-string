@@ -1,7 +1,19 @@
 declare enum HostType {
+    /**
+     * Regular domain name
+     */
     domain,
+    /**
+     * UNIX socket
+     */
     socket,
+    /**
+     * IPv4
+     */
     IPv4,
+    /**
+     * IPv6
+     */
     IPv6
 }
 

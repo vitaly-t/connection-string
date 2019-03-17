@@ -362,6 +362,10 @@ describe('toString', () => {
         expect(parse('server:123').toString()).toBe('server:123');
         expect(parse('[::]:123').toString()).toBe('[::]:123');
     });
+    it('must support multiple hosts', () => {
+        expect(parse('server1,server2').toString()).toBe('server1,server2');
+        expect(parse('[123::]:11,next:22,last:33').toString()).toBe('[123::]:11,next:22,last:33');
+    });
     it('must encode path segments', () => {
         expect(parse('/a%20b').toString()).toBe('/a%20b');
         expect(parse('/a/b%20/c').toString()).toBe('/a/b%20/c');
@@ -392,6 +396,16 @@ describe('toString', () => {
     it('must use plus for params when required', () => {
         expect(parse('?a=+1++2').toString()).toBe('?a=%201%20%202');
         expect(parse('?a=+1++2').toString({plusForSpace: true})).toBe('?a=+1++2');
+    });
+    it('must produce an empty string when an empty array is set', () => {
+        const a = parse('');
+        a.hosts = [];
+        expect(a.toString()).toBe('');
+    });
+    it('must skip empty parameters', () => {
+        const a = parse('');
+        a.params = {};
+        expect(a.toString()).toBe('');
     });
 });
 

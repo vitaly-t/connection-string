@@ -185,12 +185,12 @@
                 return fullHostName(h, options);
             }).join();
         }
-        if (Array.isArray(this.path) && this.path.length) {
+        if (Array.isArray(this.path)) {
             this.path.forEach(function (seg) {
                 s += '/' + encode(seg, options);
             });
         }
-        if (this.params) {
+        if (this.params && typeof this.params === 'object') {
             var params = [];
             for (var a in this.params) {
                 var value = this.params[a];

@@ -175,9 +175,8 @@ a.toString();
 //=> test://localhost:222,[abcd::]:111/dbname
 ```
 
-If no valid host information is found, the method returns `null`.
-
-Property `type`, when present, can be any of the following strings: `domain | socket | IPv4 | IPv6`.
+* Property `type`, when present, can be any of the following: `domain | socket | IPv4 | IPv6`.
+* If no valid host information is found, the method returns `null`.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
