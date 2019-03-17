@@ -229,7 +229,7 @@
                     var found = false;
                     for (var i = 0; i < hosts.length; i++) {
                         var thisHost = fullHostName(hosts[i]), defHost = fullHostName(dh);
-                        if (equalStrings(thisHost, defHost)) {
+                        if (thisHost.toLowerCase() === defHost.toLowerCase()) {
                             found = true;
                             break;
                         }
@@ -331,10 +331,6 @@
 
     function trim(txt) {
         return txt.replace(/^[\s]*|[\s]*$/g, '');
-    }
-
-    function equalStrings(str1, str2) {
-        return (typeof str1 === 'string' && typeof str2 === 'string') && str1.toUpperCase() === str2.toUpperCase();
     }
 
     Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
