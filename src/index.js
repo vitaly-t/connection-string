@@ -4,8 +4,8 @@
     var invalidDefaults = 'Invalid \'defaults\' parameter!';
 
     var hostType = {
-        domain: 'domain',
-        socket: 'socket',
+        domain: 'domain', // Regular domain name
+        socket: 'socket', // UNIX socket
         IPv4: 'IPv4',
         IPv6: 'IPv6'
     };
