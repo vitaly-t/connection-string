@@ -161,7 +161,7 @@ is typically not needed. But if you do need `$` encoded everywhere, pass in `{en
 
 * `plusForSpace` - Boolean (false), it is used only for parameter values, to encode spaces as `+` instead of `%20`. 
  
-### `static parseHost(host) => {name,port,type} | null`
+### `static parseHost(host) => {name, port, type} | null`
 
 When using an external list of default hosts, you may need to parse them independently, using this method,
 so they can be correctly processed by method `setDefaults`.
@@ -176,6 +176,8 @@ a.toString();
 ```
 
 If no valid host information is found, the method returns `null`.
+
+Property `type`, when present, can be any of the following strings: `domain | socket | IPv4 | IPv6`.
 
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
