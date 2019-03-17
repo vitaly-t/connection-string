@@ -132,7 +132,7 @@
                         h.type = 'IPv4';
                     } else {
                         h.name = decode(m[2]);
-                        h.type = m[2].match(/.*\.socket$/i) ? 'socket' : 'domain';
+                        h.type = m[2].match(/.*\.sock$/i) ? 'socket' : 'domain';
                     }
                 }
             }
@@ -231,8 +231,15 @@
                         var obj = {};
                         if (isText(dh.name)) {
                             obj.name = dh.name;
-                            // TODO: Need to parse the name when the type is missing here:
-                            obj.type = dh.type; // type can be missing here
+                            var types = ['domain', 'socket', 'IPv4', 'IPv6'];
+                            if (!dh.type || types.indexOf(dh.type) === -1) {
+                                var t = parseHost(dh.name);
+                                if (t) {
+                                    obj.type = t.type;
+                                }
+                            } else {
+                                obj.type = dh.type;
+                            }
                         }
                         var port = parseInt(dh.port);
                         if (port > 0 && port < 65536) {
