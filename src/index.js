@@ -91,8 +91,7 @@
                 var params = {};
                 m.forEach(function (s) {
                     var a = s.split('=');
-                    var value = a[1].replace(/\+/g, ' ');
-                    params[decode(a[0])] = decode(value);
+                    params[decode(a[0])] = decode(a[1]);
                 });
                 this.params = params;
             }
@@ -318,11 +317,14 @@
 
     function encode(text, options) {
         text = encodeURIComponent(text);
+        if (options.plusForSpace) {
+            text = text.replace(/%20/g, '+');
+        }
         return options.encodeDollar ? text : text.replace(/%24/g, '$');
     }
 
     function decode(text) {
-        return decodeURIComponent(text);
+        return decodeURIComponent(text.replace(/\+/g, '%20'));
     }
 
     function isText(txt) {

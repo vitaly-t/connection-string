@@ -70,7 +70,7 @@ describe('protocol', () => {
         expect(parse('a%20b%3F://')).toEqual({protocol: 'a b?'});
     });
     it('must support special symbols', () => {
-        expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_.+!*\'()'});
+        expect(parse('A9z$-_.+!*\'()://')).toEqual({protocol: 'A9z$-_. !*\'()'});
     });
 });
 
@@ -206,7 +206,7 @@ describe('user', () => {
         expect(parse('First%20name%3F@')).toEqual({user: 'First name?'});
     });
     it('must support special symbols', () => {
-        expect(parse('A9z$-_.+!*\'()@')).toEqual({user: 'A9z$-_.+!*\'()'});
+        expect(parse('A9z$-_.+!*\'()@')).toEqual({user: 'A9z$-_. !*\'()'});
     });
 });
 
@@ -218,7 +218,7 @@ describe('password', () => {
         expect(parse(':pass%20123%3F@')).toEqual({password: 'pass 123?'});
     });
     it('must support special symbols', () => {
-        expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_.+!*\'()'});
+        expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_. !*\'()'});
     });
 });
 
@@ -251,7 +251,7 @@ describe('path', () => {
         expect(parse('/one%20/%3Ftwo')).toEqual({path: ['one ', '?two']});
     });
     it('must support special symbols', () => {
-        expect(parse('/$-_.+!*\'()')).toEqual({path: ['$-_.+!*\'()']});
+        expect(parse('/$-_.+!*\'()')).toEqual({path: ['$-_. !*\'()']});
     });
 });
 
@@ -286,7 +286,7 @@ describe('params', () => {
     it('must support special symbols', () => {
         expect(parse('?A9z$-_.+!*\'()=A9z$-_.+!*\'()')).toEqual({
             params: {
-                'A9z$-_.+!*\'()': 'A9z$-_. !*\'()'
+                'A9z$-_. !*\'()': 'A9z$-_. !*\'()'
             }
         });
     });
