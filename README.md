@@ -168,7 +168,7 @@ so they can be correctly processed by method `setDefaults`.
 
 ```js
 const h = ConnectionString.parseHost('[abcd::]:111');
-//=> {name: 'abcd::', port: 111, type: 'IPv6'}
+//=> {name: '[abcd::]', port: 111, type: 'IPv6'}
 
 const a = new ConnectionString('test://localhost:222/dbname', {hosts: [h]});
 a.toString();
