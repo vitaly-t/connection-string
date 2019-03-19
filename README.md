@@ -159,7 +159,7 @@ The method takes one optional parameter - URL encoding options:
 as it is not used very often, and even when it is used, it is usually either in the password or a parameter name, where encoding
 is typically not needed. But if you do need `$` encoded everywhere, pass in `{encodeDollar: true}`.
 
-* `plusForSpace` - Boolean (false), it is used only for parameter values, to encode spaces as `+` instead of `%20`. 
+* `plusForSpace` - Boolean (false) - encodes spaces as `+` instead of `%20`. 
  
 ### `static parseHost(host) => {name, port, type} | null`
 
