@@ -118,7 +118,7 @@ The object returned by the parser contains only what is present in the connectio
 combined with the defaults, if those were specified, plus methods as documented further.
 
 In addition, the class has non-enumerable read-only properties `hostname` + `port`, for simpler and safer
-access to the first host details, compatible with how old parsers did it.
+access to the first host details, compatible with parsers that do not support multiple hosts.
 
 ### `setDefaults(defaults) => ConnectionString`
 

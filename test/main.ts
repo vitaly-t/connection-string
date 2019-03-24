@@ -33,6 +33,9 @@ a.setDefaults({
     password: ''
 });
 
+const hostname: string = a.hostname;
+const port: number = a.port;
+
 cs = a.toString({encodeDollar: true, plusForSpace: true});
 
 const qq: ConnectionString = a.setDefaults(new ConnectionString(''));
