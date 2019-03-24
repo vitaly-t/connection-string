@@ -181,5 +181,13 @@ a.toString();
 * Property `type`, when present, can be any of the following: `domain | socket | IPv4 | IPv6`.
 * If no valid host information is found, the method returns `null`.
 
+### Virtual Properties
+
+Type `ConnectionString` supports non-enumerable read-only properties `hostname` and `port`,
+for compatibility with older parsers that did not support multiple hosts:
+
+* `hostname = hosts && hosts[0].name`
+* `port = hosts && hosts[0].port`
+
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
