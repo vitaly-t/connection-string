@@ -342,7 +342,16 @@
             return parseHost(host, true);
         }
     });
-
+    Object.defineProperty(ConnectionString.prototype, 'hostname', {
+        get: function () {
+            return this.hosts && this.hosts[0].name;
+        }
+    });
+    Object.defineProperty(ConnectionString.prototype, 'port', {
+        get: function () {
+            return this.hosts && this.hosts[0].port;
+        }
+    });
     ConnectionString.ConnectionString = ConnectionString; // To make it more TypeScript-friendly
     ConnectionString.HostType = hostType;
 

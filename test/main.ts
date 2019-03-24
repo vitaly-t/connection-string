@@ -1,4 +1,4 @@
-import {ConnectionString, IHost} from '../src'
+import {ConnectionString, HostType, IHost} from '../src'
 
 const a = new ConnectionString('protocol://');
 const b = new ConnectionString('protocol://', {});
@@ -24,7 +24,7 @@ a.params = {
 let cs = a.toString({encodeDollar: true, plusForSpace: true});
 a.setDefaults({
     hosts: [
-        {name: '[::]', port: 123, isIPv6: true}
+        {name: '[::]', port: 123, type: HostType.IPv4}
     ]
 });
 

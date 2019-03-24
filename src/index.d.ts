@@ -1,19 +1,7 @@
 declare enum HostType {
-    /**
-     * Regular domain name
-     */
-    domain,
-    /**
-     * UNIX socket
-     */
-    socket,
-    /**
-     * IPv4
-     */
+    domain, // Regular domain name
+    socket, // UNIX socket
     IPv4,
-    /**
-     * IPv6
-     */
     IPv6
 }
 
@@ -47,6 +35,18 @@ export class ConnectionString {
     password?: string;
     path?: string[];
     params?: { [name: string]: string };
+
+    /**
+     * Virtualized accessor to the first host name:
+     * = hosts && hosts[0].name
+     */
+    readonly hostname?: string;
+
+    /**
+     * Virtualized accessor to the first host's port:
+     * = hosts && hosts[0].port
+     */
+    readonly port?: number;
 
     static parseHost(host: string): IHost
 

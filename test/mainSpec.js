@@ -169,6 +169,10 @@ describe('hosts', () => {
         expect(parse('[::]:1/')).toEqual({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
         expect(parse('[::]:123?')).toEqual({hosts: [{name: '[::]', port: 123, type: 'IPv6'}]});
     });
+    it('must allow simplified access to the first host name', () => {
+        expect(parse('').hostname).toBeUndefined();
+        expect(parse('localhost').hostname).toBe('localhost');
+    });
 });
 
 describe('port', () => {
@@ -192,6 +196,11 @@ describe('port', () => {
         }).toThrow('Invalid port: 12345a');
         expect(parse(':abc')).toEqual({});
         expect(parse('@:abc123')).toEqual({});
+    });
+    it('must allow simplified access to the first port number', () => {
+        expect(parse('').port).toBeUndefined();
+        expect(parse('localhost').port).toBeUndefined();
+        expect(parse(':123').port).toBe(123);
     });
 });
 
