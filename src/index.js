@@ -31,7 +31,7 @@
         validateUrl(cs);
 
         // Extracting the protocol:
-        var m = cs.match(/^[\w-_.+!*'()$%]*:\/\//);
+        var m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
         if (m) {
             var protocol = decode(m[0].replace(/:\/\//, ''));
             if (protocol) {
@@ -166,7 +166,7 @@
         var s = '';
         options = options || {};
         if (this.protocol) {
-            s += encode(this.protocol, options) + '://';
+            s += encode(this.protocol, options).replace(/%3A/g, ':') + '://';
         }
         if (this.user) {
             s += encode(this.user, options);

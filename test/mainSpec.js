@@ -62,6 +62,9 @@ describe('protocol', () => {
     it('must recognize standard format', () => {
         expect(parse('abc://')).toEqual({protocol: 'abc'});
     });
+    it('must allow sub-protocols', () => {
+        expect(parse('one:two:three://')).toEqual({protocol: 'one:two:three'});
+    });
     it('must ignore incomplete format', () => {
         expect(parse('abc:/')).toEqual({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('://')).toEqual({});
@@ -344,6 +347,7 @@ describe('complex', () => {
 describe('toString', () => {
     it('must encode protocol', () => {
         expect(create({protocol: 'abc 123?456'})).toBe('abc%20123%3F456://');
+        expect(create({protocol: 'one:two:three'})).toBe('one:two:three://');
     });
     it('must encode user', () => {
         expect(create({user: 'user 1?2'})).toBe('user%201%3F2@');
