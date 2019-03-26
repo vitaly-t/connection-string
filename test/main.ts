@@ -21,7 +21,7 @@ a.params = {
     second: 'hello!'
 };
 
-let cs = a.toString({encodeDollar: true, plusForSpace: true});
+let cs = a.toString({encodeDollar: true, plusForSpace: true, passwordHash: '*'});
 a.setDefaults({
     hosts: [
         {name: '[::]', port: 123, type: HostType.IPv4}

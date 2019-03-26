@@ -163,7 +163,11 @@ as it is not used very often, and even when it is used, it is usually either in 
 is typically not needed. But if you do need `$` encoded everywhere, pass in `{encodeDollar: true}`.
 
 * `plusForSpace` - Boolean (false) - encodes spaces as `+` instead of `%20`. 
- 
+
+* `passwordHash` - Boolean (false)|String - replaces each password symbol with `#`, to generate a secure connection string.
+But when set to a non-empty string, its first symbol is used instead. Symbol `#` will prevent parsing such string again,
+on purpose. But if you want it parsed again, use a different symbol, for example - `passwordHash: '*'` 
+
 ### `static parseHost(host) => {name, port, type} | null`
 
 When using an external list of default hosts, you may need to parse them independently, using this method,

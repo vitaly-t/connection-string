@@ -176,7 +176,15 @@
             s += '@';
         } else {
             if (this.password) {
-                s += ':' + encode(this.password, options) + '@';
+                s += ':';
+                var h = options.passwordHash;
+                if (h) {
+                    var code = (typeof h === 'string' && h[0]) || '#';
+                    s += new Array(this.password.length + 1).join(code);
+                } else {
+                    s += encode(this.password, options);
+                }
+                s += '@';
             }
         }
         if (Array.isArray(this.hosts)) {

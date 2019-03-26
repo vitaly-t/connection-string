@@ -420,6 +420,10 @@ describe('toString', () => {
         a.params = {};
         expect(a.toString()).toBe('');
     });
+    it('must secure passwords', () => {
+        expect(parse(':abc@').toString({passwordHash: true})).toBe(':###@');
+        expect(parse(':abc@').toString({passwordHash: '123'})).toBe(':111@');
+    });
 });
 
 describe('host.toString()', () => {
