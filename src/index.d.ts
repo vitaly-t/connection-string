@@ -8,6 +8,7 @@ declare enum HostType {
 interface IEncodingOptions {
     encodeDollar?: boolean
     plusForSpace?: boolean
+    passwordHash?: boolean | string
 }
 
 interface IHost {
