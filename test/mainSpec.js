@@ -230,7 +230,7 @@ describe('password', () => {
         expect(parse(':pass%20123%3F@')).toEqual({password: 'pass 123?'});
     });
     it('must support special symbols', () => {
-        expect(parse(':$-_.+!*\'()@')).toEqual({password: '$-_. !*\'()'});
+        expect(parse(':$-_.+!*\'()@@')).toEqual({password: '$-_. !*\'()@'});
     });
 });
 

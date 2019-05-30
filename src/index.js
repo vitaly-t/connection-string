@@ -41,7 +41,7 @@
         }
 
         // Extracting user + password:
-        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
+        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%@]*)(?=@)/);
         if (m) {
             if (m[1]) {
                 this.user = decode(m[1]);
@@ -49,7 +49,7 @@
             if (m[2]) {
                 this.password = decode(m[2]);
             }
-            cs = cs.substr(m[0].length);
+            cs = cs.substr(m[0].length + 1);
         }
 
         // Extracting hosts details...
