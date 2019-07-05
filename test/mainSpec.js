@@ -424,7 +424,9 @@ describe('toString', () => {
         expect(a.toString()).toBe('');
     });
     it('must secure passwords', () => {
+        expect(parse('user:abc@').toString({passwordHash: true})).toBe('user:###@');
         expect(parse(':abc@').toString({passwordHash: true})).toBe(':###@');
+        expect(parse('user:abc@').toString({passwordHash: '123'})).toBe('user:111@');
         expect(parse(':abc@').toString({passwordHash: '123'})).toBe(':111@');
     });
 });

@@ -168,13 +168,10 @@
         if (this.protocol) {
             s += encode(this.protocol, options).replace(/%3A/g, ':') + '://';
         }
-        if (this.user) {
-            s += encode(this.user, options);
-            if (this.password) {
-                s += ':' + encode(this.password, options);
+        if (this.user || this.password) {
+            if (this.user) {
+                s += encode(this.user, options);
             }
-            s += '@';
-        } else {
             if (this.password) {
                 s += ':';
                 var h = options.passwordHash;
@@ -184,8 +181,8 @@
                 } else {
                     s += encode(this.password, options);
                 }
-                s += '@';
             }
+            s += '@';
         }
         if (Array.isArray(this.hosts)) {
             s += this.hosts.map(function (h) {
