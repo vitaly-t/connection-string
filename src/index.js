@@ -120,11 +120,11 @@
         var m, isIPv6;
         if (host[0] === '[') {
             // This is IPv6, with [::] being the shortest possible
-            m = host.match(/((\[[0-9a-z:%]{2,45}])(?::(-?[0-9]+[^/?]*))?)/i);
+            m = host.match(/((\[[0-9a-z:%]{2,45}])(?::(-?[0-9a-z]+[^/?]*))?)/i);
             isIPv6 = true;
         } else {
             // It is either IPv4 or domain/socket
-            m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9]+[^/?]*))?)/i);
+            m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
         }
         if (m) {
             var h = {};

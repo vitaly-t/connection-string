@@ -8,6 +8,7 @@
   "parserOptions": {
   },
   "rules": {
+    "no-var": "off",
     "no-else-return": "error",
     "no-multi-spaces": "error",
     "no-whitespace-before-property": "error",

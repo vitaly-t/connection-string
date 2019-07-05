@@ -163,9 +163,14 @@ describe('hosts', () => {
     });
     it('must throw on invalid ports', () => {
         expect(() => {
+            parse(':bad');
+        }).toThrow('Invalid port: bad');
+        expect(() => {
             parse('[::]:1a');
         }).toThrow('Invalid port: 1a');
-        expect(parse('[::]:abc')).toEqual({hosts: [{name: '[::]', type: 'IPv6'}]});
+        expect(() => {
+            parse('[::]:abc');
+        }).toThrow('Invalid port: abc');
     });
     it('must allow valid ports', () => {
         expect(parse('[::]:1')).toEqual({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
@@ -197,8 +202,6 @@ describe('port', () => {
         expect(() => {
             parse(':12345a');
         }).toThrow('Invalid port: 12345a');
-        expect(parse(':abc')).toEqual({});
-        expect(parse('@:abc123')).toEqual({});
     });
     it('must allow simplified access to the first port number', () => {
         expect(parse('').port).toBeUndefined();
