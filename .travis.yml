@@ -5,5 +5,5 @@ matrix:
       script: "npm test"
     - node_js: "8"
       script: "npm run travis"
-    - node_js: "10"
+    - node_js: "12"
       script: "npm run travis"
