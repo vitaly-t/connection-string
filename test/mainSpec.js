@@ -478,10 +478,11 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
     });
     it('must set the default hostname and port', () => {
-        expect(parse('').setDefaults({hosts: [{name: '::', type: 'IPv6'}]})).toEqual({
+        expect(parse('').setDefaults({hosts: [{name: '::', type: 'IPv6', port: 1}]})).toEqual({
             hosts: [{
                 name: '::',
-                type: 'IPv6'
+                type: 'IPv6',
+                port: 1
             }]
         });
         expect(parse('my-host').setDefaults({hosts: [{name: '::', type: 'bla-bla'}]})).toEqual({
@@ -492,10 +493,11 @@ describe('setDefaults', () => {
                 name: '::'
             }]
         });
-        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host'}]})).toEqual({
+        expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 0}]})).toEqual({
             hosts: [{
                 name: 'my-host',
                 type: 'domain'
+                // note how invalid port is simply skipped here
             }]
         });
         expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 222}]})).toEqual({
@@ -519,10 +521,11 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });
     it('must ignore invalid ports', () => {
-        expect(parse('').setDefaults({port: '123'})).toEqual({});
-        expect(parse('').setDefaults({port: 'a'})).toEqual({});
-        expect(parse('').setDefaults({port: -1})).toEqual({});
-        expect(parse('').setDefaults({port: '0'})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{port: '123'}]})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{port: 'a'}]})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{port: -1}]})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{port: '0'}]})).toEqual({});
+        expect(parse('').setDefaults({hosts: [{port: 0}]})).toEqual({});
     });
     it('must set the default user', () => {
         expect(parse('').setDefaults({user: 'abc'})).toEqual({user: 'abc'});

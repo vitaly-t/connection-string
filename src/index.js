@@ -251,9 +251,9 @@
                                 }
                             }
                         }
-                        var port = parseInt(dh.port);
-                        if (port > 0 && port < 65536) {
-                            obj.port = port;
+                        var p = dh.port;
+                        if (typeof p === 'number' && p > 0 && p < 65536) {
+                            obj.port = p;
                         }
                         if (obj.name || obj.port) {
                             Object.defineProperty(obj, 'toString', {
