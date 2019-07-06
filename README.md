@@ -1,7 +1,7 @@
 connection-string
 =================
 
-Advanced URL Connection String parser, with fully optional syntax.
+Advanced URL Connection String parser + generator, with fully optional syntax.
 
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
@@ -30,6 +30,8 @@ and converts it into an object that contains only what's specified:
     }
 }
 ```
+
+And it can generate a valid Connection String from an object. See the [API].
 
 This library implements a superset of [Mongodb Connection String Spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
 which served as a great inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
@@ -193,5 +195,6 @@ for compatibility with older parsers that did not support multiple hosts:
 * `hostname = hosts && hosts[0].name`
 * `port = hosts && hosts[0].port`
 
+[API]:#api
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
