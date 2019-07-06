@@ -1,7 +1,7 @@
 {
   "name": "connection-string",
-  "version": "2.4.2",
-  "description": "Advanced URL Connection String parser.",
+  "version": "2.4.3",
+  "description": "Advanced URL Connection String parser + generator.",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
   "scripts": {
@@ -26,7 +26,8 @@
     "url",
     "connection",
     "string",
-    "parser"
+    "parser",
+    "generator"
   ],
   "author": {
     "name": "Vitaly Tomilov",
