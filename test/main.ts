@@ -25,7 +25,13 @@ let cs = a.toString({encodeDollar: true, plusForSpace: true, passwordHash: '*'})
 a.setDefaults({
     hosts: [
         {name: '[::]', port: 123, type: HostType.IPv4}
-    ]
+    ],
+    params: {
+        one: 123,
+        message: 'hello',
+        val: true,
+        date: new Date()
+    }
 });
 
 a.setDefaults({

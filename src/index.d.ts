@@ -24,7 +24,7 @@ interface IConnectionDefaults {
     user?: string
     password?: string
     path?: string[]
-    params?: { [name: string]: string }
+    params?: { [name: string]: any }
 }
 
 export class ConnectionString {
@@ -35,7 +35,7 @@ export class ConnectionString {
     user?: string;
     password?: string;
     path?: string[];
-    params?: { [name: string]: string };
+    params?: { [name: string]: any };
 
     /**
      * Virtualized accessor to the first host name:
