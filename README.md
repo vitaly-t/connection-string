@@ -31,7 +31,7 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
-And it can generate a valid Connection String from an object. See the [API].
+And it can generate a valid Connection String from an object. See the [API], plus [connection-string-demo].
 
 This library implements a superset of [Mongodb Connection String Spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
 which served as a great inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
@@ -187,6 +187,8 @@ a.toString();
 * Property `type`, when present, can be any of the following: `domain | socket | IPv4 | IPv6`.
 * If no valid host information is found, the method returns `null`.
 
+For a good example, see [connection-string-demo].
+
 ### Virtual Properties
 
 Type `ConnectionString` supports non-enumerable read-only properties `hostname` and `port`,
@@ -198,3 +200,4 @@ for compatibility with older parsers that did not support multiple hosts:
 [API]:#api
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
+[connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
