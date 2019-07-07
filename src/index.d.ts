@@ -49,7 +49,7 @@ export class ConnectionString {
      */
     readonly port?: number;
 
-    static parseHost(host: string): IHost
+    static parseHost(host: string): IHost | null
 
     toString(options?: IEncodingOptions): string
 
