@@ -271,6 +271,11 @@ describe('path', () => {
 });
 
 describe('params', () => {
+    it('must throw when repeated', () => {
+        expect(() => {
+            parse('?one=1&one=2');
+        }).toThrow('Parameter "one" is repeated.');
+    });
     it('must support lack of parameters', () => {
         expect(parse('?')).toEqual({});
         expect(parse('/?')).toEqual({});

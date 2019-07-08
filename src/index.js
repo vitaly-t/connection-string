@@ -91,7 +91,11 @@
                 var params = {};
                 m.forEach(function (s) {
                     var a = s.split('=');
-                    params[decode(a[0])] = decode(a[1]);
+                    var prop = decode(a[0]);
+                    if (prop in params) {
+                        throw new Error('Parameter "' + prop + '" is repeated.');
+                    }
+                    params[prop] = decode(a[1]);
                 });
                 this.params = params;
             }
