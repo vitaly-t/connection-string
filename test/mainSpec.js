@@ -112,6 +112,13 @@ describe('hosts', () => {
             }]
         });
     });
+    it('must recognize unix sockets', () => {
+        expect(parse('%2Fone')).toEqual({hosts: [{name: '/one', type: 'socket'}]});
+        expect(parse('one%2F')).toEqual({hosts: [{name: 'one/', type: 'socket'}]});
+        expect(parse('one%2Ftwo')).toEqual({hosts: [{name: 'one/two', type: 'socket'}]});
+        expect(parse('one.sock')).toEqual({hosts: [{name: 'one.sock', type: 'socket'}]});
+        expect(parse('one%2Ftwo.sock')).toEqual({hosts: [{name: 'one/two.sock', type: 'socket'}]});
+    });
     it('must recognize valid IPv4 addresses', () => {
         expect(parse('255.255.255.255')).toEqual({
             hosts: [{

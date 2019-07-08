@@ -142,7 +142,7 @@
                         h.type = hostType.IPv4;
                     } else {
                         h.name = decode(m[2]);
-                        h.type = m[2].match(/.*\.sock$/i) ? hostType.socket : hostType.domain;
+                        h.type = h.name.match(/\/|.*\.sock$/i) ? hostType.socket : hostType.domain;
                     }
                 }
             }
