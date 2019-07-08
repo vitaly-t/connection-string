@@ -1,7 +1,7 @@
 (function (window) {
     'use strict';
 
-    var invalidDefaults = 'Invalid \'defaults\' parameter!';
+    var invalidDefaults = 'Invalid "defaults" parameter: ';
 
     var hostType = {
         domain: 'domain', // Regular domain name
@@ -17,11 +17,11 @@
         }
 
         if (typeof cs !== 'string') {
-            throw new TypeError('Invalid connection string!');
+            throw new TypeError('Invalid connection string: ' + JSON.stringify(cs));
         }
 
         if (defaults !== undefined && defaults !== null && typeof defaults !== 'object') {
-            throw new TypeError(invalidDefaults);
+            throw new TypeError(invalidDefaults + JSON.stringify(defaults));
         }
 
         // Removing all trailing space symbols:
@@ -117,7 +117,7 @@
     function parseHost(host, external) {
         if (external) {
             if (typeof host !== 'string') {
-                throw new TypeError('Invalid \'host\' parameter!');
+                throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
             }
             host = trim(host);
         }
@@ -151,7 +151,7 @@
                 if (port > 0 && port < 65536 && port.toString() === p) {
                     h.port = port;
                 } else {
-                    throw new Error('Invalid port: ' + p);
+                    throw new Error('Invalid port number: ' + JSON.stringify(p));
                 }
             }
             if (h.name || h.port) {
@@ -220,7 +220,7 @@
 
     function setDefaults(defaults) {
         if (!defaults || typeof defaults !== 'object') {
-            throw new TypeError(invalidDefaults);
+            throw new TypeError(invalidDefaults + JSON.stringify(defaults));
         }
 
         if (!('protocol' in this) && isText(defaults.protocol)) {

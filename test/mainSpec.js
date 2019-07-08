@@ -12,13 +12,13 @@ function create(obj) {
 
 describe('init', () => {
     it('must throw on a non-string', () => {
-        const error = 'Invalid connection string!';
+        const error = 'Invalid connection string: ';
         expect(() => {
             parse();
-        }).toThrow(error);
+        }).toThrow(error + undefined);
         expect(() => {
             parse(123);
-        }).toThrow(error);
+        }).toThrow(error + 123);
     });
     it('must throw on invalid symbols', () => {
         const invalidSymbols = '`"#^<>{}\\| \r\n\t';
@@ -30,13 +30,13 @@ describe('init', () => {
         });
     });
     it('must throw on invalid defaults', () => {
-        const error = 'Invalid \'defaults\' parameter!';
+        const error = 'Invalid "defaults" parameter: ';
         expect(() => {
             parse('', '');
-        }).toThrow(error);
+        }).toThrow(error + '""');
         expect(() => {
             parse('', 123);
-        }).toThrow(error);
+        }).toThrow(error + 123);
     });
     it('must throw on inner spaces', () => {
         expect(() => {
@@ -164,13 +164,13 @@ describe('hosts', () => {
     it('must throw on invalid ports', () => {
         expect(() => {
             parse(':bad');
-        }).toThrow('Invalid port: bad');
+        }).toThrow('Invalid port number: "bad"');
         expect(() => {
             parse('[::]:1a');
-        }).toThrow('Invalid port: 1a');
+        }).toThrow('Invalid port number: "1a"');
         expect(() => {
             parse('[::]:abc');
-        }).toThrow('Invalid port: abc');
+        }).toThrow('Invalid port number: "abc"');
     });
     it('must allow valid ports', () => {
         expect(parse('[::]:1')).toEqual({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
@@ -193,15 +193,15 @@ describe('port', () => {
     it('must not allow 0 or negative ports', () => {
         expect(() => {
             parse(':0');
-        }).toThrow('Invalid port: 0');
+        }).toThrow('Invalid port number: "0"');
         expect(() => {
             parse(':-1');
-        }).toThrow('Invalid port: -1');
+        }).toThrow('Invalid port number: "-1"');
     });
     it('must not allow invalid terminators', () => {
         expect(() => {
             parse(':12345a');
-        }).toThrow('Invalid port: 12345a');
+        }).toThrow('Invalid port number: "12345a"');
     });
     it('must allow simplified access to the first port number', () => {
         expect(parse('').port).toBeUndefined();
@@ -471,13 +471,13 @@ describe('host.toString()', () => {
 
 describe('setDefaults', () => {
     it('must throw on invalid defaults', () => {
-        const error = 'Invalid \'defaults\' parameter!';
+        const error = 'Invalid "defaults" parameter: ';
         expect(() => {
             parse('').setDefaults();
-        }).toThrow(error);
+        }).toThrow(error + undefined);
         expect(() => {
             parse('').setDefaults(123);
-        }).toThrow(error);
+        }).toThrow(error + 123);
     });
     it('must set the default protocol', () => {
         expect(parse('').setDefaults({protocol: 'abc'})).toEqual({protocol: 'abc'});
@@ -571,13 +571,13 @@ describe('setDefaults', () => {
 describe('parseHost', () => {
     const parseHost = ConnectionString.parseHost;
     it('must throw on invalid host', () => {
-        const error = 'Invalid \'host\' parameter!';
+        const error = 'Invalid "host" parameter: ';
         expect(() => {
             parseHost();
-        }).toThrow(error);
+        }).toThrow(error + undefined);
         expect(() => {
             parseHost(123);
-        }).toThrow(error);
+        }).toThrow(error + 123);
     });
     it('must allow empty hosts', () => {
         expect(parseHost('')).toBeNull();
