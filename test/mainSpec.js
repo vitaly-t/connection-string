@@ -118,6 +118,7 @@ describe('hosts', () => {
         expect(parse('one%2Ftwo')).toEqual({hosts: [{name: 'one/two', type: 'socket'}]});
         expect(parse('one.sock')).toEqual({hosts: [{name: 'one.sock', type: 'socket'}]});
         expect(parse('one%2Ftwo.sock')).toEqual({hosts: [{name: 'one/two.sock', type: 'socket'}]});
+        expect(parse('one.sock.two')).toEqual({hosts: [{name: 'one.sock.two', type: 'domain'}]});
     });
     it('must recognize valid IPv4 addresses', () => {
         expect(parse('255.255.255.255')).toEqual({
