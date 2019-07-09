@@ -31,10 +31,12 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
-And it can generate a valid Connection String from an object. See the [API], plus [connection-string-demo].
+And it can generate a valid Connection String from an object - see [connection-string-demo].
+
+For documentation and examples, check out [WiKi Pages] and [API].
 
 This library implements a superset of [Mongodb Connection String Spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
-which served as a great inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
+which served as an inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
 
 ## Rationale
 
@@ -42,6 +44,7 @@ Unlike the default URL parser, this one supports the following:
 
 * Multiple hosts - for connecting to multiple servers
 * Fully optional syntax for every element in the connection string
+* It unifies Unix sockets support with the URL standard
 * Automatic defaults configuration for missing parameters
 * Re-construction of a connection string from object
 * Friendlier access to all of the URL's details
@@ -112,12 +115,11 @@ See also [WiKi Pages] for more examples and documentation.
 
 ## API
 
-When parsing a connection string, via the function or class constructor, you can pass in optional
-object `defaults`, to automatically call `setDefaults` in the end, to provide defaults for the
-values that are missing. See the method below.
+When parsing a connection string, via the function or class constructor, you can pass in optional object `defaults`,
+to automatically call `setDefaults` in the end, to provide defaults for the values that are missing. See the method below.
 
-The object returned by the parser contains only what is present in the connection string,
-combined with the defaults, if those were specified, plus methods as documented further.
+The object returned by the parser contains only what is present in the connection string, combined with the defaults,
+if those were specified, plus methods as documented further.
 
 In addition, the class has [virtual properties](#virtual-properties) `hostname` + `port`, for simpler and safer
 access to the first host details, compatible with parsers that do not support multiple hosts.
@@ -192,12 +194,17 @@ For a good example, see [connection-string-demo].
 ### Virtual Properties
 
 Type `ConnectionString` supports non-enumerable read-only properties `hostname` and `port`,
-for compatibility with older parsers that did not support multiple hosts:
+for compatibility with parsers that do not support multiple hosts:
 
 * `hostname = hosts && hosts[0].name`
 * `port = hosts && hosts[0].port`
 
+### Extras
+
+For some typical questions, consult the [FAQ Page].  
+
 [API]:#api
+[FAQ Page]:https://github.com/vitaly-t/connection-string/wiki/FAQ
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
 [connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
