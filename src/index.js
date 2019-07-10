@@ -126,9 +126,9 @@
         } else {
             // It is either IPv4 or domain/socket
             if (raw) {
-                m = host.match(/(([a-z0-9.$-/]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
+                m = host.match(/(([a-z0-9.$/-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
             } else {
-                m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
+                m = host.match(/(([a-z0-9.$%-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
             }
         }
         if (m) {

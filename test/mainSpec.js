@@ -595,6 +595,10 @@ describe('parseHost', () => {
             parseHost(123);
         }).toThrow(error + 123);
     });
+    it('must not decode hosts', () => {
+        // TODO: must not use partial host names here:
+        // expect(parseHost('a b')).toEqual(null);
+    });
     it('must allow empty hosts', () => {
         expect(parseHost('')).toBeNull();
         expect(parseHost(':')).toBeNull();
