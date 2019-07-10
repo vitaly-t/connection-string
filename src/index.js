@@ -24,18 +24,16 @@
             throw new TypeError(invalidDefaults + JSON.stringify(defaults));
         }
 
-        // Removing all trailing space symbols:
-        cs = trim(cs);
+        cs = trim(cs); // removing all trailing space symbols
 
-        // Validating URL symbols:
-        validateUrl(cs);
+        validateUrl(cs); // validating URL symbols
 
         // Extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
         if (m) {
-            var protocol = decode(m[0].replace(/:\/\//, ''));
+            var protocol = m[0].replace(/:\/\//, '');
             if (protocol) {
-                this.protocol = protocol;
+                this.protocol = decode(protocol);
             }
             cs = cs.substr(m[0].length);
         }
@@ -52,8 +50,8 @@
             cs = cs.substr(m[0].length);
         }
 
-        // Extracting hosts details...
-        // (if it starts with `/`, it is the first path segment, so no hosts specified)
+        // Extracting hosts details:
+        // (if it starts with `/`, it is the first path segment, no hosts specified)
         if (cs[0] !== '/') {
 
             var endOfHosts = cs.search(/\/|\?/);
@@ -88,16 +86,15 @@
             cs = cs.substr(idx + 1);
             m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%]+)/g);
             if (m) {
-                var params = {};
+                this.params = {};
                 m.forEach(function (s) {
                     var a = s.split('=');
                     var prop = decode(a[0]);
-                    if (prop in params) {
+                    if (prop in this.params) {
                         throw new Error('Parameter "' + prop + '" is repeated.');
                     }
-                    params[prop] = decode(a[1]);
-                });
-                this.params = params;
+                    this.params[prop] = decode(a[1]);
+                }, this);
             }
         }
 
@@ -316,7 +313,8 @@
         options = options || {};
         var a = '';
         if (obj.name) {
-            a = obj.type === hostType.IPv6 ? obj.name : encode(obj.name, options);
+            var skipEncoding = obj.type === hostType.IPv4 || obj.type === hostType.IPv6;
+            a = skipEncoding ? obj.name : encode(obj.name, options);
         }
         if (obj.port) {
             a += ':' + obj.port;
