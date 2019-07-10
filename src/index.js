@@ -247,12 +247,13 @@
                     if (!found) {
                         var obj = {};
                         if (h.name) {
-                            obj.name = h.name;
                             if (h.type && h.type in hostType) {
+                                obj.name = h.name;
                                 obj.type = h.type;
                             } else {
                                 var t = parseHost(h.name, true);
                                 if (t) {
+                                    obj.name = t.name;
                                     obj.type = t.type;
                                 }
                             }

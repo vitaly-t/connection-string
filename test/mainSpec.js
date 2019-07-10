@@ -502,14 +502,6 @@ describe('setDefaults', () => {
                 port: 1
             }]
         });
-        expect(parse('my-host').setDefaults({hosts: [{name: '::', type: 'bla-bla'}]})).toEqual({
-            hosts: [{
-                name: 'my-host',
-                type: 'domain'
-            }, {
-                name: '::'
-            }]
-        });
         expect(parse('my-host').setDefaults({hosts: [{name: 'my-host', port: 0}]})).toEqual({
             hosts: [{
                 name: 'my-host',
@@ -536,6 +528,22 @@ describe('setDefaults', () => {
         });
         expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
+    });
+    it('must skip invalid hosts', () => {
+        expect(parse('my-host').setDefaults({hosts: [{name: '::'}]})).toEqual({
+            hosts: [{
+                name: 'my-host',
+                type: 'domain'
+            }]
+        });
+        // TODO: Invalid hosts must be skipped when parsed:
+        /*
+        expect(parse('').setDefaults({hosts: [{name: 'a b'}]})).toEqual({
+            hosts: [{
+                name: 'my-host',
+                type: 'domain'
+            }]
+        });*/
     });
     it('must ignore trailing spaces for host names', () => {
         expect(parse('one').setDefaults({hosts: [{name: ' one '}]})).toEqual({
