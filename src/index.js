@@ -24,9 +24,9 @@
             throw new TypeError(invalidDefaults + JSON.stringify(defaults));
         }
 
-        cs = trim(cs); // removing all trailing space symbols
+        cs = cs.trim();
 
-        validateUrl(cs); // validating URL symbols
+        validateUrl(cs);
 
         // Extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
@@ -116,7 +116,7 @@
             if (typeof host !== 'string') {
                 throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
             }
-            host = trim(host);
+            host = host.trim();
         }
         var m, isIPv6;
         if (host[0] === '[') {
@@ -221,7 +221,7 @@
         }
 
         if (!('protocol' in this) && isText(defaults.protocol)) {
-            this.protocol = trim(defaults.protocol);
+            this.protocol = defaults.protocol.trim();
         }
 
         // Missing default hosts are merged with the existing ones:
@@ -272,11 +272,11 @@
         }
 
         if (!('user' in this) && isText(defaults.user)) {
-            this.user = trim(defaults.user);
+            this.user = defaults.user.trim();
         }
 
         if (!('password' in this) && isText(defaults.password)) {
-            this.password = trim(defaults.password);
+            this.password = defaults.password.trim();
         }
 
         // Since the order of path segments is usually important, we set default
@@ -336,10 +336,6 @@
 
     function isText(txt) {
         return typeof txt === 'string' && /\S/.test(txt);
-    }
-
-    function trim(txt) {
-        return txt.replace(/^[\s]*|[\s]*$/g, '');
     }
 
     Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
