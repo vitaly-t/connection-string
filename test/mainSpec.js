@@ -533,6 +533,14 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).toEqual({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('').setDefaults({hosts: [{port: 123}]})).toEqual({hosts: [{port: 123}]});
     });
+    it('must ignore trailing spaces for host names', () => {
+        expect(parse('one').setDefaults({hosts: [{name: ' one '}]})).toEqual({
+            hosts: [{name: 'one', type: 'domain'}]
+        });
+        expect(parse('one').setDefaults({hosts: [{name: ' \t\ttwo\r\n\t '}]})).toEqual({
+            hosts: [{name: 'one', type: 'domain'}, {name: 'two', type: 'domain'}]
+        });
+    });
     it('must ignore invalid ports', () => {
         expect(parse('').setDefaults({hosts: [{port: '123'}]})).toEqual({});
         expect(parse('').setDefaults({hosts: [{port: 'a'}]})).toEqual({});

@@ -231,9 +231,10 @@
                 return d && typeof d === 'object';
             })
                 .forEach(function (dh) {
+                    var h = {name: isText(dh.name) ? dh.name.trim() : null, port: dh.port, type: dh.type};
                     var found = false;
                     for (var i = 0; i < hosts.length; i++) {
-                        var thisHost = fullHostName(hosts[i]), defHost = fullHostName(dh);
+                        var thisHost = fullHostName(hosts[i]), defHost = fullHostName(h);
                         if (thisHost.toLowerCase() === defHost.toLowerCase()) {
                             found = true;
                             break;
@@ -241,18 +242,18 @@
                     }
                     if (!found) {
                         var obj = {};
-                        if (isText(dh.name)) {
-                            obj.name = dh.name;
-                            if (dh.type && dh.type in hostType) {
-                                obj.type = dh.type;
+                        if (h.name) {
+                            obj.name = h.name;
+                            if (h.type && h.type in hostType) {
+                                obj.type = h.type;
                             } else {
-                                var t = parseHost(dh.name);
+                                var t = parseHost(h.name);
                                 if (t) {
                                     obj.type = t.type;
                                 }
                             }
                         }
-                        var p = dh.port;
+                        var p = h.port;
                         if (typeof p === 'number' && p > 0 && p < 65536) {
                             obj.port = p;
                         }
