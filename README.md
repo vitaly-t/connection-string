@@ -126,7 +126,7 @@ access to the first host details, compatible with parsers that do not support mu
 
 ### `setDefaults(defaults) => ConnectionString`
 
-The method takes an object with default values, and safely combines it with what's missing in the current object.
+The method takes an object with default values (unencoded), and safely combines it with what's missing in the current object.
 
 Please note that while missing defaults for `hosts` and `params` are merged with the existing sets, for the `path` they are not,
 since their order is often important, so the defaults for `path` are only used when there are no path segments
@@ -174,7 +174,7 @@ on purpose. But if you want it parsed again, use a different symbol, for example
 
 ### `static parseHost(host) => {name, port, type} | null`
 
-When using an external list of default hosts, you may need to parse them independently, using this method,
+When using an external list of default hosts (unencoded), you may need to parse them independently, using this method,
 so they can be correctly processed by method `setDefaults`.
 
 ```js

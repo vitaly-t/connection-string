@@ -111,8 +111,8 @@
         }
     }
 
-    function parseHost(host, external) {
-        if (external) {
+    function parseHost(host, raw) {
+        if (raw) {
             if (typeof host !== 'string') {
                 throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
             }
@@ -125,7 +125,11 @@
             isIPv6 = true;
         } else {
             // It is either IPv4 or domain/socket
-            m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
+            if (raw) {
+                m = host.match(/(([a-z0-9.$-/]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
+            } else {
+                m = host.match(/(([a-z0-9%.$-]*)(?::(-?[0-9a-z]+[^/?]*))?)/i);
+            }
         }
         if (m) {
             var h = {};
@@ -138,7 +142,7 @@
                         h.name = m[2];
                         h.type = hostType.IPv4;
                     } else {
-                        h.name = decode(m[2]);
+                        h.name = raw ? m[2] : decode(m[2]);
                         h.type = h.name.match(/\/|.*\.sock$/i) ? hostType.socket : hostType.domain;
                     }
                 }
@@ -247,7 +251,7 @@
                             if (h.type && h.type in hostType) {
                                 obj.type = h.type;
                             } else {
-                                var t = parseHost(h.name);
+                                var t = parseHost(h.name, true);
                                 if (t) {
                                     obj.type = t.type;
                                 }

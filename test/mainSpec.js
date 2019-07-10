@@ -607,6 +607,10 @@ describe('parseHost', () => {
     it('must parse valid hosts', () => {
         expect(parseHost('a')).toEqual({name: 'a', type: 'domain'});
         expect(parseHost('a:123')).toEqual({name: 'a', port: 123, type: 'domain'});
+        expect(parseHost('1.2.3.4:123')).toEqual({name: '1.2.3.4', port: 123, type: 'IPv4'});
         expect(parseHost('[::]:123')).toEqual({name: '[::]', port: 123, type: 'IPv6'});
+        expect(parseHost('a.sock')).toEqual({name: 'a.sock', type: 'socket'});
+        expect(parseHost('/a')).toEqual({name: '/a', type: 'socket'});
+        expect(parseHost('a/')).toEqual({name: 'a/', type: 'socket'});
     });
 });
