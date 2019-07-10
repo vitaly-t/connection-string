@@ -6,6 +6,10 @@ function parse(cs, defaults) {
     return new ConnectionString(cs, defaults);
 }
 
+function parseHost(host) {
+    return ConnectionString.parseHost(host);
+}
+
 function create(obj) {
     return (new ConnectionString('', obj)).toString();
 }
@@ -446,8 +450,8 @@ describe('toString', () => {
 
 describe('host.toString()', () => {
     it('must generate full host name', () => {
-        expect(ConnectionString.parseHost('localhost:123').toString()).toBe('localhost:123');
-        expect(ConnectionString.parseHost('[::]:123').toString()).toBe('[::]:123');
+        expect(parseHost('localhost:123').toString()).toBe('localhost:123');
+        expect(parseHost('[::]:123').toString()).toBe('[::]:123');
 
         expect(parse('').setDefaults({
             hosts: [{
@@ -457,8 +461,8 @@ describe('host.toString()', () => {
         }).hosts[0].toString()).toBe('localhost:123');
     });
     it('must encode dollar symbol only when required', () => {
-        expect(ConnectionString.parseHost('my$server:123').toString()).toBe('my$server:123');
-        expect(ConnectionString.parseHost('my$server:123').toString({encodeDollar: true})).toBe('my%24server:123');
+        expect(parseHost('my$server:123').toString()).toBe('my$server:123');
+        expect(parseHost('my$server:123').toString({encodeDollar: true})).toBe('my%24server:123');
 
         expect(parse('').setDefaults({
             hosts: [{
@@ -585,7 +589,6 @@ describe('setDefaults', () => {
 });
 
 describe('parseHost', () => {
-    const parseHost = ConnectionString.parseHost;
     it('must throw on invalid host', () => {
         const error = 'Invalid "host" parameter: ';
         expect(() => {
@@ -596,7 +599,7 @@ describe('parseHost', () => {
         }).toThrow(error + 123);
     });
     it('must not decode hosts', () => {
-        // TODO: must not use partial host names here:
+        // TODO: should either skip or throw when the host match is partial:
         // expect(parseHost('a b')).toEqual(null);
     });
     it('must allow empty hosts', () => {
