@@ -39,7 +39,7 @@
     "npm": ">=2.14.2"
   },
   "devDependencies": {
-    "coveralls": "3.0.5",
+    "coveralls": "3.0.6",
     "eslint": "6.1.0",
     "istanbul": "0.4.5",
     "jasmine-node": "3.0.0"
