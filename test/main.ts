@@ -1,4 +1,4 @@
-import {ConnectionString, HostType, IHost} from '../src'
+import {ConnectionString, HostType, IHost, IParsedHost} from '../src'
 
 const a = new ConnectionString('protocol://');
 const b = new ConnectionString('protocol://', {});
@@ -11,10 +11,12 @@ if ('protocol' in a) {
     const pass = a.password;
 }
 
-const segment1: string = a.path[0];
-const param1: string = a.params['first'];
+const segment1: string | void = a.path && a.path[0];
+const param1: string = a.params && a.params['first'];
 
-a.params['first'] = 'hello';
+if (a.params) {
+    a.params['first'] = 'hello';
+}
 
 a.params = {
     first: '123',
@@ -39,14 +41,22 @@ a.setDefaults({
     password: ''
 });
 
-const hostname: string = a.hostname;
-const port: number = a.port;
+interface IValues {
+    hostname?: string;
+    port?: number;
+}
+
+const values: IValues = {
+    hostname: a.hostname,
+    port: a.port
+};
 
 cs = a.toString({encodeDollar: true, plusForSpace: true});
 
 const qq: ConnectionString = a.setDefaults(new ConnectionString(''));
 
-const parseHost: IHost = ConnectionString.parseHost('abc');
+const parsedHost: IParsedHost | null = ConnectionString.parseHost('abc');
 
-parseHost.toString({});
-
+if (parsedHost) {
+    parsedHost.toString({});
+}

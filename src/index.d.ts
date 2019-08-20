@@ -15,7 +15,11 @@ interface IHost {
     name?: string
     port?: number
     type?: HostType
-    toString?: (options?: IEncodingOptions) => string
+}
+
+interface IParsedHost extends IHost {
+    type: HostType
+    toString: (options?: IEncodingOptions) => string
 }
 
 interface IConnectionDefaults {
@@ -49,7 +53,7 @@ export class ConnectionString {
      */
     readonly port?: number;
 
-    static parseHost(host: string): IHost | null
+    static parseHost(host: string): IParsedHost | null
 
     toString(options?: IEncodingOptions): string
 
