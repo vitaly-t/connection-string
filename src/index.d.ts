@@ -35,7 +35,7 @@ export class ConnectionString {
     constructor(cs: string, defaults?: IConnectionDefaults)
 
     protocol?: string;
-    hosts?: Array<IHost>;
+    hosts?: Array<IParsedHost>;
     user?: string;
     password?: string;
     path?: string[];

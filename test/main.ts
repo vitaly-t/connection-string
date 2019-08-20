@@ -6,6 +6,8 @@ const c = new ConnectionString('protocol://', {
     path: ['one', 'two']
 });
 
+const h1 = a.hosts && a.hosts[0].toString();
+
 if ('protocol' in a) {
     const protocol = a.protocol;
     const pass = a.password;
