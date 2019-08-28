@@ -1,16 +1,17 @@
-(function (window) {
-    'use strict';
+import {IConnectionDefaults} from './types';
 
-    var invalidDefaults = 'Invalid "defaults" parameter: ';
+const invalidDefaults = 'Invalid "defaults" parameter: ';
 
-    var hostType = {
-        domain: 'domain', // Regular domain name
-        socket: 'socket', // UNIX socket
-        IPv4: 'IPv4',
-        IPv6: 'IPv6'
-    };
+const hostType = {
+    domain: 'domain', // Regular domain name
+    socket: 'socket', // UNIX socket
+    IPv4: 'IPv4',
+    IPv6: 'IPv6'
+};
 
-    function ConnectionString(cs, defaults) {
+export class ConnectionString {
+
+    constructor(cs: string, defaults?: IConnectionDefaults) {
 
         if (!(this instanceof ConnectionString)) {
             return new ConnectionString(cs, defaults);
@@ -26,7 +27,7 @@
 
         cs = cs.trim();
 
-        validateUrl(cs);
+        ConnectionString.validateUrl(cs);
 
         // Extracting the protocol:
         var m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
@@ -101,73 +102,10 @@
         if (defaults) {
             this.setDefaults(defaults);
         }
+
     }
 
-    function validateUrl(url) {
-        var idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=%]/);
-        if (idx >= 0) {
-            var s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
-            throw new Error('Invalid URL character ' + s + ' at position ' + idx);
-        }
-    }
-
-    function parseHost(host, raw) {
-        if (raw) {
-            if (typeof host !== 'string') {
-                throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
-            }
-            host = host.trim();
-        }
-        var m, isIPv6;
-        if (host[0] === '[') {
-            // This is IPv6, with [::] being the shortest possible
-            m = host.match(/((\[[0-9a-z:%]{2,45}])(?::(-?[0-9a-z]+))?)/i);
-            isIPv6 = true;
-        } else {
-            // It is either IPv4 or domain/socket
-            if (raw) {
-                m = host.match(/(([a-z0-9.$/-]*)(?::(-?[0-9a-z]+))?)/i);
-            } else {
-                m = host.match(/(([a-z0-9.$%-]*)(?::(-?[0-9a-z]+))?)/i);
-            }
-        }
-        if (m) {
-            var h = {};
-            if (m[2]) {
-                if (isIPv6) {
-                    h.name = m[2];
-                    h.type = hostType.IPv6;
-                } else {
-                    if (m[2].match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)) {
-                        h.name = m[2];
-                        h.type = hostType.IPv4;
-                    } else {
-                        h.name = raw ? m[2] : decode(m[2]);
-                        h.type = h.name.match(/\/|.*\.sock$/i) ? hostType.socket : hostType.domain;
-                    }
-                }
-            }
-            if (m[3]) {
-                var p = m[3], port = parseInt(p);
-                if (port > 0 && port < 65536 && port.toString() === p) {
-                    h.port = port;
-                } else {
-                    throw new Error('Invalid port number: ' + JSON.stringify(p));
-                }
-            }
-            if (h.name || h.port) {
-                Object.defineProperty(h, 'toString', {
-                    value: function (options) {
-                        return fullHostName(h, options);
-                    }
-                });
-                return h;
-            }
-        }
-        return null;
-    }
-
-    function toString(options) {
+    toString(options) {
         var s = '';
         options = options || {};
         if (this.protocol) {
@@ -219,7 +157,7 @@
         return s;
     }
 
-    function setDefaults(defaults) {
+    setDefaults(defaults) {
         if (!defaults || typeof defaults !== 'object') {
             throw new TypeError(invalidDefaults + JSON.stringify(defaults));
         }
@@ -315,59 +253,119 @@
         return this;
     }
 
-    function fullHostName(obj, options) {
-        options = options || {};
-        var a = '';
-        if (obj.name) {
-            var skipEncoding = obj.type === hostType.IPv4 || obj.type === hostType.IPv6;
-            a = skipEncoding ? obj.name : encode(obj.name, options);
+    private static validateUrl(url) {
+        const idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=%]/);
+        if (idx >= 0) {
+            const s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
+            throw new Error('Invalid URL character ' + s + ' at position ' + idx);
         }
-        if (obj.port) {
-            a += ':' + obj.port;
-        }
-        return a;
     }
 
-    function encode(text, options) {
-        text = encodeURIComponent(text);
-        if (options.plusForSpace) {
-            text = text.replace(/%20/g, '+');
+    private static parseHost(host, raw) {
+        if (raw) {
+            if (typeof host !== 'string') {
+                throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
+            }
+            host = host.trim();
         }
-        return options.encodeDollar ? text : text.replace(/%24/g, '$');
+        var m, isIPv6;
+        if (host[0] === '[') {
+            // This is IPv6, with [::] being the shortest possible
+            m = host.match(/((\[[0-9a-z:%]{2,45}])(?::(-?[0-9a-z]+))?)/i);
+            isIPv6 = true;
+        } else {
+            // It is either IPv4 or domain/socket
+            if (raw) {
+                m = host.match(/(([a-z0-9.$/-]*)(?::(-?[0-9a-z]+))?)/i);
+            } else {
+                m = host.match(/(([a-z0-9.$%-]*)(?::(-?[0-9a-z]+))?)/i);
+            }
+        }
+        if (m) {
+            var h = {};
+            if (m[2]) {
+                if (isIPv6) {
+                    h.name = m[2];
+                    h.type = hostType.IPv6;
+                } else {
+                    if (m[2].match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)) {
+                        h.name = m[2];
+                        h.type = hostType.IPv4;
+                    } else {
+                        h.name = raw ? m[2] : decode(m[2]);
+                        h.type = h.name.match(/\/|.*\.sock$/i) ? hostType.socket : hostType.domain;
+                    }
+                }
+            }
+            if (m[3]) {
+                var p = m[3], port = parseInt(p);
+                if (port > 0 && port < 65536 && port.toString() === p) {
+                    h.port = port;
+                } else {
+                    throw new Error('Invalid port number: ' + JSON.stringify(p));
+                }
+            }
+            if (h.name || h.port) {
+                Object.defineProperty(h, 'toString', {
+                    value: function (options) {
+                        return fullHostName(h, options);
+                    }
+                });
+                return h;
+            }
+        }
+        return null;
     }
 
-    function decode(text) {
-        return decodeURIComponent(text.replace(/\+/g, '%20'));
-    }
+}
 
-    function isText(txt) {
-        return typeof txt === 'string' && /\S/.test(txt);
+function fullHostName(obj, options) {
+    options = options || {};
+    var a = '';
+    if (obj.name) {
+        var skipEncoding = obj.type === hostType.IPv4 || obj.type === hostType.IPv6;
+        a = skipEncoding ? obj.name : encode(obj.name, options);
     }
-
-    Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
-    Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
-    Object.defineProperty(ConnectionString, 'parseHost', {
-        value: function (host) {
-            return parseHost(host, true);
-        }
-    });
-    Object.defineProperty(ConnectionString.prototype, 'hostname', {
-        get: function () {
-            return this.hosts && this.hosts[0].name;
-        }
-    });
-    Object.defineProperty(ConnectionString.prototype, 'port', {
-        get: function () {
-            return this.hosts && this.hosts[0].port;
-        }
-    });
-    ConnectionString.ConnectionString = ConnectionString; // To make it more TypeScript-friendly
-    ConnectionString.HostType = hostType;
-
-    /* istanbul ignore else */
-    if (typeof module === 'object' && module && typeof module.exports === 'object') {
-        module.exports = ConnectionString; // Inside Node.js
-    } else {
-        window.ConnectionString = ConnectionString; // Inside a browser
+    if (obj.port) {
+        a += ':' + obj.port;
     }
-})(this);
+    return a;
+}
+
+function encode(text, options) {
+    text = encodeURIComponent(text);
+    if (options.plusForSpace) {
+        text = text.replace(/%20/g, '+');
+    }
+    return options.encodeDollar ? text : text.replace(/%24/g, '$');
+}
+
+function decode(text) {
+    return decodeURIComponent(text.replace(/\+/g, '%20'));
+}
+
+function isText(txt) {
+    return typeof txt === 'string' && /\S/.test(txt);
+}
+
+/*
+Object.defineProperty(ConnectionString.prototype, 'toString', {value: toString});
+Object.defineProperty(ConnectionString.prototype, 'setDefaults', {value: setDefaults});
+Object.defineProperty(ConnectionString, 'parseHost', {
+    value: function (host) {
+        return parseHost(host, true);
+    }
+});
+Object.defineProperty(ConnectionString.prototype, 'hostname', {
+    get: function () {
+        return this.hosts && this.hosts[0].name;
+    }
+});
+Object.defineProperty(ConnectionString.prototype, 'port', {
+    get: function () {
+        return this.hosts && this.hosts[0].port;
+    }
+});
+ConnectionString.ConnectionString = ConnectionString; // To make it more TypeScript-friendly
+ConnectionString.HostType = hostType;
+*/

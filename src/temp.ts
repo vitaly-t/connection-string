@@ -1,35 +1,4 @@
-declare enum HostType {
-    domain, // Regular domain name
-    socket, // UNIX socket
-    IPv4,
-    IPv6
-}
-
-interface IEncodingOptions {
-    encodeDollar?: boolean
-    plusForSpace?: boolean
-    passwordHash?: boolean | string
-}
-
-interface IHost {
-    name?: string
-    port?: number
-    type?: HostType
-}
-
-interface IParsedHost extends IHost {
-    type: HostType
-    toString: (options?: IEncodingOptions) => string
-}
-
-interface IConnectionDefaults {
-    protocol?: string
-    hosts?: Array<IHost>
-    user?: string
-    password?: string
-    path?: string[]
-    params?: { [name: string]: any }
-}
+import {IConnectionDefaults} from "./types";
 
 export class ConnectionString {
     constructor(cs: string, defaults?: IConnectionDefaults)
