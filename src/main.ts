@@ -334,15 +334,11 @@ export class ConnectionString {
     }
 }
 
-function hideProp(prop: string) {
-    let desc = Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop) || {};
-    desc.enumerable = false;
-    Object.defineProperty(ConnectionString.prototype, prop, desc);
-}
-
 (function () {
-    hideProp('setDefaults');
-    hideProp('toString');
-    hideProp('port');
-    hideProp('hostname');
+    // hiding prototype members:
+    ['setDefaults', 'toString', 'port', 'hostname'].forEach(prop => {
+        let desc = Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop) || {};
+        desc.enumerable = false;
+        Object.defineProperty(ConnectionString.prototype, prop, desc);
+    });
 })();
