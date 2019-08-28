@@ -1,6 +1,6 @@
 import {expect} from './header';
 import {ConnectionString, IConnectionDefaults} from '../src';
-import {IParsedHost} from "../src/types";
+import {HostType, IHost, IParsedHost} from "../src/types";
 
 function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
@@ -500,22 +500,21 @@ describe('host.toString()', () => {
     });
 });
 
-/*
 describe('setDefaults', () => {
     it('must throw on invalid defaults', () => {
         const error = 'Invalid "defaults" parameter: ';
         expect(() => {
-            parse('').setDefaults();
+            parse('').setDefaults(<{}><unknown>undefined);
         }).to.throw(error + undefined);
         expect(() => {
-            parse('').setDefaults(123);
+            parse('').setDefaults(<{}><unknown>123);
         }).to.throw(error + 123);
     });
     it('must set the default protocol', () => {
         expect(parse('').setDefaults({protocol: 'abc'})).to.eql({protocol: 'abc'});
     });
     it('must set the default hostname and port', () => {
-        expect(parse('').setDefaults({hosts: [{name: '::', type: 'IPv6', port: 1}]})).to.eql({
+        expect(parse('').setDefaults({hosts: [{name: '::', type: HostType.IPv6, port: 1}]})).to.eql({
             hosts: [{
                 name: '::',
                 type: 'IPv6',
@@ -557,13 +556,13 @@ describe('setDefaults', () => {
             }]
         });
         // TODO: Invalid hosts must be skipped when parsed:
-
+        /*
         expect(parse('').setDefaults({hosts: [{name: 'a b'}]})).to.eql({
             hosts: [{
                 name: 'my-host',
                 type: 'domain'
             }]
-        });
+        });*/
     });
     it('must ignore trailing spaces for host names', () => {
         expect(parse('one').setDefaults({hosts: [{name: ' one '}]})).to.eql({
@@ -574,10 +573,10 @@ describe('setDefaults', () => {
         });
     });
     it('must ignore invalid ports', () => {
-        expect(parse('').setDefaults({hosts: [{port: '123'}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: 'a'}]})).to.eql({});
+        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'123'}]})).to.eql({});
+        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'a'}]})).to.eql({});
         expect(parse('').setDefaults({hosts: [{port: -1}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: '0'}]})).to.eql({});
+        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'0'}]})).to.eql({});
         expect(parse('').setDefaults({hosts: [{port: 0}]})).to.eql({});
     });
     it('must set the default user', () => {
@@ -604,18 +603,18 @@ describe('setDefaults', () => {
         });
     });
     it('must ignore empty path segments', () => {
-        expect(parse('').setDefaults({path: ['', 123, true, '  ']})).to.eql({});
-        expect(parse('').setDefaults({path: 123})).to.eql({});
+        expect(parse('').setDefaults({path: <string[]><unknown>['', 123, true, '  ']})).to.eql({});
+        expect(parse('').setDefaults({path: <string[]><unknown>123})).to.eql({});
     });
     it('must ignore invalid and empty hosts', () => {
-        expect(parse('').setDefaults({hosts: 1})).to.eql({});
+        expect(parse('').setDefaults({hosts: <IHost[]><unknown>1})).to.eql({});
         expect(parse('').setDefaults({hosts: []})).to.eql({});
-        expect(parse('').setDefaults({hosts: [1, 2, 3]})).to.eql({});
+        expect(parse('').setDefaults({hosts: <IHost[]>[1, 2, 3]})).to.eql({});
         expect(parse('').setDefaults({hosts: [{}, {}, {}]})).to.eql({});
     });
-
 });
 
+/*
 describe('parseHost', () => {
     it('must throw on invalid host', () => {
         const error = 'Invalid "host" parameter: ';
