@@ -1,8 +1,8 @@
 export enum HostType {
-    domain, // Regular domain name
-    socket, // UNIX socket
-    IPv4,
-    IPv6
+    domain = 'domain', // Regular domain name
+    socket = 'socket', // UNIX socket
+    IPv4 = 'IPv4',
+    IPv6 = 'IPv6'
 }
 
 export interface IEncodingOptions {
@@ -18,7 +18,6 @@ export interface IHost {
 }
 
 export interface IParsedHost extends IHost {
-    type: HostType
     toString: (options?: IEncodingOptions) => string
 }
 
