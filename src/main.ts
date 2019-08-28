@@ -129,11 +129,11 @@ export class ConnectionString {
         }
     }
 
-    static parseHost(host: string): IHost | null {
+    static parseHost(host: string): IParsedHost | null {
         return ConnectionString.parseInnerHost(host);
     }
 
-    private static parseInnerHost(host: string, raw?: boolean): IHost | null {
+    private static parseInnerHost(host: string, raw?: boolean): IParsedHost | null {
         if (raw) {
             if (typeof host !== 'string') {
                 throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));

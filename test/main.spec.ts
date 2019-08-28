@@ -1,26 +1,26 @@
 import {expect} from './header';
 import {ConnectionString, IConnectionDefaults} from '../src';
+import {IParsedHost} from "../src/types";
 
-function parse(cs: string, defaults?: IConnectionDefaults) {
+function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
 }
-
 
 function invalidParse(cs?: any, defaults?: any) {
     return new ConnectionString(cs, defaults);
 }
 
-/*
-function parseHost(host: string) {
+function parseHost(host: string): IParsedHost | null {
     return ConnectionString.parseHost(host);
 }
 
+/*
 function parseInvalidHost(host?: any) {
     return ConnectionString.parseHost(<string>host);
 }
 */
 
-function create(defaults: IConnectionDefaults) {
+function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
 }
 
@@ -461,7 +461,6 @@ describe('toString', () => {
     });
 });
 
-/*
 describe('host.toString()', () => {
     it('must generate full host name', () => {
         const h1 = parseHost('localhost:123');
@@ -469,34 +468,39 @@ describe('host.toString()', () => {
         expect(h1 && h1.toString()).to.eq('localhost:123');
         expect(h2 && h2.toString()).to.eq('[::]:123');
 
-        expect(parse('').setDefaults({
+        const defs = parse('').setDefaults({
             hosts: [{
                 name: 'localhost',
                 port: 123
             }]
-        }).hosts[0].toString()).to.eq('localhost:123');
+        });
+        expect(defs.hosts && defs.hosts[0].toString()).to.eq('localhost:123');
     });
     it('must encode dollar symbol only when required', () => {
-        expect(parseHost('my$server:123').toString()).to.eq('my$server:123');
-        expect(parseHost('my$server:123').toString({encodeDollar: true})).to.eq('my%24server:123');
+        const h1 = parseHost('my$server:123');
+        const h2 = parseHost('my$server:123');
+        expect(h1 && h1.toString()).to.eq('my$server:123');
+        expect(h2 && h2.toString({encodeDollar: true})).to.eq('my%24server:123');
 
-        expect(parse('').setDefaults({
+        const def1 = parse('').setDefaults({
             hosts: [{
                 name: 'my$server',
                 port: 123
             }]
-        }).hosts[0].toString()).to.eq('my$server:123');
+        });
+        expect(def1.hosts && def1.hosts[0].toString()).to.eq('my$server:123');
 
-        expect(parse('').setDefaults({
+        const def2 = parse('').setDefaults({
             hosts: [{
                 name: 'my$server',
                 port: 123
             }]
-        }).hosts[0].toString({encodeDollar: true})).to.eq('my%24server:123');
-
+        });
+        expect(def2.hosts && def2.hosts[0].toString({encodeDollar: true})).to.eq('my%24server:123');
     });
 });
 
+/*
 describe('setDefaults', () => {
     it('must throw on invalid defaults', () => {
         const error = 'Invalid "defaults" parameter: ';
