@@ -5,6 +5,7 @@ function parse(cs: string, defaults?: IConnectionDefaults) {
     return new ConnectionString(cs, defaults);
 }
 
+
 function invalidParse(cs?: any, defaults?: any) {
     return new ConnectionString(cs, defaults);
 }
@@ -17,11 +18,11 @@ function parseHost(host: string) {
 function parseInvalidHost(host?: any) {
     return ConnectionString.parseHost(<string>host);
 }
+*/
 
 function create(defaults: IConnectionDefaults) {
     return (new ConnectionString('', defaults)).toString();
 }
-*/
 
 describe('init', () => {
     it('must throw on a non-string', () => {
@@ -65,6 +66,7 @@ describe('init', () => {
     it('must allow empty defaults', () => {
         expect(parse('', {})).to.eql({});
     });
+
     /*
     TODO: revisit it later
     it('must support function-style calls', () => {
@@ -375,9 +377,6 @@ describe('complex', () => {
     });
 });
 
-/*
-
-
 describe('toString', () => {
     it('must encode protocol', () => {
         expect(create({protocol: 'abc 123?456'})).to.eq('abc%20123%3F456://');
@@ -429,7 +428,7 @@ describe('toString', () => {
         };
         const a = parse('', {params: {value1: obj, value2: 'text'}});
         const b = parse(a.toString());
-        expect(JSON.parse(b.params.value1)).to.eql(obj);
+        expect(JSON.parse(b.params && b.params.value1)).to.eql(obj);
     });
     it('must ignore empty parameter list', () => {
         const a = parse('');
@@ -462,6 +461,7 @@ describe('toString', () => {
     });
 });
 
+/*
 describe('host.toString()', () => {
     it('must generate full host name', () => {
         const h1 = parseHost('localhost:123');
