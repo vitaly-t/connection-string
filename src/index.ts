@@ -1,2 +1,2 @@
 export {ConnectionString} from './main';
-export {IConnectionDefaults} from './types';
+export {IConnectionDefaults, IEncodingOptions, HostType, IHost, IParsedHost} from './types';

@@ -1,6 +1,5 @@
 import {expect} from './header';
-import {ConnectionString, IConnectionDefaults} from '../src';
-import {HostType, IHost, IParsedHost} from '../src/types';
+import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../src';
 
 function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
