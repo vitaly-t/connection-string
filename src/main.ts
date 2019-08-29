@@ -1,7 +1,7 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, fullHostName, isText} from './utils';
 
-const invalidDefaults = 'Invalid "defaults" parameter: ';
+const errInvalidDefaults = 'Invalid "defaults" parameter: ';
 
 export class ConnectionString {
 
@@ -10,19 +10,17 @@ export class ConnectionString {
     user?: string;
     password?: string;
     path?: string[];
-    params?: { [name: string]: any };
+    params?: { [name: string]: string };
 
     /**
-     * Virtualized accessor to the first host name:
-     * = hosts && hosts[0].name
+     * Virtualized accessor to the first host name.
      */
     get hostname(): string | undefined {
         return this.hosts && this.hosts[0].name;
     }
 
     /**
-     * Virtualized accessor to the first host's port:
-     * = hosts && hosts[0].port
+     * Virtualized accessor to the first host's port.
      */
     get port(): number | undefined {
         return this.hosts && this.hosts[0].port;
@@ -39,7 +37,7 @@ export class ConnectionString {
         }
 
         if (defaults !== undefined && defaults !== null && typeof defaults !== 'object') {
-            throw new TypeError(invalidDefaults + JSON.stringify(defaults));
+            throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
         }
 
         cs = cs.trim();
@@ -240,7 +238,7 @@ export class ConnectionString {
 
     setDefaults(defaults: IConnectionDefaults): this {
         if (!defaults || typeof defaults !== 'object') {
-            throw new TypeError(invalidDefaults + JSON.stringify(defaults));
+            throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
         }
 
         if (!('protocol' in this) && isText(defaults.protocol)) {

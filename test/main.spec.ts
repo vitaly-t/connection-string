@@ -423,7 +423,7 @@ describe('toString', () => {
         };
         const a = parse('', {params: {value1: obj, value2: 'text'}});
         const b = parse(a.toString());
-        expect(JSON.parse(b.params && b.params.value1)).to.eql(obj);
+        expect(JSON.parse(<string>(b.params && b.params.value1))).to.eql(obj);
     });
     it('must ignore empty parameter list', () => {
         const a = parse('');
