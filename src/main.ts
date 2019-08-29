@@ -336,8 +336,8 @@ export class ConnectionString {
 
 (function () {
     // hiding prototype members:
-    ['setDefaults', 'toString', 'port', 'hostname'].forEach(prop => {
-        let desc = Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop) || {};
+    ['setDefaults', 'toString', 'hostname', 'port'].forEach(prop => {
+        let desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });
