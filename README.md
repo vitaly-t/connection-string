@@ -3,6 +3,8 @@ connection-string
 
 Advanced URL Connection String parser + generator, with fully optional syntax.
 
+Implemented in TypeScript 3.x, with `strict` mode. 
+
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
 
@@ -48,7 +50,6 @@ Unlike the default URL parser, this one supports the following:
 * Automatic defaults configuration for missing parameters
 * Re-construction of a connection string from object
 * Friendlier access to all of the URL's details
-* TypeScript declarations are deployed with the library
 
 **Short-syntax examples:**
 
@@ -64,8 +65,6 @@ Unlike the default URL parser, this one supports the following:
 
 For more short-syntax examples see [Optional Format].
 
-All modern browsers are supported, plus Node.js v4.0 and later.
-
 ## Installing
 
 ```
@@ -74,40 +73,21 @@ $ npm install connection-string
 
 ## Usage
 
-* **Node.js**
-
-```js
-const parse = require('connection-string');
-
-const obj = parse('my-server:12345');
-//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
-```
-
-or as a class:
-
-```js
-const ConnectionString = require('connection-string');
-
-const obj = new ConnectionString('my-server:12345');
-//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
-```
-
-* **Browsers**
-
-```html
-<script src="./connection-string/src"></script>
-
-<script>
-    var obj = new ConnectionString('my-server:12345');
-</script>
-```
-
 * **TypeScript**
 
 ```ts
 import {ConnectionString} from 'connection-string'
 
 const a = new ConnectionString('my-server:12345');
+//=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
+```
+
+* **Node.js**
+
+```js
+const {ConnectionString} = require('connection-string');
+
+const obj = new ConnectionString('my-server:12345');
 //=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
 ```
 

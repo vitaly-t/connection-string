@@ -28,10 +28,6 @@ export class ConnectionString {
 
     constructor(cs: string, defaults?: IConnectionDefaults) {
 
-        if (!(this instanceof ConnectionString)) {
-            return new ConnectionString(cs, defaults);
-        }
-
         if (typeof cs !== 'string') {
             throw new TypeError('Invalid connection string: ' + JSON.stringify(cs));
         }

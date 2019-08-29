@@ -63,10 +63,6 @@ describe('init', () => {
     it('must allow empty defaults', () => {
         expect(parse('', {})).to.eql({});
     });
-    it('must support function-style calls', () => {
-        const cn = <(a: string) => {}><unknown>ConnectionString;
-        expect(cn('abc://')).to.eql({protocol: 'abc'});
-    });
 });
 
 describe('protocol', () => {

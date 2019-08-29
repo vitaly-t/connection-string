@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
     "declaration": true,
     "declarationDir": "./dist",
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "strict": true,
-    "noUnusedLocals": true,
     "outDir": "./dist",
-    "target": "es5"
+    "esModuleInterop": true,
+    "strict": true,
+    "noUnusedLocals": true
   },
   "include": [
     "src/*.ts",
