@@ -6,26 +6,26 @@ export enum HostType {
 }
 
 export interface IEncodingOptions {
-    encodeDollar?: boolean
-    plusForSpace?: boolean
-    passwordHash?: boolean | string
+    encodeDollar?: boolean;
+    plusForSpace?: boolean;
+    passwordHash?: boolean | string;
 }
 
 export interface IHost {
-    name?: string
-    port?: number
-    type?: HostType
+    name?: string;
+    port?: number;
+    type?: HostType;
 }
 
 export interface IParsedHost extends IHost {
-    toString: (options?: IEncodingOptions) => string
+    toString: (options?: IEncodingOptions) => string;
 }
 
 export interface IConnectionDefaults {
-    protocol?: string
-    hosts?: Array<IHost>
-    user?: string
-    password?: string
-    path?: string[]
-    params?: { [name: string]: any }
+    protocol?: string;
+    hosts?: Array<IHost>;
+    user?: string;
+    password?: string;
+    path?: string[];
+    params?: { [name: string]: any };
 }

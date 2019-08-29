@@ -1,6 +1,6 @@
 import {expect} from './header';
 import {ConnectionString, IConnectionDefaults} from '../src';
-import {HostType, IHost, IParsedHost} from "../src/types";
+import {HostType, IHost, IParsedHost} from '../src/types';
 
 function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
@@ -64,13 +64,10 @@ describe('init', () => {
     it('must allow empty defaults', () => {
         expect(parse('', {})).to.eql({});
     });
-
-    /*
-    TODO: revisit it later
     it('must support function-style calls', () => {
-        const cn: (cn: string) => ConnectionString = ConnectionString;
+        const cn = <(a: string) => {}><unknown>ConnectionString;
         expect(cn('abc://')).to.eql({protocol: 'abc'});
-    });*/
+    });
 });
 
 describe('protocol', () => {
