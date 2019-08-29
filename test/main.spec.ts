@@ -14,11 +14,9 @@ function parseHost(host: string): IParsedHost | null {
     return ConnectionString.parseHost(host);
 }
 
-/*
 function parseInvalidHost(host?: any) {
     return ConnectionString.parseHost(<string>host);
 }
-*/
 
 function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
@@ -614,7 +612,6 @@ describe('setDefaults', () => {
     });
 });
 
-/*
 describe('parseHost', () => {
     it('must throw on invalid host', () => {
         const error = 'Invalid "host" parameter: ';
@@ -648,4 +645,3 @@ describe('parseHost', () => {
         expect(parseHost('a/')).to.eql({name: 'a/', type: 'socket'});
     });
 });
-*/

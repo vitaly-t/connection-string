@@ -130,7 +130,7 @@ export class ConnectionString {
     }
 
     static parseHost(host: string): IParsedHost | null {
-        return ConnectionString.parseInnerHost(host);
+        return ConnectionString.parseInnerHost(host, true);
     }
 
     private static parseInnerHost(host: string, raw?: boolean): IParsedHost | null {
