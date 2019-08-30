@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Advanced URL Connection String parser + generator.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

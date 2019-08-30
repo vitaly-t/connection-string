@@ -61,7 +61,7 @@ export class ConnectionString {
 
         cs = cs.trim();
 
-        validateUrl(cs);
+        validateUrl(cs); // will throw, if failed
 
         // Extracting the protocol:
         let m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
@@ -138,10 +138,18 @@ export class ConnectionString {
 
     }
 
+    /**
+     * Parses a host name into an object, which then can be passed into `setDefaults`.
+     *
+     * It returns `null` only when no valid host recognized.
+     */
     static parseHost(host: string): IParsedHost | null {
         return parseHost(host, true);
     }
 
+    /**
+     * Converts into a string.
+     */
     toString(options?: IEncodingOptions): string {
         let s = '';
         const opts = <IEncodingOptions>options || {};
@@ -193,6 +201,9 @@ export class ConnectionString {
         return s;
     }
 
+    /**
+     * Applies default parameters.
+     */
     setDefaults(defaults: IConnectionDefaults): this {
         if (!defaults || typeof defaults !== 'object') {
             throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
