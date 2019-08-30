@@ -5,22 +5,45 @@ const errInvalidDefaults = 'Invalid "defaults" parameter: ';
 
 export class ConnectionString {
 
+    /**
+     * Connection protocol, if specified.
+     */
     protocol?: string;
-    hosts?: Array<IParsedHost>;
+
+    /**
+     * User name, if specified.
+     */
     user?: string;
+
+    /**
+     * User password, if specified.
+     */
     password?: string;
+
+    /**
+     * List of parsed hosts, if at least one is specified.
+     */
+    hosts?: Array<IParsedHost>;
+
+    /**
+     * Url path segments, if at least one is specified.
+     */
     path?: string[];
+
+    /**
+     * Url parameters, if at least one is specified.
+     */
     params?: { [name: string]: any };
 
     /**
-     * Virtualized accessor to the first host name.
+     * Safe accessor to the first host's name.
      */
     get hostname(): string | undefined {
         return this.hosts && this.hosts[0].name;
     }
 
     /**
-     * Virtualized accessor to the first host's port.
+     * Safe accessor to the first host's port.
      */
     get port(): number | undefined {
         return this.hosts && this.hosts[0].port;
