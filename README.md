@@ -76,7 +76,7 @@ $ npm install connection-string
 * **TypeScript**
 
 ```ts
-import {ConnectionString} from 'connection-string'
+import {ConnectionString} from 'connection-string';
 
 const a = new ConnectionString('my-server:12345');
 //=> {hosts: [{name: 'my-server', port: 12345, type: 'domain'}]}
@@ -96,7 +96,7 @@ See also [WiKi Pages] for more examples and documentation.
 * **Browsers**
 
 TypeScript is the recommended way to include this library into a web application. Otherwise,
-you will have to [Browserify] file `dist/src/index.js`.
+you will have to [Browserify] file `dist/src/index.js`, and then include the result.
 
 ## API
 
