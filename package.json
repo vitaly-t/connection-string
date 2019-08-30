@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "3.0.0",
+  "version": "3.0.0-Beta.1",
   "description": "Advanced URL Connection String parser + generator.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -11,8 +11,7 @@
     "travis": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
-    "dist/src",
-    "dist/index.js"
+    "dist/src"
   ],
   "homepage": "https://github.com/vitaly-t/connection-string",
   "repository": {

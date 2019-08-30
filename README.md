@@ -93,6 +93,11 @@ const obj = new ConnectionString('my-server:12345');
 
 See also [WiKi Pages] for more examples and documentation.
 
+* **Browsers**
+
+TypeScript is the recommended way to include this library into a web application. Otherwise,
+you will have to [Browserify] file `dist/src/index.js`.
+
 ## API
 
 When parsing a connection string, via the function or class constructor, you can pass in optional object `defaults`,
@@ -186,5 +191,6 @@ For some typical questions, consult the [FAQ Page].
 [API]:#api
 [FAQ Page]:https://github.com/vitaly-t/connection-string/wiki/FAQ
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
+[Browserify]:https://github.com/browserify/browserify
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
 [connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
