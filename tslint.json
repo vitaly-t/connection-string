@@ -13,6 +13,7 @@
       "always-prefix"
     ],
     "unnecessary-else": false,
-    "no-return-await": true
+    "no-return-await": true,
+    "prefer-const": "error"
   }
 }

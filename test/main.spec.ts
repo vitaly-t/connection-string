@@ -539,7 +539,7 @@ describe('setDefaults', () => {
         expect(parse('').setDefaults({hosts: [{port: 123}]})).to.eql({hosts: [{port: 123}]});
     });
     it('must skip invalid hosts', () => {
-        expect(parse('my-host').setDefaults({hosts: [{name: '::'}]})).to.eql({
+        expect(parse('my-host').setDefaults({hosts: [{name: '::'}, null]})).to.eql({
             hosts: [{
                 name: 'my-host',
                 type: 'domain'

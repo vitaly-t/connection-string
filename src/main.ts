@@ -176,52 +176,50 @@ export class ConnectionString {
         }
 
         if (!('protocol' in this) && isText(defaults.protocol)) {
-            this.protocol = defaults.protocol && defaults.protocol.trim(); // TODO: non-optimal
+            this.protocol = defaults.protocol && defaults.protocol.trim();
         }
 
         // Missing default hosts are merged with the existing ones:
         if (Array.isArray(defaults.hosts)) {
             const hosts = Array.isArray(this.hosts) ? this.hosts : [];
-            defaults.hosts.filter(d => {
-                return d && typeof d === 'object';
-            })
-                .forEach(dh => {
-                    const dhName = isText(dh.name) && dh.name ? dh.name.trim() : undefined; // TODO: non-optimal
-                    const h: IHost = {name: dhName, port: dh.port, type: dh.type};
-                    let found = false;
-                    for (let i = 0; i < hosts.length; i++) {
-                        const thisHost = fullHostName(hosts[i]), defHost = fullHostName(h);
-                        if (thisHost.toLowerCase() === defHost.toLowerCase()) {
-                            found = true;
-                            break;
-                        }
+            const dhHosts = <IHost[]>defaults.hosts.filter(d => d && typeof d === 'object');
+            dhHosts.forEach(dh => {
+                const dhName = isText(dh.name) && dh.name ? dh.name.trim() : undefined;
+                const h: IHost = {name: dhName, port: dh.port, type: dh.type};
+                let found = false;
+                for (let i = 0; i < hosts.length; i++) {
+                    const thisHost = fullHostName(hosts[i]), defHost = fullHostName(h);
+                    if (thisHost.toLowerCase() === defHost.toLowerCase()) {
+                        found = true;
+                        break;
                     }
-                    if (!found) {
-                        const obj: IParsedHost = {};
-                        if (h.name) {
-                            if (h.type && h.type in HostType) {
-                                obj.name = h.name;
-                                obj.type = h.type;
-                            } else {
-                                const t = parseHost(h.name, true);
-                                if (t) {
-                                    obj.name = t.name;
-                                    obj.type = t.type;
-                                }
+                }
+                if (!found) {
+                    const obj: IParsedHost = {};
+                    if (h.name) {
+                        if (h.type && h.type in HostType) {
+                            obj.name = h.name;
+                            obj.type = h.type;
+                        } else {
+                            const t = parseHost(h.name, true);
+                            if (t) {
+                                obj.name = t.name;
+                                obj.type = t.type;
                             }
                         }
-                        const p = h.port;
-                        if (typeof p === 'number' && p > 0 && p < 65536) {
-                            obj.port = p;
-                        }
-                        if (obj.name || obj.port) {
-                            Object.defineProperty(obj, 'toString', {
-                                value: (options: IEncodingOptions) => fullHostName(obj, options)
-                            });
-                            hosts.push(obj);
-                        }
                     }
-                });
+                    const p = h.port;
+                    if (typeof p === 'number' && p > 0 && p < 65536) {
+                        obj.port = p;
+                    }
+                    if (obj.name || obj.port) {
+                        Object.defineProperty(obj, 'toString', {
+                            value: (options: IEncodingOptions) => fullHostName(obj, options)
+                        });
+                        hosts.push(obj);
+                    }
+                }
+            });
             if (hosts.length) {
                 this.hosts = hosts;
             }
@@ -238,7 +236,7 @@ export class ConnectionString {
         // Since the order of path segments is usually important, we set default
         // path segments as they are, but only when they are missing completely:
         if (!('path' in this) && Array.isArray(defaults.path)) {
-            var s = defaults.path.filter(isText);
+            const s = defaults.path.filter(isText);
             if (s.length) {
                 this.path = s;
             }
@@ -331,7 +329,7 @@ function parseHost(host: string, raw?: boolean): IParsedHost | null {
 (function () {
     // hiding prototype members:
     ['setDefaults', 'toString', 'hostname', 'port'].forEach(prop => {
-        let desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
+        const desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });

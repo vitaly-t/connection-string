@@ -23,7 +23,7 @@ export interface IParsedHost extends IHost {
 
 export interface IConnectionDefaults {
     protocol?: string;
-    hosts?: Array<IHost>;
+    hosts?: Array<IHost | null>;
     user?: string;
     password?: string;
     path?: string[];
