@@ -96,7 +96,7 @@ See also [WiKi Pages] for more examples and documentation.
 * **Browsers**
 
 TypeScript is the recommended way to include this library into a web application. Otherwise,
-you will have to [Browserify] file `dist/src/index.js`, and then include the result.
+you will have to [Browserify] distribution file `dist/index.js`, and then include the result.
 
 ## API
 

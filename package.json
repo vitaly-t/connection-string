@@ -1,17 +1,17 @@
 {
   "name": "connection-string",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Advanced URL Connection String parser + generator.",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "all": "tsc && npm test && npm run lint",
+    "build": "tsc -p src && tsc -p test",
     "lint": "./node_modules/.bin/tslint --fix ./src/**/*.ts ./test/**/*.ts",
-    "test": "nyc mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "npm run lint && npm run build && nyc mocha -r ts-node/register test/**/*.spec.ts",
     "travis": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
-    "dist/src"
+    "dist"
   ],
   "homepage": "https://github.com/vitaly-t/connection-string",
   "repository": {
