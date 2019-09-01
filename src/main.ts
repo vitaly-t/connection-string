@@ -1,5 +1,5 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
-import {decode, encode, isText, fullHostName, parseHost, validateUrl} from './utils';
+import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './utils';
 
 const errInvalidDefaults = 'Invalid "defaults" parameter: ';
 
@@ -209,7 +209,7 @@ export class ConnectionString {
             throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
         }
 
-        if (!('protocol' in this) && isText(defaults.protocol)) {
+        if (!('protocol' in this) && hasText(defaults.protocol)) {
             this.protocol = defaults.protocol && defaults.protocol.trim();
         }
 
@@ -218,7 +218,7 @@ export class ConnectionString {
             const hosts = Array.isArray(this.hosts) ? this.hosts : [];
             const dhHosts = <IHost[]>defaults.hosts.filter(d => d && typeof d === 'object');
             dhHosts.forEach(dh => {
-                const dhName = isText(dh.name) && dh.name ? dh.name.trim() : undefined;
+                const dhName = dh.name && hasText(dh.name) ? dh.name.trim() : undefined;
                 const h: IHost = {name: dhName, port: dh.port, type: dh.type};
                 let found = false;
                 for (let i = 0; i < hosts.length; i++) {
@@ -259,18 +259,18 @@ export class ConnectionString {
             }
         }
 
-        if (!('user' in this) && defaults.user && isText(defaults.user)) {
+        if (!('user' in this) && defaults.user && hasText(defaults.user)) {
             this.user = defaults.user.trim();
         }
 
-        if (!('password' in this) && defaults.password && isText(defaults.password)) {
+        if (!('password' in this) && defaults.password && hasText(defaults.password)) {
             this.password = defaults.password.trim();
         }
 
         // Since the order of path segments is usually important, we set default
         // path segments as they are, but only when they are missing completely:
         if (!('path' in this) && Array.isArray(defaults.path)) {
-            const s = defaults.path.filter(isText);
+            const s = defaults.path.filter(hasText);
             if (s.length) {
                 this.path = s;
             }
