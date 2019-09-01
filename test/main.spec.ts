@@ -545,14 +545,6 @@ describe('setDefaults', () => {
                 type: 'domain'
             }]
         });
-        // TODO: Invalid hosts must be skipped when parsed:
-        /*
-        expect(parse('').setDefaults({hosts: [{name: 'a b'}]})).to.eql({
-            hosts: [{
-                name: 'my-host',
-                type: 'domain'
-            }]
-        });*/
     });
     it('must ignore trailing spaces for host names', () => {
         expect(parse('one').setDefaults({hosts: [{name: ' one '}]})).to.eql({
@@ -615,7 +607,7 @@ describe('parseHost', () => {
         }).to.throw(error + 123);
     });
     it('must not decode hosts', () => {
-        // TODO: should either skip or throw when the host match is partial:
+        // TODO: should either skip or throw when the host match is partial?
         // expect(parseHost('a b')).to.eql(null);
     });
     it('must allow empty hosts', () => {
