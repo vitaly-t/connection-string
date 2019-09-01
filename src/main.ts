@@ -1,5 +1,5 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
-import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './utils';
+import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
 
 const errInvalidDefaults = 'Invalid "defaults" parameter: ';
 
