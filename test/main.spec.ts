@@ -22,6 +22,11 @@ function create(defaults: IConnectionDefaults): string {
 }
 
 describe('init', () => {
+    it('must throw when used as a function', () => {
+        expect(() => {
+            (ConnectionString as any)();
+        }).to.throw('Class constructor ConnectionString cannot be invoked without \'new\'');
+    });
     it('must throw on a non-string', () => {
         const error = 'Invalid connection string: ';
         expect(() => {

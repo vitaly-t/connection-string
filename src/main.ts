@@ -51,6 +51,10 @@ export class ConnectionString {
 
     constructor(cs: string, defaults?: IConnectionDefaults) {
 
+        if (!(this instanceof ConnectionString)) {
+            throw new TypeError('Class constructor ConnectionString cannot be invoked without \'new\'');
+        }
+
         if (typeof cs !== 'string') {
             throw new TypeError('Invalid connection string: ' + JSON.stringify(cs));
         }
