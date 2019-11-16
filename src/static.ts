@@ -80,7 +80,7 @@ export function parseHost(host: string, direct?: boolean): IParsedHost | null {
             if (port > 0 && port < 65536 && port.toString() === p) {
                 h.port = port;
             } else {
-                throw new Error('Invalid port number: ' + JSON.stringify(p));
+                throw new Error('Invalid port: ' + JSON.stringify(p) + '. Valid port range is: [1...65535]');
             }
         }
         if (h.name || h.port) {

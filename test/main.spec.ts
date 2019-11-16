@@ -21,6 +21,8 @@ function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
 }
 
+const portErrMsg = (txt: string) => 'Invalid port: "' + txt + '". Valid port range is: [1...65535]';
+
 describe('constructor', () => {
     it('must throw when used as a function', () => {
         expect(() => {
@@ -184,13 +186,13 @@ describe('hosts', () => {
     it('must throw on invalid ports', () => {
         expect(() => {
             parse(':bad');
-        }).to.throw('Invalid port number: "bad"');
+        }).to.throw(portErrMsg('bad'));
         expect(() => {
             parse('[::]:1a');
-        }).to.throw('Invalid port number: "1a"');
+        }).to.throw(portErrMsg('1a'));
         expect(() => {
             parse('[::]:abc');
-        }).to.throw('Invalid port number: "abc"');
+        }).to.throw(portErrMsg('abc'));
     });
     it('must allow valid ports', () => {
         expect(parse('[::]:1')).to.eql({hosts: [{name: '[::]', port: 1, type: 'IPv6'}]});
@@ -213,15 +215,15 @@ describe('port', () => {
     it('must not allow 0 or negative ports', () => {
         expect(() => {
             parse(':0');
-        }).to.throw('Invalid port number: "0"');
+        }).to.throw(portErrMsg('0'));
         expect(() => {
             parse(':-1');
-        }).to.throw('Invalid port number: "-1"');
+        }).to.throw(portErrMsg('-1'));
     });
     it('must not allow invalid terminators', () => {
         expect(() => {
             parse(':12345a');
-        }).to.throw('Invalid port number: "12345a"');
+        }).to.throw(portErrMsg('12345a'));
     });
     it('must allow simplified access to the first port number', () => {
         expect(parse('').port).to.be.undefined;
