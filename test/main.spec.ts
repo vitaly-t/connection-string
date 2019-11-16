@@ -114,12 +114,12 @@ describe('hosts', () => {
         });
     });
     it('must allow special symbols', () => {
-        expect(parse('one-1.TWO-23,three-%3F.sock')).to.eql({
+        expect(parse('one-1.TWO+23,three-%3F.gap+here.sock')).to.eql({
             hosts: [{
-                name: 'one-1.TWO-23',
+                name: 'one-1.TWO 23',
                 type: 'domain'
             }, {
-                name: 'three-?.sock',
+                name: 'three-?.gap here.sock',
                 type: 'socket'
             }]
         });
@@ -632,5 +632,13 @@ describe('parseHost', () => {
         expect(parseHost('a.sock')).to.eql({name: 'a.sock', type: 'socket'});
         expect(parseHost('/a')).to.eql({name: '/a', type: 'socket'});
         expect(parseHost('a/')).to.eql({name: 'a/', type: 'socket'});
+    });
+    it('must use inside spaces', () => {
+        expect(parseHost(' a b ')).to.eql({name: 'a b', type: 'domain'});
+        expect(parseHost(' / a b ')).to.eql({name: '/ a b', type: 'socket'});
+    });
+    it('must ignore gaps', () => {
+        expect(parseHost('a\tb')).to.eql({name: 'a', type: 'domain'});
+        expect(parseHost('a\r\nb')).to.eql({name: 'a', type: 'domain'});
     });
 });
