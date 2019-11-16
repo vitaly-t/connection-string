@@ -1,5 +1,5 @@
 import {expect} from './header';
-import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../src';
+import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../dist';
 
 function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
@@ -24,7 +24,8 @@ function create(defaults: IConnectionDefaults): string {
 describe('init', () => {
     it('must throw when used as a function', () => {
         expect(() => {
-            (ConnectionString as any)();
+            const test: any = ConnectionString;
+            test();
         }).to.throw('Class constructor ConnectionString cannot be invoked without \'new\'');
     });
     it('must throw on a non-string', () => {
