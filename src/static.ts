@@ -37,8 +37,8 @@ export function validateUrl(url: string): void {
     }
 }
 
-export function parseHost(host: string, raw?: boolean): IParsedHost | null {
-    if (raw) {
+export function parseHost(host: string, direct?: boolean): IParsedHost | null {
+    if (direct) {
         if (typeof host !== 'string') {
             throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
         }
@@ -51,10 +51,12 @@ export function parseHost(host: string, raw?: boolean): IParsedHost | null {
         isIPv6 = true;
     } else {
         // It is either IPv4 or domain/socket
-        if (raw) {
-            m = host.match(/(([a-z0-9.$/-]*)(?::(-?[0-9a-z]+))?)/i);
+        if (direct) {
+            // Allowed directly: ForwardSlash + Space
+            m = host.match(/(([a-z0-9.$/\- ]*)(?::(-?[0-9a-z]+))?)/i);
         } else {
-            m = host.match(/(([a-z0-9.$%-]*)(?::(-?[0-9a-z]+))?)/i);
+            // Allow when indirectly: + and %
+            m = host.match(/(([a-z0-9.+$%\-]*)(?::(-?[0-9a-z]+))?)/i);
         }
     }
     if (m) {
@@ -68,7 +70,7 @@ export function parseHost(host: string, raw?: boolean): IParsedHost | null {
                     h.name = m[2];
                     h.type = HostType.IPv4;
                 } else {
-                    h.name = raw ? m[2] : decode(m[2]);
+                    h.name = direct ? m[2] : decode(m[2]);
                     h.type = h.name.match(/\/|.*\.sock$/i) ? HostType.socket : HostType.domain;
                 }
             }
