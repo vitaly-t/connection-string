@@ -21,11 +21,10 @@ function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
 }
 
-describe('init', () => {
+describe('constructor', () => {
     it('must throw when used as a function', () => {
         expect(() => {
-            const test: any = ConnectionString;
-            test();
+            (ConnectionString as any)();
         }).to.throw('Class constructor ConnectionString cannot be invoked without \'new\'');
     });
     it('must throw on a non-string', () => {
