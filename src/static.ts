@@ -1,11 +1,10 @@
 import {HostType, IEncodingOptions, IHost, IParsedHost} from './types';
 
 export function fullHostName(obj: IHost, options?: IEncodingOptions): string {
-    options = options || {};
     let a = '';
     if (obj.name) {
         const skipEncoding = obj.type === HostType.IPv4 || obj.type === HostType.IPv6;
-        a = skipEncoding ? obj.name : encode(obj.name, options);
+        a = skipEncoding ? obj.name : encode(obj.name, options ?? {});
     }
     if (obj.port) {
         a += ':' + obj.port;
@@ -32,15 +31,15 @@ export function hasText(txt: any): boolean {
 export function validateUrl(url: string): void {
     const idx = url.search(/[^A-Za-z0-9-._~:/?[\]@!$&'()*+,;=%]/);
     if (idx >= 0) {
-        const s = JSON.stringify(url[idx]).replace(/^"|"$/g, '\'');
-        throw new Error('Invalid URL character ' + s + ' at position ' + idx);
+        const s = JSON.stringify(url[idx]).replace(/^"|"$/g, `'`);
+        throw new Error(`Invalid URL character ${s} at position ${idx}`);
     }
 }
 
 export function parseHost(host: string, direct?: boolean): IParsedHost | null {
     if (direct) {
         if (typeof host !== 'string') {
-            throw new TypeError('Invalid "host" parameter: ' + JSON.stringify(host));
+            throw new TypeError(`Invalid "host" parameter: ${JSON.stringify(host)}`);
         }
         host = host.trim();
     }
@@ -80,7 +79,7 @@ export function parseHost(host: string, direct?: boolean): IParsedHost | null {
             if (port > 0 && port < 65536 && port.toString() === p) {
                 h.port = port;
             } else {
-                throw new Error('Invalid port: ' + JSON.stringify(p) + '. Valid port range is: [1...65535]');
+                throw new Error(`Invalid port: ${JSON.stringify(p)}. Valid port range is: [1...65535]`);
             }
         }
         if (h.name || h.port) {

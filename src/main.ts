@@ -1,7 +1,7 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
 
-const errInvalidDefaults = 'Invalid "defaults" parameter: ';
+const errInvalidDefaults = `Invalid "defaults" parameter: `;
 
 export class ConnectionString {
 
@@ -23,7 +23,7 @@ export class ConnectionString {
     /**
      * List of parsed hosts, if at least one is specified.
      */
-    hosts?: Array<IParsedHost>;
+    hosts?: IParsedHost[];
 
     /**
      * Url path segments, if at least one is specified.
@@ -52,14 +52,14 @@ export class ConnectionString {
     constructor(cs: string, defaults?: IConnectionDefaults) {
 
         if (!(this instanceof ConnectionString)) {
-            throw new TypeError('Class constructor ConnectionString cannot be invoked without \'new\'');
+            throw new TypeError(`Class constructor ConnectionString cannot be invoked without 'new'`);
         }
 
         if (typeof cs !== 'string') {
-            throw new TypeError('Invalid connection string: ' + JSON.stringify(cs));
+            throw new TypeError(`Invalid connection string: ${JSON.stringify(cs)}`);
         }
 
-        if (typeof (defaults ?? null) !== 'object') {
+        if (typeof (defaults ?? {}) !== 'object') {
             throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
         }
 
@@ -93,7 +93,7 @@ export class ConnectionString {
         // (if it starts with `/`, it is the first path segment, no hosts specified)
         if (cs[0] !== '/') {
 
-            const endOfHosts = cs.search(/\/|\?/);
+            const endOfHosts = cs.search(/[\/?]/);
             const hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
 
             hosts.forEach(h => {
@@ -128,7 +128,7 @@ export class ConnectionString {
                     const a = s.split('=');
                     const prop = decode(a[0]);
                     if (prop in params) {
-                        throw new Error('Parameter "' + prop + '" is repeated.');
+                        throw new Error(`Parameter "${prop}" is repeated.`);
                     }
                     params[prop] = decode(a[1]);
                 });
@@ -196,10 +196,10 @@ export class ConnectionString {
                 if (opts.plusForSpace) {
                     value = value.replace(/%20/g, '+');
                 }
-                params.push(encode(a, opts) + '=' + value);
+                params.push(`${encode(a, opts)}=${value}`);
             }
             if (params.length) {
-                s += '?' + params.join('&');
+                s += `?${params.join('&')}`;
             }
         }
         return s;
