@@ -39,14 +39,14 @@ export class ConnectionString {
      * Safe accessor to the first host's name.
      */
     get hostname(): string | undefined {
-        return this.hosts && this.hosts[0].name;
+        return this.hosts?.[0].name;
     }
 
     /**
      * Safe accessor to the first host's port.
      */
     get port(): number | undefined {
-        return this.hosts && this.hosts[0].port;
+        return this.hosts?.[0].port;
     }
 
     constructor(cs: string, defaults?: IConnectionDefaults) {
@@ -59,7 +59,7 @@ export class ConnectionString {
             throw new TypeError('Invalid connection string: ' + JSON.stringify(cs));
         }
 
-        if (defaults !== undefined && defaults !== null && typeof defaults !== 'object') {
+        if (typeof (defaults ?? null) !== 'object') {
             throw new TypeError(errInvalidDefaults + JSON.stringify(defaults));
         }
 

@@ -181,8 +181,8 @@ For a good example, see [connection-string-demo].
 Type `ConnectionString` supports non-enumerable read-only properties `hostname` and `port`,
 for compatibility with parsers that do not support multiple hosts:
 
-* `hostname = hosts && hosts[0].name`
-* `port = hosts && hosts[0].port`
+* `hostname = hosts?.[0].name`
+* `port = hosts?.[0].port`
 
 ### Extras
 
