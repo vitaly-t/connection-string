@@ -138,11 +138,11 @@ if you want to generate a complete host name from the current properties.
 
 **Example:**
 
-```js
+```ts
 const a = new ConnectionString('abc://my-host:123,[abcd::]:456');
-a.hosts.toString(); //=> 'my-host:123,[abcd::]:456'
-a.hosts[0].toString(); //=> 'my-host:123'
-a.hosts[1].toString(); //=> '[abcd::]:456'
+a.hosts?.toString(); //=> 'my-host:123,[abcd::]:456'
+a.hosts?.[0].toString(); //=> 'my-host:123'
+a.hosts?.[1].toString(); //=> '[abcd::]:456'
 ```
 
 The method takes one optional parameter - URL encoding options:
