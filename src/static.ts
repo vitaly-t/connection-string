@@ -24,7 +24,7 @@ export function decode(text: string): string {
     return decodeURIComponent(text.replace(/\+/g, '%20'));
 }
 
-export function hasText(txt: any): boolean {
+export function hasText(txt?: string): boolean {
     return typeof txt === 'string' && /\S/.test(txt);
 }
 

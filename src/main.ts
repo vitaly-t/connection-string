@@ -214,15 +214,15 @@ export class ConnectionString {
         }
 
         if (!('protocol' in this) && hasText(defaults.protocol)) {
-            this.protocol = defaults.protocol && defaults.protocol.trim();
+            this.protocol = defaults.protocol!.trim();
         }
 
         // Missing default hosts are merged with the existing ones:
         if (Array.isArray(defaults.hosts)) {
             const hosts = Array.isArray(this.hosts) ? this.hosts : [];
-            const dhHosts = <IHost[]>defaults.hosts.filter(d => d && typeof d === 'object');
+            const dhHosts = defaults.hosts.filter(d => d && typeof d === 'object') as IHost[];
             dhHosts.forEach(dh => {
-                const dhName = dh.name && hasText(dh.name) ? dh.name.trim() : undefined;
+                const dhName = hasText(dh.name) ? dh.name!.trim() : undefined;
                 const h: IHost = {name: dhName, port: dh.port, type: dh.type};
                 let found = false;
                 for (let i = 0; i < hosts.length; i++) {
@@ -263,12 +263,12 @@ export class ConnectionString {
             }
         }
 
-        if (!('user' in this) && defaults.user && hasText(defaults.user)) {
-            this.user = defaults.user.trim();
+        if (!('user' in this) && hasText(defaults.user)) {
+            this.user = defaults.user!.trim();
         }
 
-        if (!('password' in this) && defaults.password && hasText(defaults.password)) {
-            this.password = defaults.password.trim();
+        if (!('password' in this) && hasText(defaults.password)) {
+            this.password = defaults.password!.trim();
         }
 
         // Since the order of path segments is usually important, we set default
