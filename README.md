@@ -176,7 +176,7 @@ For a good example, see [connection-string-demo].
 ### Virtual Properties
 
 Type `ConnectionString` supports non-enumerable read-only properties `hostname`, `port` and `type`
-for compatibility with parsers that do support only one host:
+for compatibility with parsers that support only one host:
 
 * `hostname = hosts?.[0].name`
 * `port = hosts?.[0].port`
