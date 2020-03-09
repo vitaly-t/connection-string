@@ -33,12 +33,9 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
-And it can generate a valid Connection String from an object - see [connection-string-demo].
+And it can generate a valid connection string from an object (see [connection-string-demo]).
 
-For documentation and examples, check out [WiKi Pages] and [API].
-
-This library implements a superset of [Mongodb Connection String Spec](https://github.com/mongodb/specifications/blob/master/source/connection-string/connection-string-spec.rst),
-which served as an inspirational basis, but extended to be more flexible and generic. See also [adaptation examples](https://github.com/vitaly-t/connection-string/wiki/Adapters).
+For documentation and examples, see [WiKi Pages] and [API].
 
 ## Rationale
 
@@ -178,11 +175,12 @@ For a good example, see [connection-string-demo].
 
 ### Virtual Properties
 
-Type `ConnectionString` supports non-enumerable read-only properties `hostname` and `port`,
-for compatibility with parsers that do not support multiple hosts:
+Type `ConnectionString` supports non-enumerable read-only properties `hostname`, `port` and `type`
+for compatibility with parsers that do support only one host:
 
 * `hostname = hosts?.[0].name`
 * `port = hosts?.[0].port`
+* `type = hosts?.[0].type`
 
 ### Extras
 
