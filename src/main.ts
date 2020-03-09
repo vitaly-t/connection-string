@@ -49,6 +49,13 @@ export class ConnectionString {
         return this.hosts?.[0].port;
     }
 
+    /**
+     * Safe accessor to the first host's type.
+     */
+    get type(): HostType | undefined {
+        return this.hosts?.[0].type;
+    }
+
     constructor(cs: string, defaults?: IConnectionDefaults) {
 
         if (!(this instanceof ConnectionString)) {
@@ -304,7 +311,7 @@ export class ConnectionString {
 
 (function () {
     // hiding prototype members:
-    ['setDefaults', 'toString', 'hostname', 'port'].forEach(prop => {
+    ['setDefaults', 'toString', 'hostname', 'port', 'type'].forEach(prop => {
         const desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);

@@ -203,6 +203,10 @@ describe('hosts', () => {
         expect(parse('').hostname).to.be.undefined;
         expect(parse('localhost').hostname).to.eq('localhost');
     });
+    it('must allow simplified access to the first host type', () => {
+        expect(parse('').type).to.be.undefined;
+        expect(parse('localhost').type).to.eq('domain');
+    });
 });
 
 describe('port', () => {
