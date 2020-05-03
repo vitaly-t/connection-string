@@ -99,13 +99,13 @@ you will have to [Browserify] distribution file `dist/index.js`, and then includ
 
 ## API
 
-When parsing a connection string, via the function or class constructor, you can pass in optional object `defaults`,
-to automatically call `setDefaults` in the end, to provide defaults for the values that are missing. See the method below.
+`ConnectionString` constructor accepts object `defaults`, as optional second parameter, to automatically
+call `setDefaults` in the end, to provide defaults for the values that are missing. See the method below.
 
-The object returned by the parser contains only what is present in the connection string, combined with the defaults,
+The object returned by the parser will contain what's present in the connection string, combined with the defaults,
 if those were specified, plus methods as documented further.
 
-In addition, the class has [virtual properties](#virtual-properties) `hostname` + `port`, for simpler and safer
+In addition, the class has [virtual properties](#virtual-properties) `hostname`, `port` and `type`, for simpler and safer
 access to the first host details, compatible with parsers that do not support multiple hosts.
 
 ### `setDefaults(defaults) => ConnectionString`
