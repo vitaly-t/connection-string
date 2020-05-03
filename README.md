@@ -33,6 +33,8 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
+Plus it adds some [Virtual Properties], to simplify access to the first host.
+
 And it can generate a valid connection string from an object (see [connection-string-demo]).
 
 For documentation and examples, see [WiKi Pages] and [API].
@@ -175,8 +177,8 @@ For a good example, see [connection-string-demo].
 
 ### Virtual Properties
 
-Type `ConnectionString` supports non-enumerable read-only properties `hostname`, `port` and `type`
-for compatibility with parsers that support only one host:
+Type `ConnectionString` supports non-enumerable read-only properties `hostname`, `port` and `type`,
+for easy compatibility with libraries that support only one host:
 
 * `hostname = hosts?.[0].name`
 * `port = hosts?.[0].port`
@@ -191,4 +193,5 @@ For some typical questions, consult the [FAQ Page].
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Browserify]:https://github.com/browserify/browserify
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
+[Virtual Properties]:#virtual-properties
 [connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
