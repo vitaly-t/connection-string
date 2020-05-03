@@ -300,7 +300,7 @@ describe('params', () => {
     it('must throw when repeated', () => {
         expect(() => {
             parse('?one=1&one=2');
-        }).to.throw('Parameter "one" is repeated.');
+        }).to.throw('Parameter "one" repeated.');
     });
     it('must support lack of parameters', () => {
         expect(parse('?')).to.eql({});

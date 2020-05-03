@@ -6,56 +6,70 @@ const errInvalidDefaults = `Invalid "defaults" parameter: `;
 export class ConnectionString {
 
     /**
-     * Connection protocol, if specified.
+     * Connection protocol, if specified,
+     * or else the property does not exist.
      */
     protocol?: string;
 
     /**
-     * User name, if specified.
+     * User name, if specified,
+     * or else the property does not exist.
      */
     user?: string;
 
     /**
-     * User password, if specified.
+     * User password, if specified,
+     * or else the property does not exist.
      */
     password?: string;
 
     /**
-     * List of parsed hosts, if at least one is specified.
+     * List of parsed hosts, if at least one is specified,
+     * or else the property does not exist.
      */
     hosts?: IParsedHost[];
 
     /**
-     * Url path segments, if at least one is specified.
+     * Url path segments, if at least one is specified,
+     * or else the property does not exist.
      */
     path?: string[];
 
     /**
-     * Url parameters, if at least one is specified.
+     * Url parameters, if at least one is specified,
+     * or else the property does not exist.
      */
     params?: { [name: string]: any };
 
     /**
-     * Safe accessor to the first host's name.
+     * Safe read-accessor to the first host's name.
      */
     get hostname(): string | undefined {
         return this.hosts?.[0].name;
     }
 
     /**
-     * Safe accessor to the first host's port.
+     * Safe read-accessor to the first host's port.
      */
     get port(): number | undefined {
         return this.hosts?.[0].port;
     }
 
     /**
-     * Safe accessor to the first host's type.
+     * Safe read-accessor to the first host's type.
      */
     get type(): HostType | undefined {
         return this.hosts?.[0].type;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param cs - connection string (can be empty).
+     *
+     * @param defaults - optional defaults, which can also be set
+     * explicitly, via method setDefaults.
+     */
     constructor(cs: string, defaults?: IConnectionDefaults) {
 
         if (!(this instanceof ConnectionString)) {
@@ -97,7 +111,7 @@ export class ConnectionString {
         }
 
         // Extracting hosts details:
-        // (if it starts with `/`, it is the first path segment, no hosts specified)
+        // (if it starts with `/`, it is the first path segment, i.e. no hosts specified)
         if (cs[0] !== '/') {
 
             const endOfHosts = cs.search(/[\/?]/);
@@ -135,7 +149,7 @@ export class ConnectionString {
                     const a = s.split('=');
                     const prop = decode(a[0]);
                     if (prop in params) {
-                        throw new Error(`Parameter "${prop}" is repeated.`);
+                        throw new Error(`Parameter "${prop}" repeated.`);
                     }
                     params[prop] = decode(a[1]);
                 });
@@ -159,7 +173,7 @@ export class ConnectionString {
     }
 
     /**
-     * Converts into a string.
+     * Converts this object into a valid connection string.
      */
     toString(options?: IEncodingOptions): string {
         let s = '';
@@ -177,7 +191,7 @@ export class ConnectionString {
                 const h = opts.passwordHash;
                 if (h) {
                     const code = (typeof h === 'string' && h[0]) || '#';
-                    s += new Array(this.password.length + 1).join(code);
+                    s += code.repeat(this.password.length);
                 } else {
                     s += encode(this.password, opts);
                 }
@@ -213,7 +227,7 @@ export class ConnectionString {
     }
 
     /**
-     * Applies default parameters.
+     * Applies default parameters, and returns itself.
      */
     setDefaults(defaults: IConnectionDefaults): this {
         if (!defaults || typeof defaults !== 'object') {
@@ -224,7 +238,7 @@ export class ConnectionString {
             this.protocol = defaults.protocol!.trim();
         }
 
-        // Missing default hosts are merged with the existing ones:
+        // Missing default `hosts` are merged with the existing ones:
         if (Array.isArray(defaults.hosts)) {
             const hosts = Array.isArray(this.hosts) ? this.hosts : [];
             const dhHosts = defaults.hosts.filter(d => d && typeof d === 'object') as IHost[];
@@ -278,8 +292,8 @@ export class ConnectionString {
             this.password = defaults.password!.trim();
         }
 
-        // Since the order of path segments is usually important, we set default
-        // path segments as they are, but only when they are missing completely:
+        // Since the order of `path` segments is usually important, we set default
+        // `path` segments as they are, but only when they are missing completely:
         if (!('path' in this) && Array.isArray(defaults.path)) {
             const s = defaults.path.filter(hasText);
             if (s.length) {
@@ -287,7 +301,7 @@ export class ConnectionString {
             }
         }
 
-        // Missing default params are merged with the existing ones:
+        // Missing default `params` are merged with the existing ones:
         if (defaults.params && typeof defaults.params === 'object') {
             const keys = Object.keys(defaults.params);
             if (keys.length) {
@@ -310,7 +324,7 @@ export class ConnectionString {
 }
 
 (function () {
-    // hiding prototype members:
+    // hiding prototype members, to keep the type signature clean:
     ['setDefaults', 'toString', 'hostname', 'port', 'type'].forEach(prop => {
         const desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
