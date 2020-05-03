@@ -18,7 +18,7 @@ export interface IHost {
 }
 
 export interface IParsedHost extends IHost {
-    toString: (options?: IEncodingOptions) => string;
+    toString(options?: IEncodingOptions): string;
 }
 
 export interface IConnectionDefaults {
