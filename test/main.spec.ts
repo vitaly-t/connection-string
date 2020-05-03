@@ -39,7 +39,7 @@ describe('constructor', () => {
         }).to.throw(error + 123);
     });
     it('must throw on invalid symbols', () => {
-        const invalidSymbols = '`"#^<>{}\\| \r\n\t';
+        const invalidSymbols = '~`"#^<>{}\\| \r\n\t';
         invalidSymbols.split('').forEach(s => {
             const a = JSON.stringify(s).replace(/^"|"$/g, '\'');
             expect(() => {
