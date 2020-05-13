@@ -335,20 +335,17 @@ export class ConnectionString {
 
     let inspecting = false;
     // istanbul ignore else
-    if (inspect?.custom) {
+    if (inspect && inspect.custom) {
         Object.defineProperty(ConnectionString.prototype, inspect.custom, {
             value: function () {
                 if (inspecting) {
                     return this;
                 }
                 inspecting = true;
-                const src = inspect(this, {colors: true});
-                const vp = inspect({
-                        hostname: this.hostname,
-                        port: this.port,
-                        type: this.type
-                    },
-                    {colors: true});
+                const options = {colors: process.stdout.isTTY};
+                const src = inspect(this, options);
+                const {hostname, port, type} = this;
+                const vp = inspect({hostname, port, type}, options);
                 inspecting = false;
                 return `${src}${EOL}Virtual Properties: ${vp}`;
             }
