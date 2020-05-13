@@ -1,3 +1,5 @@
+import {inspect} from 'util';
+import {EOL} from 'os';
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
 
@@ -330,4 +332,26 @@ export class ConnectionString {
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });
+
+    let inspecting = false;
+    // istanbul ignore else
+    if (inspect?.custom) {
+        Object.defineProperty(ConnectionString.prototype, inspect.custom, {
+            value: function () {
+                if (inspecting) {
+                    return this;
+                }
+                inspecting = true;
+                const src = inspect(this, {colors: true});
+                const vp = inspect({
+                        hostname: this.hostname,
+                        port: this.port,
+                        type: this.type
+                    },
+                    {colors: true});
+                inspecting = false;
+                return `${src}${EOL}Virtual Properties: ${vp}`;
+            }
+        });
+    }
 })();

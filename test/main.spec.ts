@@ -1,3 +1,5 @@
+import {inspect} from 'util';
+import {EOL} from 'os';
 import {expect} from './header';
 import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../dist';
 
@@ -19,6 +21,11 @@ function parseInvalidHost(host?: any) {
 
 function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
+}
+
+function removeColors(text: string) {
+    /*eslint no-control-regex: 0*/
+    return text.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '');
 }
 
 const portErrMsg = (txt: string) => 'Invalid port: "' + txt + '". Valid port range is: [1...65535]';
@@ -646,5 +653,17 @@ describe('parseHost', () => {
     it('must ignore gaps', () => {
         expect(parseHost('a\tb')).to.eql({name: 'a', type: 'domain'});
         expect(parseHost('a\r\nb')).to.eql({name: 'a', type: 'domain'});
+    });
+});
+
+describe('inspection', () => {
+    const cs = parse('');
+    const out1 = inspect(cs);
+    const out2 = removeColors(out1);
+    it('must include virtual properties', () => {
+        expect(out2).to.eq(`ConnectionString {}${EOL}Virtual Properties: { hostname: undefined, port: undefined, type: undefined }`);
+    });
+    it('must produce color output', () => {
+        expect(out1).to.not.eq(out2);
     });
 });
