@@ -3,8 +3,6 @@ connection-string
 
 Advanced URL Connection String parser + generator, with fully optional syntax.
 
-Implemented in TypeScript 3.x, with `strict` mode. 
-
 [![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
 [![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
 
@@ -24,12 +22,12 @@ and converts it into an object that contains only what's specified:
     hosts: [
             {name: 'host1', port: 123, type: 'domain'},
             {name: '[abcd::]', port: 456, type: 'IPv6'}
-            ],
-    path: ['one', 'two'],
+            ], // = undefined when no hosts specified
+    path: ['one', 'two'], // = undefined when no path specified
     params: {
         p1: 'val1',
         msg: 'hello world!'
-    }
+    } // = undefined when no params specified
 }
 ```
 
