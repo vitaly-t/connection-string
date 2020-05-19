@@ -337,7 +337,7 @@ export class ConnectionString {
     // istanbul ignore else
     if (inspect.custom) {
         Object.defineProperty(ConnectionString.prototype, inspect.custom, {
-            value: function () {
+            value() {
                 if (inspecting) {
                     return this;
                 }
