@@ -72,11 +72,13 @@ export class ConnectionString {
      * @param defaults - optional defaults, which can also be set
      * explicitly, via method setDefaults.
      */
-    constructor(cs: string, defaults?: IConnectionDefaults) {
+    constructor(cs?: string | null, defaults?: IConnectionDefaults) {
 
         if (!(this instanceof ConnectionString)) {
             throw new TypeError(`Class constructor ConnectionString cannot be invoked without 'new'`);
         }
+
+        cs = cs ?? '';
 
         if (typeof cs !== 'string') {
             throw new TypeError(`Invalid connection string: ${JSON.stringify(cs)}`);

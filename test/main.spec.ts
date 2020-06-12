@@ -3,7 +3,7 @@ import {EOL} from 'os';
 import {expect} from './header';
 import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../dist';
 
-function parse(cs: string, defaults?: IConnectionDefaults): ConnectionString {
+function parse(cs?: string | null, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
 }
 
@@ -31,16 +31,24 @@ function removeColors(text: string) {
 const portErrMsg = (txt: string) => 'Invalid port: "' + txt + '". Valid port range is: [1...65535]';
 
 describe('constructor', () => {
+    it('must allow undefined', () => {
+        const cs = new ConnectionString();
+        expect(cs).to.eql({});
+    });
+    it('must allow null', () => {
+        const cs = new ConnectionString(null);
+        expect(cs).to.eql({});
+    });
     it('must throw when used as a function', () => {
         expect(() => {
             (ConnectionString as any)();
         }).to.throw('Class constructor ConnectionString cannot be invoked without \'new\'');
     });
-    it('must throw on a non-string', () => {
+    it('must throw on invalid connection string', () => {
         const error = 'Invalid connection string: ';
         expect(() => {
-            invalidParse();
-        }).to.throw(error + undefined);
+            invalidParse(true);
+        }).to.throw(error + true);
         expect(() => {
             invalidParse(123);
         }).to.throw(error + 123);
@@ -57,10 +65,10 @@ describe('constructor', () => {
     it('must throw on invalid defaults', () => {
         const error = 'Invalid "defaults" parameter: ';
         expect(() => {
-            invalidParse('', '');
+            invalidParse(null, '');
         }).to.throw(error + '""');
         expect(() => {
-            invalidParse('', 123);
+            invalidParse(null, 123);
         }).to.throw(error + 123);
     });
     it('must throw on inner spaces', () => {
@@ -72,7 +80,7 @@ describe('constructor', () => {
         }).to.throw('Invalid URL character \'\\t\' at position 2');
     });
     it('must allow an empty string', () => {
-        expect(parse('')).to.eql({});
+        expect(parse()).to.eql({});
     });
     it('must allow empty defaults', () => {
         expect(parse('', {})).to.eql({});
@@ -207,7 +215,7 @@ describe('hosts', () => {
         expect(parse('[::]:123?')).to.eql({hosts: [{name: '[::]', port: 123, type: 'IPv6'}]});
     });
     it('must allow simplified access to the first host name', () => {
-        expect(parse('').hostname).to.be.undefined;
+        expect(parse().hostname).to.be.undefined;
         expect(parse('localhost').hostname).to.eq('localhost');
     });
     it('must allow simplified access to the first host type', () => {
@@ -237,7 +245,7 @@ describe('port', () => {
         }).to.throw(portErrMsg('12345a'));
     });
     it('must allow simplified access to the first port number', () => {
-        expect(parse('').port).to.be.undefined;
+        expect(parse().port).to.be.undefined;
         expect(parse('localhost').port).to.be.undefined;
         expect(parse(':123').port).to.eq(123);
     });
