@@ -94,6 +94,7 @@ See also [WiKi Pages] for more examples and documentation.
 
 TypeScript is the recommended way to include this library into a web application. Otherwise,
 you will have to [Browserify] distribution file `dist/index.js`, and then include the result.
+For more details, see [Browsers] page.
 
 ## API
 
@@ -190,6 +191,7 @@ For some typical questions, consult the [FAQ Page].
 [FAQ Page]:https://github.com/vitaly-t/connection-string/wiki/FAQ
 [WiKi Pages]:https://github.com/vitaly-t/connection-string/wiki
 [Browserify]:https://github.com/browserify/browserify
+[Browsers]:https://github.com/vitaly-t/connection-string/wiki/Browsers
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
 [Virtual Properties]:#virtual-properties
 [connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
