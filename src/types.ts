@@ -24,6 +24,12 @@ export interface IParsedHost extends IHost {
 export interface IConnectionDefaults {
     protocol?: string;
     hosts?: Array<IHost | null>;
+
+    /**
+     * Default port to be applied to every host that has no port specified.
+     */
+    port?: number;
+
     user?: string;
     password?: string;
     path?: string[];
