@@ -54,7 +54,7 @@ Unlike the default URL parser, this one supports the following:
 * `localhost:12345` => `{hosts: [{name: 'localhost', port: 12345, type: 'domain'}]`
 * `[12ab:34cd]:123` => `{hosts: [{name: '[12ab:34cd]', port: 123, type: 'IPv6'}]`
 * `abc:///one?p1=val` => `{protocol: 'abc', path: ['one'], params: {p1: 'val'}}`
-* `:12345` => `{hosts: [{port: 12345}]`
+* `:12345` => `{hosts: [{port: 12345}]}`
 * `username@` => `{user: 'username'}`
 * `:pass123@` => `{password: 'pass123'}`
 * `/one/two` => `{path: ['one', 'two']}`
