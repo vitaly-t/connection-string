@@ -34,8 +34,8 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=4.5",
-    "npm": ">=2.15"
+    "node": ">=12",
+    "npm": ">=6"
   },
   "devDependencies": {
     "@types/chai": "4.2.12",
