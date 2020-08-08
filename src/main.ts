@@ -80,7 +80,7 @@ export class ConnectionString {
 
         cs = cs ?? '';
 
-        if (typeof cs !== 'string') {
+        if (typeof cs as any !== 'string') {
             throw new TypeError(`Invalid connection string: ${JSON.stringify(cs)}`);
         }
 

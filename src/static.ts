@@ -38,7 +38,7 @@ export function validateUrl(url: string): void {
 
 export function parseHost(host: string, direct?: boolean): IParsedHost | null {
     if (direct) {
-        if (typeof host !== 'string') {
+        if (typeof host as any !== 'string') {
             throw new TypeError(`Invalid "host" parameter: ${JSON.stringify(host)}`);
         }
         host = host.trim();
