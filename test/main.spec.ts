@@ -89,7 +89,7 @@ describe('constructor', () => {
 
 describe('protocol', () => {
     it('must recognize standard format', () => {
-        expect(parse('abc://')).to.eql({protocol: 'abc'});
+        expect(parse('abc123://')).to.eql({protocol: 'abc123'});
     });
     it('must allow special symbols', () => {
         expect(parse('one+two-three.four://')).to.eql({protocol: 'one+two-three.four'});
@@ -97,6 +97,22 @@ describe('protocol', () => {
     it('must ignore incomplete format', () => {
         expect(parse('abc:/')).to.eql({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('://')).to.eql({});
+    });
+    it('must throw on invalid symbols', () => {
+        expect(() => {
+            parse('a$b://');
+        }).to.throw('Invalid protocol name: a$b');
+        expect(() => {
+            parse('a%://');
+        }).to.throw('Invalid protocol name: a%');
+    });
+    it('must throw on leading digits', () => {
+        expect(() => {
+            parse('123://');
+        }).to.throw('Invalid protocol name: 123');
+        expect(() => {
+            parse('1a://');
+        }).to.throw('Invalid protocol name: 1a');
     });
 });
 

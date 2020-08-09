@@ -93,10 +93,15 @@ export class ConnectionString {
         validateUrl(cs); // will throw, if failed
 
         // Extracting the protocol:
-        let m = cs.match(/^([a-z]+[a-z0-9+-.]*)?:\/\//i);
+        let m = cs.match(/^(.*)?:\/\//);
         if (m) {
-            if (m[1]) {
-                this.protocol = m[1];
+            const p = m[1]; // protocol name
+            if (p) {
+                const m2 = p.match(/^([a-z]+[a-z0-9+-.]*)/i);
+                if (p && (!m2 || m2[1] !== p)) {
+                    throw new Error(`Invalid protocol name: ${p}`);
+                }
+                this.protocol = p;
             }
             cs = cs.substr(m[0].length);
         }
