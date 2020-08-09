@@ -229,7 +229,7 @@ describe('hosts', () => {
         expect(parse('localhost').hostname).to.eq('localhost');
     });
     it('must allow simplified access to the first host type', () => {
-        expect(parse('').type).to.be.undefined;
+        expect(parse().type).to.be.undefined;
         expect(parse('localhost').type).to.eq('domain');
     });
 });
@@ -439,7 +439,7 @@ describe('toString', () => {
         expect(parse('/a/b%20/c').toString()).to.eq('/a/b%20/c');
     });
     it('must ignore empty path', () => {
-        const a = parse('');
+        const a = parse();
         a.path = [];
         expect(a.toString()).to.eq('');
     });
@@ -448,12 +448,12 @@ describe('toString', () => {
             text: 1,
             values: ['one', true]
         };
-        const a = parse('', {params: {value1: obj, value2: 'text'}});
+        const a = parse(null, {params: {value1: obj, value2: 'text'}});
         const b = parse(a.toString());
         expect(JSON.parse(<string>(b.params && b.params.value1))).to.eql(obj);
     });
     it('must ignore empty parameter list', () => {
-        const a = parse('');
+        const a = parse();
         a.params = {};
         expect(a.toString()).to.eq('');
     });
@@ -466,12 +466,12 @@ describe('toString', () => {
         expect(parse('?a=+1++2').toString({plusForSpace: true})).to.eq('?a=+1++2');
     });
     it('must produce an empty string when an empty array is set', () => {
-        const a = parse('');
+        const a = parse();
         a.hosts = [];
         expect(a.toString()).to.eq('');
     });
     it('must skip empty parameters', () => {
-        const a = parse('');
+        const a = parse();
         a.params = {};
         expect(a.toString()).to.eq('');
     });
@@ -490,7 +490,7 @@ describe('host.toString()', () => {
         expect(h1 && h1.toString()).to.eq('localhost:123');
         expect(h2 && h2.toString()).to.eq('[::]:123');
 
-        const defs = parse('').setDefaults({
+        const defs = parse().setDefaults({
             hosts: [{
                 name: 'localhost',
                 port: 123
@@ -504,7 +504,7 @@ describe('host.toString()', () => {
         expect(h1 && h1.toString()).to.eq('my$server:123');
         expect(h2 && h2.toString({encodeDollar: true})).to.eq('my%24server:123');
 
-        const def1 = parse('').setDefaults({
+        const def1 = parse().setDefaults({
             hosts: [{
                 name: 'my$server',
                 port: 123
@@ -512,7 +512,7 @@ describe('host.toString()', () => {
         });
         expect(def1.hosts && def1.hosts[0].toString()).to.eq('my$server:123');
 
-        const def2 = parse('').setDefaults({
+        const def2 = parse().setDefaults({
             hosts: [{
                 name: 'my$server',
                 port: 123
@@ -526,17 +526,18 @@ describe('setDefaults', () => {
     it('must throw on invalid defaults', () => {
         const error = 'Invalid "defaults" parameter: ';
         expect(() => {
-            parse('').setDefaults(<{}><unknown>undefined);
+            parse().setDefaults(<{}><unknown>undefined);
         }).to.throw(error + undefined);
         expect(() => {
-            parse('').setDefaults(<{}><unknown>123);
+            parse().setDefaults(<{}><unknown>123);
         }).to.throw(error + 123);
     });
     it('must set the default protocol', () => {
-        expect(parse('').setDefaults({protocol: 'abc'})).to.eql({protocol: 'abc'});
+        expect(parse().setDefaults({protocol: 'abc'})).to.eql({protocol: 'abc'});
+        expect(parse().setDefaults({protocol: null as any})).to.eql({});
     });
     it('must set the default hostname and port', () => {
-        expect(parse('').setDefaults({hosts: [{name: '::', type: HostType.IPv6, port: 1}]})).to.eql({
+        expect(parse().setDefaults({hosts: [{name: '::', type: HostType.IPv6, port: 1}]})).to.eql({
             hosts: [{
                 name: '::',
                 type: 'IPv6',
@@ -567,8 +568,8 @@ describe('setDefaults', () => {
                 port: 111
             }, {port: 123}]
         });
-        expect(parse('').setDefaults({hosts: [{name: 'abc'}]})).to.eql({hosts: [{name: 'abc', type: 'domain'}]});
-        expect(parse('').setDefaults({hosts: [{port: 123}]})).to.eql({hosts: [{port: 123}]});
+        expect(parse().setDefaults({hosts: [{name: 'abc'}]})).to.eql({hosts: [{name: 'abc', type: 'domain'}]});
+        expect(parse().setDefaults({hosts: [{port: 123}]})).to.eql({hosts: [{port: 123}]});
     });
     it('must skip invalid hosts', () => {
         expect(parse('my-host').setDefaults({hosts: [{name: '::'}, null]})).to.eql({
@@ -587,26 +588,26 @@ describe('setDefaults', () => {
         });
     });
     it('must ignore invalid ports', () => {
-        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'123'}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'a'}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: -1}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: <number><unknown>'0'}]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{port: 0}]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{port: <number><unknown>'123'}]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{port: <number><unknown>'a'}]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{port: -1}]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{port: <number><unknown>'0'}]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{port: 0}]})).to.eql({});
     });
     it('must set the default user', () => {
-        expect(parse('').setDefaults({user: 'abc'})).to.eql({user: 'abc'});
+        expect(parse().setDefaults({user: 'abc'})).to.eql({user: 'abc'});
     });
     it('must set the default password', () => {
-        expect(parse('').setDefaults({password: 'abc'})).to.eql({password: 'abc'});
+        expect(parse().setDefaults({password: 'abc'})).to.eql({password: 'abc'});
     });
     it('must set the default path', () => {
-        expect(parse('').setDefaults({path: ['abc']})).to.eql({path: ['abc']});
+        expect(parse().setDefaults({path: ['abc']})).to.eql({path: ['abc']});
     });
     it('must set the default params', () => {
-        expect(parse('').setDefaults({params: {p1: 'abc'}})).to.eql({params: {p1: 'abc'}});
+        expect(parse().setDefaults({params: {p1: 'abc'}})).to.eql({params: {p1: 'abc'}});
     });
     it('must skip empty params', () => {
-        expect(parse('').setDefaults({params: {}})).to.eql({});
+        expect(parse().setDefaults({params: {}})).to.eql({});
     });
     it('must merge params', () => {
         expect(parse('?value1=1').setDefaults({params: {value1: 0, value2: 2}})).to.eql({
@@ -617,14 +618,14 @@ describe('setDefaults', () => {
         });
     });
     it('must ignore empty path segments', () => {
-        expect(parse('').setDefaults({path: <string[]><unknown>['', 123, true, '  ']})).to.eql({});
-        expect(parse('').setDefaults({path: <string[]><unknown>123})).to.eql({});
+        expect(parse().setDefaults({path: <string[]><unknown>['', 123, true, '  ']})).to.eql({});
+        expect(parse().setDefaults({path: <string[]><unknown>123})).to.eql({});
     });
     it('must ignore invalid and empty hosts', () => {
-        expect(parse('').setDefaults({hosts: <IHost[]><unknown>1})).to.eql({});
-        expect(parse('').setDefaults({hosts: []})).to.eql({});
-        expect(parse('').setDefaults({hosts: <IHost[]>[1, 2, 3]})).to.eql({});
-        expect(parse('').setDefaults({hosts: [{}, {}, {}]})).to.eql({});
+        expect(parse().setDefaults({hosts: <IHost[]><unknown>1})).to.eql({});
+        expect(parse().setDefaults({hosts: []})).to.eql({});
+        expect(parse().setDefaults({hosts: <IHost[]>[1, 2, 3]})).to.eql({});
+        expect(parse().setDefaults({hosts: [{}, {}, {}]})).to.eql({});
     });
 });
 
@@ -671,7 +672,7 @@ describe('parseHost', () => {
 });
 
 describe('inspection', () => {
-    const cs = parse('');
+    const cs = parse();
     const out1 = inspect(cs);
     const out2 = removeColors(out1);
     it('must include virtual properties', () => {

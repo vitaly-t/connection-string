@@ -7,7 +7,7 @@ export function fullHostName(obj: IHost, options?: IEncodingOptions): string {
         a = skipEncoding ? obj.name : encode(obj.name, options ?? {});
     }
     if (obj.port) {
-        a += ':' + obj.port;
+        a += `:${obj.port}`;
     }
     return a;
 }

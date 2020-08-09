@@ -208,7 +208,7 @@ export class ConnectionString {
         }
         if (Array.isArray(this.path)) {
             this.path.forEach(seg => {
-                s += '/' + encode(seg, opts);
+                s += `/${encode(seg, opts)}`;
             });
         }
         if (this.params && typeof this.params === 'object') {
@@ -240,7 +240,7 @@ export class ConnectionString {
         }
 
         if (!('protocol' in this) && hasText(defaults.protocol)) {
-            this.protocol = defaults.protocol?.trim();
+            this.protocol = defaults.protocol && defaults.protocol.trim();
         }
 
         // Missing default `hosts` are merged with the existing ones:
@@ -310,7 +310,7 @@ export class ConnectionString {
         if (defaults.params && typeof defaults.params === 'object') {
             const keys = Object.keys(defaults.params);
             if (keys.length) {
-                if (this.params && typeof (this.params) === 'object') {
+                if (this.params && typeof this.params === 'object') {
                     for (const a in defaults.params) {
                         if (!(a in this.params)) {
                             this.params[a] = defaults.params[a];
