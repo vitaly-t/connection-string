@@ -80,7 +80,7 @@ export class ConnectionString {
 
         cs = cs ?? '';
 
-        if (typeof cs !== 'string') {
+        if (typeof cs as any !== 'string') {
             throw new TypeError(`Invalid connection string: ${JSON.stringify(cs)}`);
         }
 
@@ -93,11 +93,15 @@ export class ConnectionString {
         validateUrl(cs); // will throw, if failed
 
         // Extracting the protocol:
-        let m = cs.match(/^[\w-_.+!*'()$%:]*:\/\//);
+        let m = cs.match(/^(.*)?:\/\//);
         if (m) {
-            const protocol = m[0].replace(/:\/\//, '');
-            if (protocol) {
-                this.protocol = decode(protocol);
+            const p = m[1]; // protocol name
+            if (p) {
+                const m2 = p.match(/^([a-z]+[a-z0-9+-.]*)/i);
+                if (p && (!m2 || m2[1] !== p)) {
+                    throw new Error(`Invalid protocol name: ${p}`);
+                }
+                this.protocol = p;
             }
             cs = cs.substr(m[0].length);
         }
@@ -180,12 +184,9 @@ export class ConnectionString {
      * Converts this object into a valid connection string.
      */
     toString(options?: IEncodingOptions): string {
-        let s = '';
+        let s = this.protocol ? `${this.protocol}://` : ``;
         const opts = <IEncodingOptions>options || {};
 
-        if (this.protocol) {
-            s += encode(this.protocol, opts).replace(/%3A/g, ':') + '://';
-        }
         if (this.user || this.password) {
             if (this.user) {
                 s += encode(this.user, opts);
@@ -239,7 +240,7 @@ export class ConnectionString {
         }
 
         if (!('protocol' in this) && hasText(defaults.protocol)) {
-            this.protocol = defaults.protocol!.trim();
+            this.protocol = defaults.protocol?.trim();
         }
 
         // Missing default `hosts` are merged with the existing ones:

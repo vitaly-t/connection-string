@@ -89,20 +89,30 @@ describe('constructor', () => {
 
 describe('protocol', () => {
     it('must recognize standard format', () => {
-        expect(parse('abc://')).to.eql({protocol: 'abc'});
+        expect(parse('abc123://')).to.eql({protocol: 'abc123'});
     });
-    it('must allow sub-protocols', () => {
-        expect(parse('one:two:three://')).to.eql({protocol: 'one:two:three'});
+    it('must allow special symbols', () => {
+        expect(parse('one+two-three.four://')).to.eql({protocol: 'one+two-three.four'});
     });
     it('must ignore incomplete format', () => {
         expect(parse('abc:/')).to.eql({hosts: [{name: 'abc', type: 'domain'}]});
         expect(parse('://')).to.eql({});
     });
-    it('must decode URL-encoded characters', () => {
-        expect(parse('a%20b%3F://')).to.eql({protocol: 'a b?'});
+    it('must throw on invalid symbols', () => {
+        expect(() => {
+            parse('a$b://');
+        }).to.throw('Invalid protocol name: a$b');
+        expect(() => {
+            parse('a%://');
+        }).to.throw('Invalid protocol name: a%');
     });
-    it('must support special symbols', () => {
-        expect(parse('A9z$-_.+!*\'()://')).to.eql({protocol: 'A9z$-_. !*\'()'});
+    it('must throw on leading digits', () => {
+        expect(() => {
+            parse('123://');
+        }).to.throw('Invalid protocol name: 123');
+        expect(() => {
+            parse('1a://');
+        }).to.throw('Invalid protocol name: 1a');
     });
 });
 
@@ -394,10 +404,6 @@ describe('complex', () => {
 });
 
 describe('toString', () => {
-    it('must encode protocol', () => {
-        expect(create({protocol: 'abc 123?456'})).to.eq('abc%20123%3F456://');
-        expect(create({protocol: 'one:two:three'})).to.eq('one:two:three://');
-    });
     it('must encode user', () => {
         expect(create({user: 'user 1?2'})).to.eq('user%201%3F2@');
     });
@@ -452,8 +458,8 @@ describe('toString', () => {
         expect(a.toString()).to.eq('');
     });
     it('must encode dollar symbol when required', () => {
-        expect(parse('abc%20$://user$:pa$$@host$name.com/seg$?par$=1$2').toString()).to.eq('abc%20$://user$:pa$$@host$name.com/seg$?par$=1$2');
-        expect(parse('abc%20$://user$:pa$$@host$name.com/seg$?par$=1$2').toString({encodeDollar: true})).to.eq('abc%20%24://user%24:pa%24%24@host%24name.com/seg%24?par%24=1%242');
+        expect(parse('abc://user$:pa$$@host$name.com/seg$?par$=1$2').toString()).to.eq('abc://user$:pa$$@host$name.com/seg$?par$=1$2');
+        expect(parse('abc://user$:pa$$@host$name.com/seg$?par$=1$2').toString({encodeDollar: true})).to.eq('abc://user%24:pa%24%24@host%24name.com/seg%24?par%24=1%242');
     });
     it('must use plus for params when required', () => {
         expect(parse('?a=+1++2').toString()).to.eq('?a=%201%20%202');

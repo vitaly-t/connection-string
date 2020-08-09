@@ -29,7 +29,7 @@ export function hasText(txt?: string): boolean {
 }
 
 export function validateUrl(url: string): void {
-    const idx = url.search(/[^A-Za-z0-9-._:/?[\]@!$&'()*+,;=%]/);
+    const idx = url.search(/[^a-z0-9-._:/?[\]@!$&'()*+,;=%]/i);
     if (idx >= 0) {
         const s = JSON.stringify(url[idx]).replace(/^"|"$/g, `'`);
         throw new Error(`Invalid URL character ${s} at position ${idx}`);
@@ -38,7 +38,7 @@ export function validateUrl(url: string): void {
 
 export function parseHost(host: string, direct?: boolean): IParsedHost | null {
     if (direct) {
-        if (typeof host !== 'string') {
+        if (typeof host as any !== 'string') {
             throw new TypeError(`Invalid "host" parameter: ${JSON.stringify(host)}`);
         }
         host = host.trim();
