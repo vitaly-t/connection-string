@@ -44,6 +44,13 @@ export class ConnectionString {
     params?: { [name: string]: any };
 
     /**
+     * Safe read-accessor to the first host's full name (hostname + port).
+     */
+    get host(): string | undefined {
+        return this.hosts?.[0].toString();
+    }
+
+    /**
      * Safe read-accessor to the first host's name.
      */
     get hostname(): string | undefined {
@@ -330,7 +337,7 @@ export class ConnectionString {
 
 (function () {
     // hiding prototype members, to keep the type signature clean:
-    ['setDefaults', 'toString', 'hostname', 'port', 'type'].forEach(prop => {
+    ['setDefaults', 'toString', 'host', 'hostname', 'port', 'type'].forEach(prop => {
         const desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
@@ -347,8 +354,8 @@ export class ConnectionString {
                 inspecting = true;
                 const options = {colors: process.stdout.isTTY};
                 const src = inspect(this, options);
-                const {hostname, port, type} = this;
-                const vp = inspect({hostname, port, type}, options);
+                const {host, hostname, port, type} = this;
+                const vp = inspect({host, hostname, port, type}, options);
                 inspecting = false;
                 return `${src}${EOL}Virtual Properties: ${vp}`;
             }
