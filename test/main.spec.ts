@@ -92,7 +92,7 @@ describe('protocol', () => {
         expect(parse('abc123://')).to.eql({protocol: 'abc123'});
     });
     it('must allow special symbols', () => {
-        expect(parse('one+two-three.four://')).to.eql({protocol: 'one+two-three.four'});
+        expect(parse('one+two-three.four:five://')).to.eql({protocol: 'one+two-three.four:five'});
     });
     it('must ignore incomplete format', () => {
         expect(parse('abc:/')).to.eql({hosts: [{name: 'abc', type: 'domain'}]});

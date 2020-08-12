@@ -104,7 +104,7 @@ export class ConnectionString {
         if (m) {
             const p = m[1]; // protocol name
             if (p) {
-                const m2 = p.match(/^([a-z]+[a-z0-9+-.]*)/i);
+                const m2 = p.match(/^([a-z]+[a-z0-9+-.:]*)/i);
                 if (p && (!m2 || m2[1] !== p)) {
                     throw new Error(`Invalid protocol name: ${p}`);
                 }
