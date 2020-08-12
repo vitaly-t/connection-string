@@ -704,9 +704,7 @@ describe('inspection', () => {
     const cs = parse('local:123');
     const out1 = inspect(cs);
     const out2 = removeColors(out1);
-
     it('must include virtual properties', () => {
-
         expect(out2).to.contain(`${EOL}Virtual Properties:`);
         expect(out2).to.contain(`host: 'local:123'`);
         expect(out2).to.contain(`hostname: 'local'`);

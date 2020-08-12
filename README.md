@@ -31,7 +31,7 @@ and converts it into an object that contains only what's specified:
 }
 ```
 
-Plus it adds some [Virtual Properties], to simplify access to the first host.
+Plus it adds some [Virtual Properties], to simplify access to the first host details.
 
 And it can generate a valid connection string from an object (see [connection-string-demo]).
 
@@ -177,7 +177,7 @@ For a good example, see [connection-string-demo].
 ### Virtual Properties
 
 Type `ConnectionString` supports non-enumerable read-only properties `host`, `hostname`, `port` and `type`,
-for simpler use when only the first host is needed:
+for simpler use when you need only the first host details:
 
 * `host = hosts?.[0].toString()`
 * `hostname = hosts?.[0].name`
