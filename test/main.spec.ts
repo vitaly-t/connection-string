@@ -671,12 +671,47 @@ describe('parseHost', () => {
     });
 });
 
+describe('virtual properties', () => {
+    it('must provide correct values', () => {
+        const cs = parse('local:123');
+        expect(cs).to.contain({
+            host: 'local:123',
+            hostname: 'local',
+            port: 123,
+            type: 'domain'
+        });
+        expect(cs.host).to.eq('local:123');
+        expect(cs.hostname).to.eq('local');
+        expect(cs.port).to.eq(123);
+        expect(cs.type).to.eq('domain');
+    });
+    it('must handle empty values', () => {
+        const cs = parse();
+        expect(cs).to.contain({
+            host: undefined,
+            hostname: undefined,
+            port: undefined,
+            type: undefined
+        });
+        expect(cs.host).to.eq(undefined);
+        expect(cs.hostname).to.eq(undefined);
+        expect(cs.port).to.eq(undefined);
+        expect(cs.type).to.eq(undefined);
+    });
+});
+
 describe('inspection', () => {
-    const cs = parse();
+    const cs = parse('local:123');
     const out1 = inspect(cs);
     const out2 = removeColors(out1);
+
     it('must include virtual properties', () => {
-        expect(out2).to.eq(`ConnectionString {}${EOL}Virtual Properties: { hostname: undefined, port: undefined, type: undefined }`);
+
+        expect(out2).to.contain(`${EOL}Virtual Properties:`);
+        expect(out2).to.contain(`host: 'local:123'`);
+        expect(out2).to.contain(`hostname: 'local'`);
+        expect(out2).to.contain(`port: 123`);
+        expect(out2).to.contain(`type: 'domain'`);
     });
     it('must produce color output', () => {
         expect(out1).to.not.eq(out2);

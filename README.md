@@ -176,9 +176,10 @@ For a good example, see [connection-string-demo].
 
 ### Virtual Properties
 
-Type `ConnectionString` supports non-enumerable read-only properties `hostname`, `port` and `type`,
-for easy compatibility with libraries that support only one host:
+Type `ConnectionString` supports non-enumerable read-only properties `host`, `hostname`, `port` and `type`,
+for simpler use when only the first host is needed:
 
+* `host = hosts?.[0].toString()`
 * `hostname = hosts?.[0].name`
 * `port = hosts?.[0].port`
 * `type = hosts?.[0].type`
