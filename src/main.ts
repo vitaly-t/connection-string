@@ -336,8 +336,8 @@ export class ConnectionString {
 }
 
 (function () {
-    // hiding prototype members, to keep the type signature clean:
-    ['setDefaults', 'toString', 'host', 'hostname', 'port', 'type'].forEach(prop => {
+    // hiding prototype methods, to keep the type signature clean:
+    ['setDefaults', 'toString'].forEach(prop => {
         const desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(ConnectionString.prototype, prop);
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
