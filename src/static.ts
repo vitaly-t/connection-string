@@ -84,7 +84,8 @@ export function parseHost(host: string, direct?: boolean): IParsedHost | null {
         }
         if (h.name || h.port) {
             Object.defineProperty(h, 'toString', {
-                value: (options: IEncodingOptions) => fullHostName(h, options)
+                value: (options: IEncodingOptions) => fullHostName(h, options),
+                enumerable: false
             });
             return h;
         }

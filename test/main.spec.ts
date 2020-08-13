@@ -660,6 +660,11 @@ describe('parseHost', () => {
         expect(parseHost('a.sock')).to.eql({name: 'a.sock', type: 'socket'});
         expect(parseHost('/a')).to.eql({name: '/a', type: 'socket'});
         expect(parseHost('a/')).to.eql({name: 'a/', type: 'socket'});
+
+        // TODO: host parsing is a bit buggy, needs overhaul
+        //    odd/arguable tests:
+        // expect(parseHost('123.0.0.1-hello')).to.eql({name: '123.0.0.1-hello', type: 'IPv4'});
+        // expect(parseHost('[::]/here')).to.eql({name: '[::]here', type: 'IPv6'});
     });
     it('must use inside spaces', () => {
         expect(parseHost(' a b ')).to.eql({name: 'a b', type: 'domain'});
