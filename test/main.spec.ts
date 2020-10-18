@@ -322,10 +322,16 @@ describe('path', () => {
 });
 
 describe('params', () => {
-    it('must throw when repeated', () => {
-        expect(() => {
-            parse('?one=1&one=2');
-        }).to.throw('Parameter "one" repeated.');
+    describe('with repeated names', () => {
+        it('must join values into array', () => {
+            expect(parse('?one=1&one=2&two=3,4&two=5')).to.eql({params: {one: ['1', '2'], two: ['3', '4', '5']}});
+        });
+        it('must join csv values into array', () => {
+            expect(parse('?one=1&one=2,3')).to.eql({params: {one: ['1', '2', '3']}});
+            expect(parse('?one=1&one=2,3&one=4,5')).to.eql({params: {one: ['1', '2', '3', '4', '5']}});
+            expect(parse('?one=,&one=2,3&one=4,5')).to.eql({params: {one: ['', '', '2', '3', '4', '5']}});
+            expect(parse('?one=,&one=1,2&one=,')).to.eql({params: {one: ['', '', '1', '2', '', '']}});
+        });
     });
     it('must support lack of parameters', () => {
         expect(parse('?')).to.eql({});

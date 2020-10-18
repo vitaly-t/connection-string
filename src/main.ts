@@ -163,11 +163,16 @@ export class ConnectionString {
                 m.forEach(s => {
                     const a = s.split('=');
                     const prop = decode(a[0]);
-                    if (prop in params) {
-                        throw new Error(`Parameter "${prop}" repeated.`);
-                    }
                     const val = decode(a[1]).split(',');
-                    params[prop] = val.length > 1 ? val : val[0];
+                    if (prop in params) {
+                        if (Array.isArray(params[prop])) {
+                            (params[prop] as string[]).push(...val);
+                        } else {
+                            params[prop] = [params[prop] as string, ...val];
+                        }
+                    } else {
+                        params[prop] = val.length > 1 ? val : val[0];
+                    }
                 });
                 this.params = params;
             }
