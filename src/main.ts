@@ -157,16 +157,17 @@ export class ConnectionString {
         const idx = cs.indexOf('?');
         if (idx !== -1) {
             cs = cs.substr(idx + 1);
-            m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%]+)/g);
+            m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%,]+)/g);
             if (m) {
-                const params: { [name: string]: string } = {};
+                const params: { [name: string]: string | string[] } = {};
                 m.forEach(s => {
                     const a = s.split('=');
                     const prop = decode(a[0]);
                     if (prop in params) {
                         throw new Error(`Parameter "${prop}" repeated.`);
                     }
-                    params[prop] = decode(a[1]);
+                    const val = decode(a[1]).split(',');
+                    params[prop] = val.length > 1 ? val : val[0];
                 });
                 this.params = params;
             }

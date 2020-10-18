@@ -371,6 +371,11 @@ describe('params', () => {
     it('must convert each plus to a space', () => {
         expect(parse('?p1=+1++2+3')).to.eql({params: {p1: ' 1  2 3'}});
     });
+    it('must support comma-separated values', () => {
+        expect(parse('?one=1,2,3')).to.eql({params: {one: ['1', '2', '3']}});
+        expect(parse('?one=,1')).to.eql({params: {one: ['', '1']}});
+        expect(parse('?one=1,')).to.eql({params: {one: ['1', '']}});
+    });
 });
 
 describe('complex', () => {
