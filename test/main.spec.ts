@@ -376,6 +376,13 @@ describe('params', () => {
         expect(parse('?one=,1')).to.eql({params: {one: ['', '1']}});
         expect(parse('?one=1,')).to.eql({params: {one: ['1', '']}});
     });
+    it('must convert arrays of values into csv', () => {
+        expect(parse('?one=1,2,3').toString()).to.eq('?one=1,2,3');
+        expect(create({params: {one: [1, 2, 3]}})).to.eq('?one=1,2,3');
+        expect(create({params: {one: [1, 'hello here']}})).to.eq('?one=1,hello%20here');
+        expect(create({params: {one: [1, '']}})).to.eq('?one=1,');
+        expect(create({params: {one: ['', 1]}})).to.eq('?one=,1');
+    });
 });
 
 describe('complex', () => {

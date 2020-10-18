@@ -223,10 +223,10 @@ export class ConnectionString {
             const params = [];
             for (const a in this.params) {
                 let value = this.params[a];
-                if (typeof value !== 'string') {
-                    value = JSON.stringify(value);
-                }
-                value = encode(value, opts);
+                value = Array.isArray(value) ? value : [value];
+                value = value.map((v: any) => {
+                    return encode(typeof v === 'string' ? v : JSON.stringify(v), opts);
+                }).join();
                 if (opts.plusForSpace) {
                     value = value.replace(/%20/g, '+');
                 }
