@@ -325,6 +325,7 @@ describe('params', () => {
     describe('with repeated names', () => {
         it('must join values into array', () => {
             expect(parse('?one=1&one=2&two=3,4&two=5')).to.eql({params: {one: ['1', '2'], two: ['3', '4', '5']}});
+            expect(parse('?one=1&one=hello+here,2')).to.eql({params: {one: ['1', 'hello here', '2']}});
         });
         it('must join csv values into array', () => {
             expect(parse('?one=1&one=2,3')).to.eql({params: {one: ['1', '2', '3']}});
