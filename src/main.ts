@@ -163,7 +163,7 @@ export class ConnectionString {
                 m.forEach(s => {
                     const a = s.split('=');
                     const prop = decode(a[0]);
-                    const val = decode(a[1]).split(',');
+                    const val = a[1].split(',').map(decode);
                     if (prop in params) {
                         if (Array.isArray(params[prop])) {
                             (params[prop] as string[]).push(...val);

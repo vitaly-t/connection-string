@@ -390,6 +390,9 @@ describe('params', () => {
         expect(create({params: {one: [1, '']}})).to.eq('?one=1,');
         expect(create({params: {one: ['', 1]}})).to.eq('?one=,1');
     });
+    it('must treat encoded comma as text', () => {
+        expect(parse('?one=1%2C2%2C3')).to.eql({params: {one: '1,2,3'}});
+    });
 });
 
 describe('complex', () => {
