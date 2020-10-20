@@ -392,6 +392,7 @@ describe('params', () => {
     });
     it('must treat encoded comma as text', () => {
         expect(parse('?one=1%2C2%2C3')).to.eql({params: {one: '1,2,3'}});
+        expect(parse('?one%2C1=1%2C2,3%2C4')).to.eql({params: {'one,1': ['1,2', '3,4']}});
     });
 });
 
