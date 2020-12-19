@@ -65,7 +65,7 @@ For more short-syntax examples see [Optional Format].
 ## Installing
 
 ```
-$ npm install connection-string
+$ npm i connection-string
 ```
 
 ## Usage
@@ -98,14 +98,11 @@ For more details, see [Browsers] page.
 
 ## API
 
-`ConnectionString` constructor accepts object `defaults`, as optional second parameter, to automatically
+[ConnectionString] constructor accepts object `defaults`, as optional second parameter, to automatically
 call `setDefaults` in the end, to provide defaults for the values that are missing. See the method below.
 
 The object returned by the parser will contain what's present in the connection string, combined with the defaults,
 if those were specified, plus methods as documented further.
-
-In addition, the class has [virtual properties](#virtual-properties) `hostname`, `port` and `type`, for simpler and safer
-access to the first host details, compatible with parsers that do not support multiple hosts.
 
 ### `setDefaults(defaults) => ConnectionString`
 
@@ -176,7 +173,7 @@ For a good example, see [connection-string-demo].
 
 ### Virtual Properties
 
-Type `ConnectionString` supports non-enumerable read-only properties `host`, `hostname`, `port` and `type`,
+Type [ConnectionString] supports non-enumerable read-only properties [host], [hostname], [port] and [type],
 for simpler use when you need only the first host details:
 
 * `host = hosts?.[0].toString()`
@@ -196,3 +193,8 @@ For some typical questions, consult the [FAQ Page].
 [Optional Format]:https://github.com/vitaly-t/connection-string/wiki#optional-format
 [Virtual Properties]:#virtual-properties
 [connection-string-demo]:https://github.com/vitaly-t/connection-string-demo
+[ConnectionString]:https://github.com/vitaly-t/connection-string/blob/master/src/main.ts#L8
+[host]:https://github.com/vitaly-t/connection-string/blob/master/src/main.ts#L49
+[hostname]:https://github.com/vitaly-t/connection-string/blob/master/src/main.ts#L56
+[port]:https://github.com/vitaly-t/connection-string/blob/master/src/main.ts#L63
+[type]:https://github.com/vitaly-t/connection-string/blob/master/src/main.ts#L70

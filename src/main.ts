@@ -51,7 +51,7 @@ export class ConnectionString {
     }
 
     /**
-     * Safe read-accessor to the first host's name.
+     * Safe read-accessor to the first host's name (without port).
      */
     get hostname(): string | undefined {
         return this.hosts?.[0].name;
