@@ -2,6 +2,8 @@ language: node_js
 matrix:
   include:
     - node_js: "12"
-      script: "npm run travis"
+      script: "npm test"
     - node_js: "14"
+      script: "npm test travis"
+    - node_js: "15"
       script: "npm test"
