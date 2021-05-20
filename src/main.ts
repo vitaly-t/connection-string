@@ -1,5 +1,3 @@
-import {inspect} from 'util';
-import {EOL} from 'os';
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
 
@@ -349,9 +347,11 @@ export class ConnectionString {
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });
 
-    let inspecting = false;
     // istanbul ignore else
-    if (inspect.custom) {
+    if (typeof module !== 'undefined') {
+        const {inspect} = require('util');
+        const {EOL} = require('os');
+        let inspecting = false;
         Object.defineProperty(ConnectionString.prototype, inspect.custom, {
             value() {
                 if (inspecting) {
