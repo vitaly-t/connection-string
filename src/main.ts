@@ -1,5 +1,6 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
+import {setupCustomInspect} from './inspect';
 
 const errInvalidDefaults = `Invalid "defaults" parameter: `;
 
@@ -347,24 +348,5 @@ export class ConnectionString {
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });
 
-    // istanbul ignore else
-    if (typeof module !== 'undefined') {
-        const {inspect} = require('util');
-        const {EOL} = require('os');
-        let inspecting = false;
-        Object.defineProperty(ConnectionString.prototype, inspect.custom, {
-            value() {
-                if (inspecting) {
-                    return this;
-                }
-                inspecting = true;
-                const options = {colors: process.stdout.isTTY};
-                const src = inspect(this, options);
-                const {host, hostname, port, type} = this;
-                const vp = inspect({host, hostname, port, type}, options);
-                inspecting = false;
-                return `${src}${EOL}Virtual Properties: ${vp}`;
-            }
-        });
-    }
+    setupCustomInspect(ConnectionString);
 })();
