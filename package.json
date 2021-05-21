@@ -1,6 +1,6 @@
 {
   "name": "connection-string",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "Advanced URL Connection String parser + generator.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/chai": "4.2.18",
     "@types/mocha": "8.2.2",
-    "@types/node": "15.3.1",
+    "@types/node": "15.6.0",
     "chai": "4.3.4",
     "coveralls": "3.1.0",
     "mocha": "8.4.0",
