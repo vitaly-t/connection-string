@@ -141,9 +141,9 @@ describe('hosts', () => {
         });
     });
     it('must allow special symbols', () => {
-        expect(parse('one-1.TWO+23,three-%3F.gap+here.sock')).to.eql({
+        expect(parse('one-1.TWO+23_,three-%3F.gap+here.sock')).to.eql({
             hosts: [{
-                name: 'one-1.TWO 23',
+                name: 'one-1.TWO 23_',
                 type: 'domain'
             }, {
                 name: 'three-?.gap here.sock',
