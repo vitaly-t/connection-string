@@ -3,10 +3,7 @@ connection-string
 
 Advanced URL Connection String parser + generator, with fully optional syntax.
 
-[![Build Status](https://travis-ci.org/vitaly-t/connection-string.svg?branch=master)](https://travis-ci.org/vitaly-t/connection-string)
-[![Coverage Status](https://coveralls.io/repos/vitaly-t/connection-string/badge.svg?branch=master)](https://coveralls.io/r/vitaly-t/connection-string?branch=master)
-
-Takes a URL connection string (with every element being optional):
+It takes a URL connection string (with every element being optional):
 
 ```
 protocol://user:password@host1:123,[abcd::]:456/one/two?p1=val1&msg=hello+world!
