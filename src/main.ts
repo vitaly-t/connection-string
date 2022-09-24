@@ -109,7 +109,7 @@ export class ConnectionString {
                 }
                 this.protocol = p;
             }
-            cs = cs.substr(m[0].length);
+            cs = cs.substring(m[0].length);
         }
 
         // Extracting user + password:
@@ -121,7 +121,7 @@ export class ConnectionString {
             if (m[2]) {
                 this.password = decode(m[2]);
             }
-            cs = cs.substr(m[0].length);
+            cs = cs.substring(m[0].length);
         }
 
         // Extracting hosts details:
@@ -129,7 +129,7 @@ export class ConnectionString {
         if (cs[0] !== '/') {
 
             const endOfHosts = cs.search(/[\/?]/);
-            const hosts = (endOfHosts === -1 ? cs : cs.substr(0, endOfHosts)).split(',');
+            const hosts = (endOfHosts === -1 ? cs : cs.substring(0, endOfHosts)).split(',');
 
             hosts.forEach(h => {
                 const host = parseHost(h);
@@ -142,20 +142,20 @@ export class ConnectionString {
             });
 
             if (endOfHosts >= 0) {
-                cs = cs.substr(endOfHosts);
+                cs = cs.substring(endOfHosts);
             }
         }
 
         // Extracting the path:
         m = cs.match(/\/([\w-_.+!*'()$%]+)/g);
         if (m) {
-            this.path = m.map(s => decode(s.substr(1)));
+            this.path = m.map(s => decode(s.substring(1)));
         }
 
         // Extracting parameters:
         const idx = cs.indexOf('?');
         if (idx !== -1) {
-            cs = cs.substr(idx + 1);
+            cs = cs.substring(idx + 1);
             m = cs.match(/([\w-_.+!*'()$%]+)=([\w-_.+!*'()$%,]+)/g);
             if (m) {
                 const params: { [name: string]: string | string[] } = {};
