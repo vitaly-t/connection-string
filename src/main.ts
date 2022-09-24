@@ -113,7 +113,7 @@ export class ConnectionString {
         }
 
         // Extracting user + password:
-        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%]*)@/);
+        m = cs.match(/^([\w-_.+!*'()$%]*):?([\w-_.+!*'()$%~]*)@/);
         if (m) {
             if (m[1]) {
                 this.user = decode(m[1]);

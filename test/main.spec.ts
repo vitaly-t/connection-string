@@ -54,7 +54,7 @@ describe('constructor', () => {
         }).to.throw(error + 123);
     });
     it('must throw on invalid symbols', () => {
-        const invalidSymbols = '~`"#^<>{}\\| \r\n\t';
+        const invalidSymbols = '`"#^<>{}\\| \r\n\t';
         invalidSymbols.split('').forEach(s => {
             const a = JSON.stringify(s).replace(/^"|"$/g, '\'');
             expect(() => {
@@ -284,7 +284,7 @@ describe('password', () => {
         expect(parse(':pass%20123%3F@')).to.eql({password: 'pass 123?'});
     });
     it('must support special symbols', () => {
-        expect(parse(':$-_.+!*\'()@')).to.eql({password: '$-_. !*\'()'});
+        expect(parse(':$-_.+!*\'()~@')).to.eql({password: '$-_. !*\'()~'});
     });
 });
 

@@ -29,7 +29,7 @@ export function hasText(txt?: string): boolean {
 }
 
 export function validateUrl(url: string): void {
-    const idx = url.search(/[^a-z0-9-._:\/?[\]@!$&'()*+,;=%]/i);
+    const idx = url.search(/[^a-z0-9-._:\/?[\]@!$&'()*+,;=%~]/i);
     if (idx >= 0) {
         const s = JSON.stringify(url[idx]).replace(/^"|"$/g, `'`);
         throw new Error(`Invalid URL character ${s} at position ${idx}`);
