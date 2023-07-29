@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
 
       - run: npm install
 
-      # GitHub actions do not use a TTY, which is required for util.inspect to
+      # GitHub Actions do not use a TTY, which is required for util.inspect to
       # output in color, so use script to force a TTY.
       - run: npm test
         # Workaround for No TTY issue
