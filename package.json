@@ -8,9 +8,8 @@
     "./dist/inspect.js": "./dist/browser/inspect.js"
   },
   "scripts": {
-    "build": "tsc -p src && tsc -p test",
-    "lint": "tslint --fix ./src/**/*.ts ./test/**/*.ts",
-    "test": "npm run lint && npm run build && nyc mocha -r ts-node/register test/**/*.spec.ts"
+    "build": "tsc -p src",
+    "test": "jest"
   },
   "files": [
     "dist"
@@ -36,18 +35,13 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=14"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
-    "@types/chai": "4.3.8",
-    "@types/mocha": "10.0.2",
-    "@types/node": "20.8.6",
-    "chai": "4.3.10",
-    "mocha": "10.2.0",
-    "mocha-lcov-reporter": "1.3.0",
-    "nyc": "15.1.0",
-    "ts-node": "10.9.1",
-    "tslint": "6.1.3",
-    "typescript": "5.8.2"
+    "@types/jest": "30.0.0",
+    "@types/node": "24.3.0",
+    "jest": "30.0.5",
+    "ts-jest": "29.4.1",
+    "typescript": "5.9.2"
   }
 }
