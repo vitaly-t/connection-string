@@ -1,6 +1,3 @@
-import {inspect} from 'util';
-import {EOL} from 'os';
-
 import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../src';
 
 function parse(cs?: string | null, defaults?: IConnectionDefaults): ConnectionString {
@@ -23,11 +20,6 @@ function create(defaults: IConnectionDefaults): string {
     return (new ConnectionString('', defaults)).toString();
 }
 
-function removeColors(text: string) {
-    /*eslint no-control-regex: 0*/
-    return text.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '');
-}
-
 const portErrMsg = (txt: string) => 'Invalid port: "' + txt + '". Valid port range is: [1...65535]';
 
 describe('constructor', () => {
@@ -38,11 +30,6 @@ describe('constructor', () => {
     it('must allow null', () => {
         const cs = new ConnectionString(null);
         expect(cs).toEqual({});
-    });
-    it('must throw when used as a function', () => {
-        expect(() => {
-            (ConnectionString as any)();
-        }).toThrow('Class constructor ConnectionString cannot be invoked without \'new\'');
     });
     it('must throw on invalid connection string', () => {
         const error = 'Invalid connection string: ';
@@ -707,14 +694,6 @@ describe('parseHost', () => {
 describe('virtual properties', () => {
     it('must provide correct values', () => {
         const cs = parse('local:123');
-        /*
-        TODO: This needs fixing, for virtual properties
-        expect(cs).toEqual({
-            host: 'local:123',
-            hostname: 'local',
-            port: 123,
-            type: 'domain'
-        });*/
         expect(cs.host).toEqual('local:123');
         expect(cs.hostname).toEqual('local');
         expect(cs.port).toEqual(123);
@@ -732,22 +711,5 @@ describe('virtual properties', () => {
         expect(cs.hostname).toBeUndefined();
         expect(cs.port).toBeUndefined();
         expect(cs.type).toBeUndefined();
-    });
-});
-
-describe('inspection', () => {
-    const cs = parse('local:123');
-    const out1 = inspect(cs);
-    const out2 = removeColors(out1);
-    it('must include virtual properties', () => {
-        expect(out2).toContain(`${EOL}Virtual Properties:`);
-        expect(out2).toContain(`host: 'local:123'`);
-        expect(out2).toContain(`hostname: 'local'`);
-        expect(out2).toContain(`port: 123`);
-        expect(out2).toContain(`type: 'domain'`);
-    });
-    it.skip('must produce color output', () => {
-        // TODO: This needs fixing:
-        expect(out1).not.toEqual(out2);
     });
 });

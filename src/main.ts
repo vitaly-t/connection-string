@@ -1,6 +1,5 @@
 import {HostType, IConnectionDefaults, IEncodingOptions, IHost, IParsedHost} from './types';
 import {decode, encode, hasText, fullHostName, parseHost, validateUrl} from './static';
-import {setupCustomInspect} from './inspect';
 
 const errInvalidDefaults = `Invalid "defaults" parameter: `;
 
@@ -79,10 +78,6 @@ export class ConnectionString {
      * explicitly, via method setDefaults.
      */
     constructor(cs?: string | null, defaults?: IConnectionDefaults) {
-
-        if (!(this instanceof ConnectionString)) {
-            throw new TypeError(`Class constructor ConnectionString cannot be invoked without 'new'`);
-        }
 
         cs = cs ?? '';
 
@@ -347,6 +342,4 @@ export class ConnectionString {
         desc.enumerable = false;
         Object.defineProperty(ConnectionString.prototype, prop, desc);
     });
-
-    setupCustomInspect(ConnectionString);
 })();

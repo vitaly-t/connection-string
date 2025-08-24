@@ -3,9 +3,8 @@ module.exports = {
     collectCoverage: true,
     coverageThreshold: {
         global: {
-            // TODO: Restore the lines here when all tests pass
-            branches: 80, // Interoperability JS lines cannot be covered, hence 95%
-            lines: 80
+            branches: 95, // Interoperability JS lines cannot be covered, hence 95%
+            lines: 100
         }
     },
     globals: {

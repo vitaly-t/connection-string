@@ -4,9 +4,6 @@
   "description": "Advanced URL Connection String parser + generator.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "browser": {
-    "./dist/inspect.js": "./dist/browser/inspect.js"
-  },
   "scripts": {
     "build": "tsc -p src",
     "test": "jest"
