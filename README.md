@@ -1,7 +1,7 @@
 connection-string
 =================
 
-[![Build Status](https://github.com/vitaly-t/connection-string/workflows/ci/badge.svg?branch=master)](https://github.com/vitaly-t/connection-string/actions?query=workflow%3Aci+branch%3Amaster)
+[![ci](https://github.com/vitaly-t/connection-string/actions/workflows/ci.yml/badge.svg)](https://github.com/vitaly-t/connection-string/actions/workflows/ci.yml)
 [![Node Version](https://img.shields.io/badge/nodejs-20%20--%2024-green.svg?logo=node.js&style=flat)](https://nodejs.org)
 
 Advanced URL Connection String parser + generator, with fully optional syntax.
