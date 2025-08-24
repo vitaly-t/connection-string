@@ -13,7 +13,7 @@ export class ConnectionString {
     protocol?: string;
 
     /**
-     * User name, if specified,
+     * Username, if specified,
      * or else the property does not exist.
      */
     user?: string;
