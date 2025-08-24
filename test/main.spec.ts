@@ -1,7 +1,7 @@
 import {inspect} from 'util';
 import {EOL} from 'os';
 
-import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../dist';
+import {ConnectionString, IConnectionDefaults, HostType, IHost, IParsedHost} from '../src';
 
 function parse(cs?: string | null, defaults?: IConnectionDefaults): ConnectionString {
     return new ConnectionString(cs, defaults);
